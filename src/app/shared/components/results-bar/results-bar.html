@@ -1,21 +1,31 @@
-<section class="results" aria-label="Current results">
-  <h3 class="results__title">Results ({{ totalVotes() }} votes)</h3>
+<div class="results">
+  <div class="results__header">
+    <span class="results__live" aria-live="polite">
+      <span class="results__dot" aria-hidden="true"></span>
+      LIVE
+    </span>
+    <span class="results__total">{{ totalVotes() }} vote{{ totalVotes() === 1 ? '' : 's' }}</span>
+  </div>
+
   <ul class="results__list" role="list">
-    @for (option of options(); track option.id) {
-      <li class="results__item">
-        <span class="results__label">{{ option.label }}</span>
+    @for (option of options(); track option.id; let i = $index) {
+      <li class="results__row">
+        <div class="results__row-top">
+          <span class="results__letter">{{ letter(i) }}</span>
+          <span class="results__label">{{ option.label }}</span>
+          <span class="results__pct">{{ percentage(option) }}%</span>
+        </div>
         <div
-          class="results__bar-wrap"
+          class="results__track"
           role="progressbar"
-          [attr.aria-valuenow]="option.getPercentage(totalVotes())"
+          [attr.aria-valuenow]="percentage(option)"
           aria-valuemin="0"
           aria-valuemax="100"
-          [attr.aria-label]="option.label + ': ' + option.getPercentage(totalVotes()) + '%'"
+          [attr.aria-label]="option.label + ' result'"
         >
-          <div class="results__bar" [style.width.%]="option.getPercentage(totalVotes())"></div>
+          <div class="results__fill" [style.width.%]="percentage(option)"></div>
         </div>
-        <span class="results__percent"> {{ option.getPercentage(totalVotes()) }}% </span>
       </li>
     }
   </ul>
-</section>
+</div>

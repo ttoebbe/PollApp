@@ -1,19 +1,22 @@
-import { Component, input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
 import { SurveyModel } from '../../models/survey.model';
 
-/** Karte für eine einzelne Umfrage in der Listenansicht */
+/**
+ * Listen-Eintrag einer Umfrage auf dem Homescreen (Active/Past Tab).
+ * Dunkles, halb-transparentes Card-Layout mit asymmetrischem Radius (5/50/5/5).
+ * Past-Surveys werden als <article> (nicht klickbar) gerendert.
+ */
 @Component({
   selector: 'app-survey-card',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink],
   templateUrl: './survey-card.html',
   styleUrl: './survey-card.scss',
 })
 export class SurveyCard {
-  /** Die anzuzeigende Umfrage */
   readonly survey = input.required<SurveyModel>();
+  readonly isPast = input(false);
 
-  /** true wenn die Umfrage abgelaufen ist (Tab "Past") */
-  readonly isPast = input<boolean>(false);
+  readonly endsLabel = computed(() => this.survey().endsInLabel());
+  readonly category = computed(() => this.survey().category ?? 'General');
 }

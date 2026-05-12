@@ -1,171 +1,262 @@
-@use 'styles/abstracts' as a;
-@use 'sass:color';
+@use '../../../styles/abstracts' as a;
 
-// ─── Neue-Umfrage-Seite ───────────────────────────────────────────────────────
+:host {
+  display: block;
+}
+
 .create {
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.create__back {
-  display: inline-block;
-  color: a.$color-text-muted;
-  margin-bottom: a.$space-4;
-  @include a.transition(color);
-
-  &:hover {
-    color: a.$color-primary;
-    text-decoration: none;
-  }
-}
-
-.create__header {
-  @include a.flex-column;
-  gap: a.$space-2;
-  margin-bottom: a.$space-6;
-}
-
-.create__title {
-  font-size: a.$font-size-2xl;
-  font-weight: a.$font-weight-bold;
-}
-
-// ─── Formular ─────────────────────────────────────────────────────────────────
-.create__form {
-  @include a.flex-column;
+  max-width: a.$container-max;
+  margin-inline: auto;
+  padding: a.$space-7;
+  display: flex;
+  flex-direction: column;
   gap: a.$space-5;
-}
 
-// ─── Einzelnes Formularfeld ───────────────────────────────────────────────────
-.form-field {
-  @include a.flex-column;
-  gap: a.$space-2;
-  border: none;
-  padding: 0;
-}
-
-.form-field__label {
-  font-weight: a.$font-weight-medium;
-  font-size: a.$font-size-base;
-  display: flex;
-  gap: a.$space-1;
-  align-items: baseline;
-}
-
-.form-field__required {
-  color: a.$color-danger;
-}
-
-.form-field__optional,
-.form-field__hint {
-  color: a.$color-text-muted;
-  font-weight: a.$font-weight-normal;
-  font-size: a.$font-size-base;
-}
-
-.form-field__input {
-  padding: a.$space-3 a.$space-4;
-  border: 1px solid a.$color-border;
-  border-radius: a.$radius-md;
-  font-family: inherit;
-  font-size: a.$font-size-base;
-  color: a.$color-text;
-  background-color: a.$color-surface;
-  @include a.transition(border-color);
-
-  &:focus {
-    outline: none;
-    border-color: a.$color-primary;
-  }
-
-  &--error {
-    border-color: a.$color-danger;
-  }
-
-  &--textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-}
-
-.form-field__error {
-  color: a.$color-danger;
-  font-size: a.$font-size-base;
-}
-
-// ─── Optionen-Zeile (Eingabe + Entfernen-Button) ──────────────────────────────
-.create__option-row {
-  display: flex;
-  gap: a.$space-2;
-  align-items: center;
-  margin-bottom: a.$space-2;
-}
-
-.create__option-remove {
-  flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: a.$radius-full;
-  color: a.$color-danger;
-  font-size: a.$font-size-base;
-  @include a.flex-center;
-  @include a.transition(background-color);
-
-  &:hover {
-    background-color: color.adjust(#e05252, $lightness: 30%);
-  }
-}
-
-.create__option-add {
-  color: a.$color-primary;
-  font-size: a.$font-size-base;
-  font-weight: a.$font-weight-medium;
-  padding: a.$space-1 0;
-  text-align: left;
-  @include a.transition(color);
-
-  &:hover {
-    color: a.$color-primary-dark;
-  }
-}
-
-// ─── Aktions-Buttons (Speichern / Abbrechen) ──────────────────────────────────
-.create__actions {
-  display: flex;
-  gap: a.$space-4;
-  justify-content: flex-end;
-  padding-top: a.$space-4;
-  border-top: 1px solid a.$color-border;
-}
-
-.create__btn-cancel {
-  padding: a.$space-3 a.$space-5;
-  border-radius: a.$radius-md;
-  color: a.$color-text-muted;
-  font-size: a.$font-size-base;
-  @include a.transition(color);
-
-  &:hover {
-    color: a.$color-text;
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-1;
+    color: a.$color-orange-light;
     text-decoration: none;
+    width: fit-content;
+    font-weight: a.$font-weight-medium;
+    &:hover {
+      color: a.$color-orange;
+    }
+  }
+
+  &__card {
+    background: a.$color-bg-light;
+    border-radius: a.$radius-card-form;
+    padding: a.$space-8 a.$space-9 a.$space-9;
+    color: a.$color-text-dark;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      padding: a.$space-6 a.$space-5;
+      border-radius: 5px 60px 5px 5px;
+    }
+  }
+
+  &__header {
+    margin-bottom: a.$space-7;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-2;
+  }
+
+  &__title {
+    font-family: a.$font-family-display;
+    font-size: clamp(40px, 5vw, a.$fs-page-title);
+    color: a.$color-orange-deep;
+    line-height: 1;
+    margin: 0;
+  }
+
+  &__lede {
+    margin: 0;
+    color: a.$color-text-muted;
+    font-size: a.$fs-body-lg;
   }
 }
 
-.create__btn-submit {
-  padding: a.$space-3 a.$space-6;
-  border-radius: a.$radius-md;
-  background-color: a.$color-primary;
-  color: a.$color-surface;
-  font-weight: a.$font-weight-medium;
-  font-size: a.$font-size-base;
-  @include a.transition(background-color);
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: a.$space-5;
 
-  &:hover:not(:disabled) {
-    background-color: a.$color-primary-dark;
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: a.$space-4;
+    @media (max-width: a.$breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
   }
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-1;
+
+    label {
+      font-family: a.$font-family-base;
+      font-weight: a.$font-weight-bold;
+      color: a.$color-text-muted;
+      font-size: a.$fs-body-sm;
+      letter-spacing: 0.02em;
+    }
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid rgb(53 39 58 / 0.15);
+      border-radius: a.$radius-input;
+      font-family: a.$font-family-base;
+      font-size: a.$fs-body-lg;
+      color: a.$color-text-dark;
+      background: a.$color-white;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &:focus {
+        outline: none;
+        border-color: a.$color-orange;
+        box-shadow: 0 0 0 3px rgb(255 183 112 / 0.25);
+      }
+      &::placeholder {
+        color: rgb(53 39 58 / 0.4);
+      }
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: a.$font-family-base;
+    }
+  }
+
+  &__hint {
+    color: rgb(53 39 58 / 0.5);
+    font-weight: a.$font-weight-regular;
+  }
+  &__error {
+    color: a.$color-danger;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-medium;
+    &--global {
+      padding: a.$space-3 a.$space-4;
+      background: rgb(220 80 80 / 0.08);
+      border-radius: a.$radius-sm;
+    }
+  }
+
+  &__options {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-3;
+
+    legend {
+      font-weight: a.$font-weight-bold;
+      color: a.$color-text-muted;
+      font-size: a.$fs-body-sm;
+      letter-spacing: 0.02em;
+      padding: 0;
+      margin-bottom: a.$space-2;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: a.$space-2;
+    }
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: a.$space-3;
+    input {
+      flex: 1;
+    }
+  }
+  &__letter {
+    flex: 0 0 24px;
+    font-weight: a.$font-weight-bold;
+    color: a.$color-text-dark;
+  }
+  &__remove {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+    color: a.$color-text-muted;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    &:hover {
+      background: rgb(53 39 58 / 0.06);
+      color: a.$color-danger;
+    }
+  }
+  &__add {
+    align-self: flex-start;
+    background: transparent;
+    border: 1.5px dashed rgb(53 39 58 / 0.3);
+    border-radius: a.$radius-md;
+    padding: 10px 14px;
+    color: a.$color-orange-deep;
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-bold;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+    &:hover:not(:disabled) {
+      border-color: a.$color-orange;
+      color: a.$color-orange-deep;
+    }
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: a.$space-3;
+    justify-content: flex-end;
+    margin-top: a.$space-3;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: a.$radius-md;
+  font-family: a.$font-family-base;
+  font-weight: a.$font-weight-bold;
+  font-size: a.$fs-body-lg;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+
+  &--primary {
+    background: a.$color-orange;
+    color: a.$color-text-dark;
+    &:hover:not(:disabled) {
+      background: a.$color-orange-deep;
+      color: a.$color-white;
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+  }
+  &--ghost {
+    background: transparent;
+    color: a.$color-text-muted;
+    border: 1.5px solid rgb(53 39 58 / 0.2);
+    &:hover {
+      background: rgb(53 39 58 / 0.06);
+    }
   }
 }

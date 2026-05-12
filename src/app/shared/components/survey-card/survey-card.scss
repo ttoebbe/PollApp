@@ -1,56 +1,76 @@
-@use 'styles/abstracts' as a;
+@use '../../../../styles/abstracts' as a;
 
-// ─── Umfragen-Karte ───────────────────────────────────────────────────────────
+:host {
+  display: block;
+}
+
 .survey-card {
-  @include a.card;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: a.$space-4;
-  @include a.transition(box-shadow);
+  position: relative;
+  display: block;
+  background: a.$color-surface-overlay-dark;
+  border-radius: a.$radius-card-list;
+  padding: a.$space-3 a.$space-5 a.$space-7;
+  min-height: 127px;
+  color: a.$color-text-on-dark;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+  cursor: pointer;
 
   &:hover {
-    box-shadow: a.$shadow-md;
+    background: rgb(255 255 255 / 0.1);
+    text-decoration: none;
   }
 
   &--past {
-    opacity: 0.6;
+    cursor: not-allowed;
+    opacity: 0.55;
+    &:hover {
+      background: a.$color-surface-overlay-dark;
+    }
   }
-}
 
-.survey-card__body {
-  @include a.flex-column;
-  gap: a.$space-2;
-  flex: 1;
-}
+  &__meta {
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    font-size: a.$fs-body;
+    color: a.$color-orange-light;
+    margin-bottom: a.$space-1;
+  }
 
-.survey-card__title {
-  font-size: a.$font-size-lg;
-  font-weight: a.$font-weight-bold;
-  @include a.truncate;
-}
+  &__title {
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-survey-title-list;
+    line-height: 1.1;
+    color: a.$color-text-on-dark;
+    margin: 0;
+    text-wrap: balance;
+  }
 
-.survey-card__description {
-  color: a.$color-text-muted;
-}
+  &__desc {
+    margin-top: a.$space-2;
+    font-size: a.$fs-body-sm;
+    color: rgb(255 255 255 / 0.65);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-.survey-card__deadline-label {
-  font-weight: a.$font-weight-medium;
-  margin-right: a.$space-1;
-}
-
-.survey-card__link {
-  display: inline-block;
-  background-color: a.$color-primary;
-  color: a.$color-surface;
-  padding: a.$space-2 a.$space-4;
-  border-radius: a.$radius-full;
-  font-weight: a.$font-weight-medium;
-  white-space: nowrap;
-  @include a.transition(background-color);
-
-  &:hover {
-    background-color: a.$color-primary-dark;
-    text-decoration: none;
+  &__pill {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: a.$color-orange-light;
+    color: a.$color-text-dark;
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    font-size: a.$fs-tag;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: a.$radius-tag;
   }
 }

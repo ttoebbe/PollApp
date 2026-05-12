@@ -1,14 +1,41 @@
-<ul class="vote-options" role="list" aria-label="Vote options">
-  @for (option of options(); track option.id) {
+<ul class="vote-list" role="radiogroup" aria-label="Antwortoptionen">
+  @for (option of options(); track option.id; let i = $index) {
     <li>
       <button
-        class="vote-options__btn"
         type="button"
-        (click)="selectOption(option)"
-        aria-label="Vote for: {{ option.label }}"
+        class="vote-pill"
+        [class.vote-pill--selected]="selectedId() === option.id"
+        [attr.aria-checked]="selectedId() === option.id"
+        [attr.aria-disabled]="disabled()"
+        role="radio"
+        (click)="select(option.id)"
       >
-        {{ option.label }}
+        <span class="vote-pill__check" aria-hidden="true">
+          @if (selectedId() === option.id) {
+            <svg viewBox="0 0 16 16" width="14" height="14">
+              <path
+                d="M2 8l4 4 8-9"
+                stroke="currentColor"
+                stroke-width="2.5"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          }
+        </span>
+        <span class="vote-pill__letter">{{ letter(i) }}</span>
+        <span class="vote-pill__label">{{ option.label }}</span>
       </button>
     </li>
   }
 </ul>
+
+<button
+  type="button"
+  class="vote-submit"
+  [disabled]="!selectedId() || disabled()"
+  (click)="submit()"
+>
+  Submit vote
+</button>

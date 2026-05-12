@@ -1,20 +1,19 @@
-@use 'styles/abstracts' as a;
+@use '../../../styles/abstracts' as a;
 
-// ─── Footer: Globale Fußzeile ─────────────────────────────────────────────────
 .footer {
-  background-color: a.$color-surface;
-  border-top: 1px solid a.$color-border;
-  margin-top: auto;
-}
+  background: a.$color-bg-dark;
+  border-top: 1px solid rgb(255 255 255 / 0.05);
 
-.footer__inner {
-  @include a.flex-center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: a.$space-4;
-}
+  &__inner {
+    max-width: a.$container-max;
+    margin-inline: auto;
+    padding: a.$space-6 a.$space-7;
+    text-align: center;
+  }
 
-.footer__text {
-  color: a.$color-text-muted;
-  font-size: a.$font-size-base;
+  &__text {
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-sm;
+    color: rgb(255 255 255 / 0.5);
+  }
 }

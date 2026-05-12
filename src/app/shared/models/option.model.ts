@@ -29,4 +29,9 @@ export class OptionModel implements Option {
     if (totalVotes === 0) return 0;
     return Math.round((this.vote_count / totalVotes) * 100);
   }
+
+  /** Buchstabe für die Anzeige (A., B., C., …) */
+  static letter(index: number): string {
+    return String.fromCharCode(65 + index) + '.';
+  }
 }

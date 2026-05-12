@@ -1,16 +1,17 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
 import { SurveyModel } from '../../models/survey.model';
 
-/** Zeigt dringende Umfragen (enden in 48h) chronologisch sortiert */
+/**
+ * "Ending soon"-Highlight-Karte (US1).
+ * Helle Karte mit asymmetrischem Radius (0/80/0/0) und großem Survey-Titel.
+ */
 @Component({
   selector: 'app-urgent-surveys',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink],
   templateUrl: './urgent-surveys.html',
   styleUrl: './urgent-surveys.scss',
 })
 export class UrgentSurveys {
-  /** Liste der dringenden Umfragen — bereits nach Deadline sortiert */
   readonly surveys = input.required<SurveyModel[]>();
 }

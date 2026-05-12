@@ -1,15 +1,21 @@
-<section class="urgent" aria-label="Ending soon">
-  <h2 class="urgent__title">⏰ Ending Soon</h2>
-  <ul class="urgent__list" role="list">
+<section class="ending-soon" aria-labelledby="ending-soon-heading">
+  <h2 id="ending-soon-heading" class="ending-soon__label">Ending soon surveys</h2>
+
+  <ul class="ending-soon__grid" role="list">
     @for (survey of surveys(); track survey.id) {
-      <li class="urgent__item">
-        <a class="urgent__link" [routerLink]="['/survey', survey.id]">
-          <span class="urgent__name">{{ survey.title }}</span>
-          <span class="urgent__date">
-            {{ survey.deadline | date: 'dd.MM.yyyy HH:mm' }}
-          </span>
+      <li class="ending-soon__cell">
+        <a
+          class="hl-card"
+          [routerLink]="['/survey', survey.id]"
+          [attr.aria-label]="'Open survey ' + survey.title"
+        >
+          <span class="hl-card__meta">{{ survey.category ?? 'General' }}</span>
+          <h3 class="hl-card__title">{{ survey.title }}</h3>
+          <span class="hl-card__pill">{{ survey.endsInLabel() }}</span>
         </a>
       </li>
+    } @empty {
+      <li class="ending-soon__empty">No urgent surveys right now.</li>
     }
   </ul>
 </section>

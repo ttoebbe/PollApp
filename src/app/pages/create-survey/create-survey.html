@@ -1,110 +1,110 @@
 <section class="create">
-  <header class="create__header">
-    <a class="create__back" routerLink="/" aria-label="Cancel and go back">← Cancel</a>
-    <h1 class="create__title">New Survey</h1>
-  </header>
-
-  <form class="create__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-    <!-- Titel (Pflichtfeld) -->
-    <div class="form-field">
-      <label class="form-field__label" for="title">
-        Title <span class="form-field__required" aria-hidden="true">*</span>
-      </label>
-      <input
-        class="form-field__input"
-        [class.form-field__input--error]="
-          form.controls.title.invalid && form.controls.title.touched
-        "
-        id="title"
-        type="text"
-        formControlName="title"
-        placeholder="What do you want to ask?"
-        aria-required="true"
-        [attr.aria-describedby]="
-          form.controls.title.invalid && form.controls.title.touched ? 'title-error' : null
-        "
+  <a class="create__back" routerLink="/" aria-label="Back to surveys">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path
+        d="M15 6l-6 6 6 6"
+        stroke="currentColor"
+        stroke-width="2"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
-      @if (form.controls.title.invalid && form.controls.title.touched) {
-        <p class="form-field__error" id="title-error" role="alert">
-          @if (form.controls.title.errors?.['required']) {
-            Title is required.
-          } @else if (form.controls.title.errors?.['minlength']) {
-            At least 3 characters.
-          }
-        </p>
-      }
-    </div>
+    </svg>
+    All surveys
+  </a>
 
-    <!-- Beschreibung (optional) -->
-    <div class="form-field">
-      <label class="form-field__label" for="description"
-        >Description <span class="form-field__optional">(optional)</span></label
-      >
-      <textarea
-        class="form-field__input form-field__input--textarea"
-        id="description"
-        formControlName="description"
-        placeholder="Add more context…"
-        rows="3"
-      ></textarea>
-    </div>
+  <article class="create__card" aria-labelledby="create-heading">
+    <header class="create__header">
+      <h1 id="create-heading" class="create__title">Create new survey</h1>
+      <p class="create__lede">Fill in the details and add at least two answer options.</p>
+    </header>
 
-    <!-- Deadline (optional) -->
-    <div class="form-field">
-      <label class="form-field__label" for="deadline"
-        >Deadline <span class="form-field__optional">(optional)</span></label
-      >
-      <input
-        class="form-field__input"
-        id="deadline"
-        type="datetime-local"
-        formControlName="deadline"
-      />
-    </div>
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="form__field">
+        <label for="cs-title">Survey title</label>
+        <input
+          id="cs-title"
+          type="text"
+          formControlName="title"
+          placeholder="What should we vote on?"
+          autocomplete="off"
+        />
+        @if (form.controls['title'].touched && form.controls['title'].invalid) {
+          <small class="form__error">Please enter a title (min. 3 characters).</small>
+        }
+      </div>
 
-    <!-- Optionen (FormArray, mind. 2 Pflichtfelder) -->
-    <fieldset class="form-field" formArrayName="options">
-      <legend class="form-field__label">
-        Options <span class="form-field__required" aria-hidden="true">*</span>
-        <span class="form-field__hint">(at least 2)</span>
-      </legend>
+      <div class="form__row">
+        <div class="form__field">
+          <label for="cs-cat">Choose category</label>
+          <select id="cs-cat" formControlName="category">
+            @for (c of categories; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </div>
 
-      @for (ctrl of options.controls; track $index) {
-        <div class="create__option-row">
-          <input
-            class="form-field__input"
-            [class.form-field__input--error]="ctrl.invalid && ctrl.touched"
-            type="text"
-            [formControlName]="$index"
-            [placeholder]="'Option ' + ($index + 1)"
-            [attr.aria-label]="'Option ' + ($index + 1)"
-          />
-          @if (options.length > 2) {
-            <button
-              class="create__option-remove"
-              type="button"
-              (click)="removeOption($index)"
-              aria-label="Remove option {{ $index + 1 }}"
-            >
-              ✕
-            </button>
+        <div class="form__field">
+          <label for="cs-deadline">Deadline</label>
+          <input id="cs-deadline" type="datetime-local" formControlName="deadline" />
+          @if (form.controls['deadline'].touched && form.controls['deadline'].invalid) {
+            <small class="form__error">Please pick a deadline.</small>
           }
         </div>
+      </div>
+
+      <div class="form__field">
+        <label for="cs-desc">Description <span class="form__hint">(optional)</span></label>
+        <textarea
+          id="cs-desc"
+          formControlName="description"
+          rows="3"
+          placeholder="Give people a bit more context&hellip;"
+        ></textarea>
+      </div>
+
+      <fieldset class="form__options" formArrayName="options">
+        <legend>Answer options</legend>
+        <ul role="list">
+          @for (ctrl of options.controls; track $index; let i = $index) {
+            <li class="form__option">
+              <span class="form__letter">{{
+                ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.'][i]
+              }}</span>
+              <input type="text" [formControlName]="i" [placeholder]="'Option ' + (i + 1)" />
+              @if (options.length > 2) {
+                <button
+                  type="button"
+                  class="form__remove"
+                  (click)="removeOption(i)"
+                  [attr.aria-label]="'Remove option ' + (i + 1)"
+                >
+                  &#215;
+                </button>
+              }
+            </li>
+          }
+        </ul>
+        <button
+          type="button"
+          class="form__add"
+          (click)="addOption()"
+          [disabled]="options.length >= 8"
+        >
+          + Add option
+        </button>
+      </fieldset>
+
+      @if (errorMessage()) {
+        <p class="form__error form__error--global" role="alert">{{ errorMessage() }}</p>
       }
 
-      <button class="create__option-add" type="button" (click)="addOption()">+ Add option</button>
-
-      @if (options.invalid && options.touched) {
-        <p class="form-field__error" role="alert">At least 2 options are required.</p>
-      }
-    </fieldset>
-
-    <!-- Aktionen -->
-    <div class="create__actions">
-      <a class="create__btn-cancel" routerLink="/">Cancel</a>
-      <button class="create__btn-submit" type="submit" [disabled]="isSaving()">
-        {{ isSaving() ? 'Saving…' : 'Create Survey' }}
-      </button>
-    </div>
-  </form>
+      <div class="form__actions">
+        <a routerLink="/" class="btn btn--ghost">Cancel</a>
+        <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSubmitting()">
+          {{ isSubmitting() ? 'Saving…' : 'Create survey' }}
+        </button>
+      </div>
+    </form>
+  </article>
 </section>

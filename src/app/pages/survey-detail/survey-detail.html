@@ -1,31 +1,59 @@
-@if (survey(); as s) {
+@if (errorMessage()) {
+  <div class="state state--error">
+    <p>{{ errorMessage() }}</p>
+    <a routerLink="/">Back to home</a>
+  </div>
+} @else if (!survey()) {
+  <div class="state" aria-live="polite">Loading survey&hellip;</div>
+} @else {
   <article class="detail">
-    <!-- Kopfbereich: Titel, Beschreibung, Deadline -->
-    <header class="detail__header">
-      <a class="detail__back" routerLink="/" aria-label="Back to survey list">← Back</a>
-      <h1 class="detail__title">{{ s.title }}</h1>
-      @if (s.description) {
-        <p class="detail__description">{{ s.description }}</p>
+    <a class="detail__back" routerLink="/" aria-label="Back to surveys">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path
+          d="M15 6l-6 6 6 6"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      All surveys
+    </a>
+
+    <header class="detail__head">
+      <span class="detail__category">{{ survey()!.category ?? 'General' }}</span>
+      <h1 class="detail__title">{{ survey()!.title }}</h1>
+      @if (survey()!.description) {
+        <p class="detail__desc">{{ survey()!.description }}</p>
       }
-      @if (s.deadline) {
-        <p class="detail__deadline">Deadline: {{ s.deadline | date: 'dd.MM.yyyy HH:mm' }}</p>
-      }
+      <span class="detail__pill">{{ survey()!.endsInLabel() }}</span>
     </header>
 
-    <!-- Desktop: Abstimmung links, Ergebnis rechts (US5) -->
-    <div class="detail__content">
-      <section class="detail__vote" aria-label="Cast your vote">
-        <h2 class="detail__section-title">Cast Your Vote</h2>
-        <app-vote-options [options]="options()" (voted)="onVote($event)" />
+    <div class="detail__grid">
+      <!-- Voting-Karte -->
+      <section class="card card--vote" aria-labelledby="vote-heading">
+        <h2 id="vote-heading" class="card__title">Cast your vote</h2>
+        @if (hasVoted()) {
+          <p class="card__hint">
+            <span aria-hidden="true">&#10003;</span>
+            Thanks &mdash; your vote has been recorded.
+          </p>
+        } @else {
+          <p class="card__hint">Pick one option and submit your answer.</p>
+        }
+        <app-vote-options
+          [options]="options()"
+          [disabled]="hasVoted()"
+          (vote)="onVote($event)"
+        ></app-vote-options>
       </section>
 
-      <section class="detail__results" aria-label="Current results">
-        <app-results-bar [options]="options()" />
+      <!-- Results-Karte -->
+      <section class="card card--results" aria-labelledby="results-heading">
+        <h2 id="results-heading" class="card__title">Survey results</h2>
+        <app-results-bar [options]="options()"></app-results-bar>
       </section>
     </div>
   </article>
-} @else if (isLoading()) {
-  <p class="detail__loading" aria-live="polite">Loading survey…</p>
-} @else {
-  <p class="detail__not-found">Survey not found. <a routerLink="/">Back to list</a></p>
 }

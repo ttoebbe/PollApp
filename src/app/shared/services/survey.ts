@@ -1,160 +1,104 @@
-import { Injectable, signal, inject, DestroyRef } from '@angular/core';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { SupabaseService } from './supabase';
-import type { Survey } from '../interfaces/survey.interface';
-import type { Option } from '../interfaces/option.interface';
 import { SurveyModel } from '../models/survey.model';
 import { OptionModel } from '../models/option.model';
+import type { Survey } from '../interfaces/survey.interface';
+import type { Option } from '../interfaces/option.interface';
 
 /**
- * Domain-Service für Umfragen.
- * Verwaltet den reaktiven Zustand via Angular Signals und
- * synchronisiert Änderungen über Supabase Realtime-Channels.
+ * Verwaltet Umfragen + Optionen + Stimmen (Supabase-Backend).
+ * Signals-basierte State-Verwaltung: surveys(), options(), isLoading().
  */
 @Injectable({ providedIn: 'root' })
 export class SurveyService {
-  private readonly supabase = inject(SupabaseService).client;
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly supabase = inject(SupabaseService);
 
-  /** Reaktive Liste aller Umfragen */
-  readonly surveys = signal<SurveyModel[]>([]);
+  private readonly _surveys = signal<SurveyModel[]>([]);
+  private readonly _options = signal<OptionModel[]>([]);
+  private readonly _isLoading = signal(false);
 
-  /** Reaktive Liste der Optionen der aktuell geöffneten Umfrage */
-  readonly currentOptions = signal<OptionModel[]>([]);
+  readonly surveys = this._surveys.asReadonly();
+  readonly options = this._options.asReadonly();
+  readonly isLoading = this._isLoading.asReadonly();
 
-  /** Wird auf true gesetzt während ein Ladevorgang läuft */
-  readonly isLoading = signal<boolean>(false);
-
-  private surveyChannel: RealtimeChannel | null = null;
-  private optionChannel: RealtimeChannel | null = null;
-
-  constructor() {
-    this.destroyRef.onDestroy(() => this.cleanupChannels());
+  /** Optionen einer bestimmten Umfrage (computed view) */
+  optionsFor(surveyId: string) {
+    return computed(() => this._options().filter((o) => o.survey_id === surveyId));
   }
 
-  /** Lädt alle Umfragen aus Supabase und aktiviert Realtime-Subscription */
+  /** Lädt alle Umfragen aus Supabase */
   async loadSurveys(): Promise<void> {
-    this.isLoading.set(true);
-    const { data, error } = await this.supabase
-      .from('surveys')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Fehler beim Laden der Umfragen:', error.message);
-      this.isLoading.set(false);
-      return;
+    this._isLoading.set(true);
+    try {
+      const { data, error } = await this.supabase.client
+        .from('surveys')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      this._surveys.set((data ?? []).map((s: Survey) => new SurveyModel(s)));
+    } finally {
+      this._isLoading.set(false);
     }
-
-    this.surveys.set((data as Survey[]).map((s) => new SurveyModel(s)));
-    this.isLoading.set(false);
-    this.subscribeToSurveys();
   }
 
-  /** Lädt die Optionen einer einzelnen Umfrage und aktiviert Realtime für Stimmen */
-  async loadOptions(surveyId: string): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('options')
-      .select('*')
-      .eq('survey_id', surveyId)
-      .order('created_at', { ascending: true });
+  /** Lädt eine einzelne Umfrage + zugehörige Optionen */
+  async loadSurveyWithOptions(id: string): Promise<SurveyModel | null> {
+    this._isLoading.set(true);
+    try {
+      const [surveyRes, optionsRes] = await Promise.all([
+        this.supabase.client.from('surveys').select('*').eq('id', id).single(),
+        this.supabase.client.from('options').select('*').eq('survey_id', id).order('created_at'),
+      ]);
+      if (surveyRes.error) throw surveyRes.error;
+      if (optionsRes.error) throw optionsRes.error;
 
-    if (error) {
-      console.error('Fehler beim Laden der Optionen:', error.message);
-      return;
+      const survey = new SurveyModel(surveyRes.data as Survey);
+      const options = (optionsRes.data ?? []).map((o: Option) => new OptionModel(o));
+
+      // State updaten
+      this._options.set(options);
+      const existing = this._surveys();
+      if (!existing.find((s) => s.id === survey.id)) {
+        this._surveys.set([survey, ...existing]);
+      }
+      return survey;
+    } finally {
+      this._isLoading.set(false);
     }
-
-    this.currentOptions.set((data as Option[]).map((o) => new OptionModel(o)));
-    this.subscribeToOptions(surveyId);
   }
 
-  /** Erstellt eine neue Umfrage inkl. aller Optionen in Supabase */
+  /** Erstellt neue Umfrage inkl. Optionen */
   async createSurvey(
     survey: Omit<Survey, 'id' | 'created_at'>,
-    optionLabels: string[],
-  ): Promise<string | null> {
-    const { data, error } = await this.supabase
+    labels: string[],
+  ): Promise<SurveyModel> {
+    const { data: created, error } = await this.supabase.client
       .from('surveys')
       .insert(survey)
-      .select('id')
+      .select()
       .single();
+    if (error) throw error;
+    const surveyModel = new SurveyModel(created as Survey);
 
-    if (error || !data) {
-      console.error('Fehler beim Erstellen der Umfrage:', error?.message);
-      return null;
-    }
+    const rows = labels.map((label) => ({ survey_id: surveyModel.id, label }));
+    const { error: optErr } = await this.supabase.client.from('options').insert(rows);
+    if (optErr) throw optErr;
 
-    const surveyId: string = (data as { id: string }).id;
-    await this.insertOptions(surveyId, optionLabels);
-    return surveyId;
+    this._surveys.update((curr) => [surveyModel, ...curr]);
+    return surveyModel;
   }
 
-  /** Erhöht den Stimmenzähler einer Option um 1 */
-  async vote(option: OptionModel): Promise<void> {
-    const { error } = await this.supabase
-      .from('options')
-      .update({ vote_count: option.vote_count + 1 })
-      .eq('id', option.id);
-
-    if (error) {
-      console.error('Fehler beim Abstimmen:', error.message);
-    }
-  }
-
-  /** Fügt Antwortoptionen für eine neu erstellte Umfrage ein */
-  private async insertOptions(surveyId: string, labels: string[]): Promise<void> {
-    const rows = labels.map((label) => ({ survey_id: surveyId, label }));
-    const { error } = await this.supabase.from('options').insert(rows);
-
-    if (error) {
-      console.error('Fehler beim Erstellen der Optionen:', error.message);
-    }
-  }
-
-  /** Abonniert neue Umfragen via Realtime und fügt sie dem Signal hinzu */
-  private subscribeToSurveys(): void {
-    this.surveyChannel = this.supabase
-      .channel('survey-insert-channel')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'surveys' },
-        (payload) => {
-          const newSurvey = new SurveyModel(payload.new as Survey);
-          this.surveys.update((list) => [newSurvey, ...list]);
-        },
-      )
-      .subscribe();
-  }
-
-  /** Abonniert Stimmen-Updates für die aktuelle Umfrage via Realtime */
-  private subscribeToOptions(surveyId: string): void {
-    if (this.optionChannel) {
-      this.supabase.removeChannel(this.optionChannel);
-    }
-
-    this.optionChannel = this.supabase
-      .channel(`option-vote-channel-${surveyId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'options',
-          filter: `survey_id=eq.${surveyId}`,
-        },
-        (payload) => {
-          const updated = new OptionModel(payload.new as Option);
-          this.currentOptions.update((list) =>
-            list.map((o) => (o.id === updated.id ? updated : o)),
-          );
-        },
-      )
-      .subscribe();
-  }
-
-  /** Bereinigt alle offenen Realtime-Channels beim Zerstören des Services */
-  private cleanupChannels(): void {
-    if (this.surveyChannel) this.supabase.removeChannel(this.surveyChannel);
-    if (this.optionChannel) this.supabase.removeChannel(this.optionChannel);
+  /** Stimmen für eine Option (transactional via RPC — siehe Migration) */
+  async vote(optionId: string): Promise<void> {
+    const { error } = await this.supabase.client.rpc('increment_vote', {
+      option_id: optionId,
+    });
+    if (error) throw error;
+    // lokal updaten
+    this._options.update((opts) =>
+      opts.map((o) =>
+        o.id === optionId ? new OptionModel({ ...o, vote_count: o.vote_count + 1 }) : o,
+      ),
+    );
   }
 }

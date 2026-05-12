@@ -1,26 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormArray,
-  FormControl,
-  ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SurveyService } from '../../shared/services/survey';
+import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
 
-/** Mindestanzahl ausgefüllter Optionen im FormArray (Custom Validator) */
-function minOptionsValidator(min: number) {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const arr = control as FormArray;
-    const filled = arr.controls.filter((c) => c.value?.trim().length > 0);
-    return filled.length >= min ? null : { minOptions: { required: min, actual: filled.length } };
-  };
-}
-
-/** Formular zum Erstellen einer neuen Umfrage */
+/**
+ * Create-Survey-Seite (US3).
+ * Eigenständige Route, visuell ans Figma angelehnt (helle Karte mit
+ * asymmetrischem Radius, Form auf dunklem Inner-Container).
+ */
 @Component({
   selector: 'app-create-survey',
   imports: [ReactiveFormsModule, RouterLink],
@@ -29,67 +17,75 @@ function minOptionsValidator(min: number) {
 })
 export class CreateSurvey {
   private readonly fb = inject(FormBuilder);
-  private readonly surveyService = inject(SurveyService);
   private readonly router = inject(Router);
+  private readonly surveyService = inject(SurveyService);
 
-  /** Zeigt an ob das Formular gerade gespeichert wird */
-  readonly isSaving = signal(false);
+  readonly categories = SURVEY_CATEGORIES;
+  readonly isSubmitting = signal(false);
+  readonly errorMessage = signal<string | null>(null);
 
-  readonly form = this.fb.group({
-    title: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(3)],
-    }),
-    description: new FormControl('', { nonNullable: true }),
-    deadline: new FormControl('', { nonNullable: true }),
-    options: this.fb.array([this.createOptionControl(), this.createOptionControl()], {
-      validators: minOptionsValidator(2),
-    }),
+  readonly form: FormGroup = this.fb.group({
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    description: [''],
+    category: ['Team activities', Validators.required],
+    deadline: [this.defaultDeadlineLocal(), Validators.required],
+    options: this.fb.array([
+      this.fb.control('', Validators.required),
+      this.fb.control('', Validators.required),
+    ]),
   });
 
-  /** Getter für einfachen Template-Zugriff auf das FormArray */
   get options(): FormArray {
-    return this.form.controls.options;
+    return this.form.get('options') as FormArray;
   }
 
-  /** Fügt ein neues leeres Optionsfeld hinzu */
   addOption(): void {
-    this.options.push(this.createOptionControl());
+    if (this.options.length >= 8) return;
+    this.options.push(this.fb.control('', Validators.required));
   }
 
-  /** Entfernt ein Optionsfeld (mind. 2 bleiben immer erhalten) */
-  removeOption(index: number): void {
-    if (this.options.length > 2) {
-      this.options.removeAt(index);
-    }
+  removeOption(i: number): void {
+    if (this.options.length <= 2) return;
+    this.options.removeAt(i);
   }
 
-  /** Speichert die Umfrage und navigiert zur Detailansicht */
-  async onSubmit(): Promise<void> {
-    if (this.form.invalid) {
+  async submit(): Promise<void> {
+    if (this.form.invalid || this.isSubmitting()) {
       this.form.markAllAsTouched();
       return;
     }
-
-    this.isSaving.set(true);
-    const { title, description, deadline } = this.form.getRawValue();
-    const labels = this.options.controls
-      .map((c) => c.value?.trim())
-      .filter((v): v is string => v.length > 0);
-
-    const id = await this.surveyService.createSurvey(
-      { title, description: description || null, deadline: deadline || null },
-      labels,
-    );
-
-    this.isSaving.set(false);
-    if (id) {
-      await this.router.navigate(['/survey', id]);
+    this.isSubmitting.set(true);
+    this.errorMessage.set(null);
+    try {
+      const v = this.form.value as {
+        title: string;
+        description: string;
+        category: string;
+        deadline: string;
+        options: string[];
+      };
+      const labels = v.options.map((o) => o.trim()).filter(Boolean);
+      const survey = await this.surveyService.createSurvey(
+        {
+          title: v.title.trim(),
+          description: v.description?.trim() || null,
+          category: v.category,
+          deadline: new Date(v.deadline).toISOString(),
+        },
+        labels,
+      );
+      this.router.navigate(['/survey', survey.id]);
+    } catch {
+      this.errorMessage.set('Saving failed — please try again.');
+    } finally {
+      this.isSubmitting.set(false);
     }
   }
 
-  /** Erstellt einen neuen FormControl für eine Antwortoption */
-  private createOptionControl(): FormControl<string> {
-    return new FormControl('', { nonNullable: true, validators: Validators.required });
+  /** datetime-local default: jetzt + 7 Tage, im lokalen Format */
+  private defaultDeadlineLocal(): string {
+    const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
   }
 }

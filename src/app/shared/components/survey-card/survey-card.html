@@ -1,30 +1,23 @@
-<article
-  class="survey-card"
-  [class.survey-card--past]="isPast()"
-  [attr.aria-label]="survey().title"
->
-  <div class="survey-card__body">
-    <h2 class="survey-card__title">{{ survey().title }}</h2>
-
+@if (isPast()) {
+  <article class="survey-card survey-card--past" aria-disabled="true">
+    <div class="survey-card__meta">{{ category() }}</div>
+    <h3 class="survey-card__title">{{ survey().title }}</h3>
     @if (survey().description) {
-      <p class="survey-card__description">{{ survey().description }}</p>
+      <p class="survey-card__desc">{{ survey().description }}</p>
     }
-
-    @if (survey().deadline) {
-      <p class="survey-card__deadline">
-        <span class="survey-card__deadline-label">Deadline:</span>
-        {{ survey().deadline | date: 'dd.MM.yyyy' }}
-      </p>
+    <span class="survey-card__pill">{{ endsLabel() }}</span>
+  </article>
+} @else {
+  <a
+    class="survey-card"
+    [routerLink]="['/survey', survey().id]"
+    [attr.aria-label]="'Open survey ' + survey().title"
+  >
+    <div class="survey-card__meta">{{ category() }}</div>
+    <h3 class="survey-card__title">{{ survey().title }}</h3>
+    @if (survey().description) {
+      <p class="survey-card__desc">{{ survey().description }}</p>
     }
-  </div>
-
-  @if (!isPast()) {
-    <a
-      class="survey-card__link"
-      [routerLink]="['/survey', survey().id]"
-      aria-label="Open survey: {{ survey().title }}"
-    >
-      Vote →
-    </a>
-  }
-</article>
+    <span class="survey-card__pill">{{ endsLabel() }}</span>
+  </a>
+}

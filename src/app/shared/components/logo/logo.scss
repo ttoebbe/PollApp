@@ -1,0 +1,47 @@
+@use '../../../../styles/abstracts' as a;
+
+:host {
+  display: inline-flex;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+
+  &__mark {
+    width: 69px;
+    height: 50px;
+    flex-shrink: 0;
+  }
+
+  &__wordmark {
+    font-family: a.$font-family-display;
+    font-size: 26px;
+    line-height: 0.85;
+    letter-spacing: 0.02em;
+    color: currentColor;
+    white-space: pre-line;
+  }
+
+  &[data-size='sm'] {
+    .logo__mark {
+      width: 48px;
+      height: 35px;
+    }
+    .logo__wordmark {
+      font-size: 18px;
+    }
+  }
+  &[data-size='lg'] {
+    .logo__mark {
+      width: 92px;
+      height: 67px;
+    }
+    .logo__wordmark {
+      font-size: 36px;
+    }
+  }
+}

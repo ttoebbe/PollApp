@@ -1,22 +1,35 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { OptionModel } from '../../models/option.model';
 
-/** Zeigt die Abstimmungsoptionen einer Umfrage als klickbare Buttons */
+/**
+ * Antwort-Pills im Detail-View (Property1Default9 aus Figma).
+ * Single-Choice: User wählt eine Option, drückt "Submit" → emit vote.
+ */
 @Component({
   selector: 'app-vote-options',
-  imports: [],
   templateUrl: './vote-options.html',
   styleUrl: './vote-options.scss',
 })
 export class VoteOptions {
-  /** Optionen der aktuellen Umfrage */
   readonly options = input.required<OptionModel[]>();
+  readonly disabled = input(false);
+  readonly vote = output<string>();
 
-  /** Gibt die gewählte Option nach außen weiter */
-  readonly voted = output<OptionModel>();
+  readonly selectedId = signal<string | null>(null);
 
-  /** Sendet die gewählte Option an den Parent */
-  selectOption(option: OptionModel): void {
-    this.voted.emit(option);
+  letter(i: number): string {
+    return OptionModel.letter(i);
+  }
+
+  select(id: string): void {
+    if (this.disabled()) return;
+    this.selectedId.set(id);
+  }
+
+  submit(): void {
+    const id = this.selectedId();
+    if (!id || this.disabled()) return;
+    this.vote.emit(id);
+    this.selectedId.set(null);
   }
 }

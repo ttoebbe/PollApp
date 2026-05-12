@@ -1,41 +1,93 @@
-@use 'styles/abstracts' as a;
+@use '../../../../styles/abstracts' as a;
 
-// ─── Dringende Umfragen – Bereich oben auf der Startseite ─────────────────────
-.urgent {
-  background-color: #fff8f0;
-  border: 1px solid a.$color-accent;
-  border-radius: a.$radius-md;
-  padding: a.$space-4;
-  margin-bottom: a.$space-6;
+:host {
+  display: block;
 }
 
-.urgent__title {
-  font-size: a.$font-size-base;
-  font-weight: a.$font-weight-bold;
-  color: a.$color-accent;
-  margin-bottom: a.$space-3;
-}
+.ending-soon {
+  display: flex;
+  flex-direction: column;
+  gap: a.$space-7;
 
-.urgent__list {
-  @include a.flex-column;
-  gap: a.$space-2;
-  list-style: none;
-}
+  &__label {
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    font-size: a.$fs-section-label;
+    color: a.$color-text-on-dark;
+    margin: 0;
+    line-height: 1;
+  }
 
-.urgent__link {
-  @include a.flex-between;
-  gap: a.$space-4;
-  color: a.$color-text;
-  @include a.transition(color);
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: a.$space-6;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
-  &:hover {
-    color: a.$color-primary;
-    text-decoration: none;
+    @media (max-width: a.$breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__empty {
+    grid-column: 1 / -1;
+    color: rgb(255 255 255 / 0.5);
+    text-align: center;
+    padding: a.$space-7;
   }
 }
 
-.urgent__date {
-  color: a.$color-danger;
-  font-size: a.$font-size-base;
-  white-space: nowrap;
+.hl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: a.$color-surface-card;
+  color: a.$color-text-muted;
+  border-radius: a.$radius-card-hl;
+  padding: a.$space-7 a.$space-4 a.$space-7;
+  min-height: 310px;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: a.$shadow-card;
+    text-decoration: none;
+  }
+
+  &__meta {
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-body-sm;
+    color: a.$color-text-muted;
+    margin-bottom: a.$space-2;
+  }
+
+  &__title {
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-survey-title-card;
+    line-height: 1.1;
+    color: a.$color-text-muted;
+    margin: 0;
+    flex: 1;
+    text-wrap: balance;
+  }
+
+  &__pill {
+    align-self: flex-start;
+    background: a.$color-orange-light;
+    color: a.$color-text-dark;
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    font-size: a.$fs-tag;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: a.$radius-tag;
+    margin-top: a.$space-4;
+  }
 }

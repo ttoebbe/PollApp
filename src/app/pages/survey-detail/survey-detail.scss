@@ -1,61 +1,137 @@
-@use 'styles/abstracts' as a;
+@use '../../../styles/abstracts' as a;
 
-// ─── Detailansicht ────────────────────────────────────────────────────────────
-.detail__back {
-  display: inline-block;
-  color: a.$color-text-muted;
-  margin-bottom: a.$space-4;
-  @include a.transition(color);
-
-  &:hover {
-    color: a.$color-primary;
-    text-decoration: none;
-  }
+:host {
+  display: block;
 }
 
-.detail__header {
-  @include a.flex-column;
-  gap: a.$space-2;
-  margin-bottom: a.$space-6;
-}
-
-.detail__title {
-  font-size: a.$font-size-2xl;
-  font-weight: a.$font-weight-bold;
-}
-
-.detail__description {
-  color: a.$color-text-muted;
-  font-size: a.$font-size-base;
-}
-
-.detail__deadline {
-  color: a.$color-text-muted;
-  font-size: a.$font-size-base;
-}
-
-// ─── Desktop-Split: Vote links / Ergebnis rechts (US5) ───────────────────────
-.detail__content {
-  @include a.flex-column;
-  gap: a.$space-6;
-
-  @include a.respond('md') {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: a.$space-8;
-    align-items: start;
-  }
-}
-
-.detail__section-title {
-  font-size: a.$font-size-lg;
-  font-weight: a.$font-weight-bold;
-  margin-bottom: a.$space-4;
-}
-
-.detail__loading,
-.detail__not-found {
-  color: a.$color-text-muted;
+.state {
+  max-width: a.$container-max;
+  margin-inline: auto;
+  padding: a.$space-10 a.$space-7;
   text-align: center;
-  padding: a.$space-8;
+  color: rgb(255 255 255 / 0.7);
+
+  &--error {
+    color: a.$color-orange-light;
+  }
+
+  a {
+    color: a.$color-orange;
+    text-decoration: underline;
+    margin-top: a.$space-4;
+    display: inline-block;
+  }
+}
+
+.detail {
+  max-width: a.$container-max;
+  margin-inline: auto;
+  padding: a.$space-7;
+  display: flex;
+  flex-direction: column;
+  gap: a.$space-7;
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-1;
+    color: a.$color-orange-light;
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    text-decoration: none;
+    width: fit-content;
+    &:hover {
+      color: a.$color-orange;
+    }
+  }
+
+  &__head {
+    background: a.$color-surface-overlay-dark;
+    border-radius: a.$radius-card-detail;
+    padding: a.$space-7 a.$space-8 a.$space-8;
+    color: a.$color-text-on-dark;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-3;
+    position: relative;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      border-radius: 5px 60px 5px 5px;
+      padding: a.$space-5;
+    }
+  }
+
+  &__category {
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    font-size: a.$fs-body;
+    color: a.$color-orange-light;
+  }
+
+  &__title {
+    font-family: a.$font-family-display;
+    font-size: clamp(40px, 5vw, a.$fs-survey-title-lg);
+    line-height: 0.95;
+    color: a.$color-orange;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: a.$fs-body-lg;
+    color: rgb(255 255 255 / 0.85);
+    max-width: 70ch;
+    text-wrap: pretty;
+  }
+
+  &__pill {
+    align-self: flex-start;
+    background: a.$color-orange-light;
+    color: a.$color-text-dark;
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-body-sm;
+    padding: 4px 10px;
+    border-radius: a.$radius-tag;
+    margin-top: a.$space-2;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: a.$space-6;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.card {
+  background: a.$color-surface-card;
+  border-radius: 5px 60px 5px 5px;
+  padding: a.$space-7;
+  display: flex;
+  flex-direction: column;
+  gap: a.$space-5;
+  color: a.$color-text-dark;
+
+  &--results {
+    background: a.$color-white;
+  }
+
+  &__title {
+    font-family: a.$font-family-display;
+    font-size: 32px;
+    line-height: 1;
+    color: a.$color-text-dark;
+    margin: 0;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: a.$fs-body-sm;
+    color: a.$color-text-muted;
+  }
 }

@@ -1,56 +1,72 @@
-@use 'styles/abstracts' as a;
+@use '../../../styles/abstracts' as a;
 
-// ─── Header: Globale Navigation ───────────────────────────────────────────────
 .header {
-  background-color: a.$color-surface;
-  border-bottom: 1px solid a.$color-border;
-  box-shadow: a.$shadow-sm;
   position: sticky;
   top: 0;
-  z-index: 100;
-}
+  z-index: 50;
+  background: a.$color-bg-dark;
+  border-bottom: 1px solid rgb(255 255 255 / 0.05);
 
-.header__inner {
-  @include a.flex-between;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: a.$space-4;
-}
+  &__inner {
+    max-width: a.$container-max;
+    margin-inline: auto;
+    padding: a.$space-4 a.$space-7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: a.$space-5;
+    min-height: a.$header-height;
+  }
 
-// ─── Logo ─────────────────────────────────────────────────────────────────────
-.header__logo {
-  @include a.flex-center;
-  gap: a.$space-2;
-  text-decoration: none;
-  color: a.$color-text;
-  font-weight: a.$font-weight-bold;
-  font-size: a.$font-size-lg;
-  @include a.transition(color);
-
-  &:hover {
-    color: a.$color-primary;
+  &__logo-link {
+    display: inline-flex;
+    color: a.$color-text-on-dark;
     text-decoration: none;
+    &:hover {
+      text-decoration: none;
+      opacity: 0.9;
+    }
+  }
+
+  &__btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: a.$radius-md;
+    background: a.$color-orange-light;
+    color: a.$color-text-dark;
+    font-family: a.$font-family-button;
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-body-lg;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background 0.15s ease,
+      transform 0.1s ease;
+
+    svg {
+      color: a.$color-text-dark;
+    }
+
+    &:hover {
+      background: a.$color-orange;
+      text-decoration: none;
+    }
+    &:active {
+      transform: translateY(1px);
+    }
   }
 }
 
-.header__logo-icon {
-  font-size: a.$font-size-xl;
-}
-
-// ─── "New Survey"-Button ──────────────────────────────────────────────────────
-.header__btn-new {
-  display: inline-block;
-  background-color: a.$color-primary;
-  color: a.$color-surface;
-  padding: a.$space-2 a.$space-5;
-  border-radius: a.$radius-full;
-  font-weight: a.$font-weight-medium;
-  font-size: a.$font-size-base;
-  text-decoration: none;
-  @include a.transition(background-color);
-
-  &:hover {
-    background-color: a.$color-primary-dark;
-    text-decoration: none;
+@media (max-width: a.$breakpoint-mobile) {
+  .header__inner {
+    padding-inline: a.$space-4;
+  }
+  .header__btn-new span {
+    display: none;
+  }
+  .header__btn-new {
+    padding: 10px;
   }
 }
