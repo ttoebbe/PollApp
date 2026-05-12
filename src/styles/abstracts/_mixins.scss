@@ -1,0 +1,61 @@
+@use 'variables' as v;
+@use 'sass:math';
+
+// ─── Responsive: Media Query über Breakpoint-Map ──────────────────────────────
+// Verwendung: @include respond('md') { ... }
+@mixin respond($breakpoint) {
+  $value: map-get(v.$breakpoints, $breakpoint);
+
+  @if $value == null {
+    @warn "Unbekannter Breakpoint: #{$breakpoint}";
+  } @else {
+    @media (min-width: $value) {
+      @content;
+    }
+  }
+}
+
+// ─── Layout: Flexbox-Zentrierungen ────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// ─── Typografie: Einzeilige Textkürzung mit Ellipsis ──────────────────────────
+@mixin truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// ─── Hilfsfunktion: px → rem ──────────────────────────────────────────────────
+// Verwendung: font-size: px-to-rem(18)
+@function px-to-rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
+// ─── Animation: SCSS-Transition (kein Angular Animation-Modul) ────────────────
+@mixin transition($properties: all, $duration: 0.2s, $easing: ease-in-out) {
+  transition: $properties $duration $easing;
+}
+
+// ─── Karte: Einheitliches Card-Styling ────────────────────────────────────────
+@mixin card {
+  background-color: v.$color-surface;
+  border: 1px solid v.$color-border;
+  border-radius: v.$radius-md;
+  box-shadow: v.$shadow-sm;
+  padding: v.$space-5;
+}

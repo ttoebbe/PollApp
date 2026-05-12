@@ -1,0 +1,41 @@
+@use 'styles/abstracts' as a;
+
+// ─── Startseite ───────────────────────────────────────────────────────────────
+.home__tabs {
+  display: flex;
+  gap: a.$space-2;
+  border-bottom: 2px solid a.$color-border;
+  margin-bottom: a.$space-5;
+}
+
+.home__tab {
+  padding: a.$space-2 a.$space-5;
+  font-size: a.$font-size-base;
+  font-weight: a.$font-weight-medium;
+  color: a.$color-text-muted;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  @include a.transition(color);
+
+  &--active {
+    color: a.$color-primary;
+    border-bottom-color: a.$color-primary;
+  }
+
+  &:hover:not(.home__tab--active) {
+    color: a.$color-text;
+  }
+}
+
+.home__list {
+  @include a.flex-column;
+  gap: a.$space-4;
+  list-style: none;
+}
+
+.home__empty,
+.home__loading {
+  color: a.$color-text-muted;
+  text-align: center;
+  padding: a.$space-8;
+}

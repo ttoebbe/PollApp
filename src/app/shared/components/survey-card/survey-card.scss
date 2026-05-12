@@ -1,0 +1,56 @@
+@use 'styles/abstracts' as a;
+
+// ─── Umfragen-Karte ───────────────────────────────────────────────────────────
+.survey-card {
+  @include a.card;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: a.$space-4;
+  @include a.transition(box-shadow);
+
+  &:hover {
+    box-shadow: a.$shadow-md;
+  }
+
+  &--past {
+    opacity: 0.6;
+  }
+}
+
+.survey-card__body {
+  @include a.flex-column;
+  gap: a.$space-2;
+  flex: 1;
+}
+
+.survey-card__title {
+  font-size: a.$font-size-lg;
+  font-weight: a.$font-weight-bold;
+  @include a.truncate;
+}
+
+.survey-card__description {
+  color: a.$color-text-muted;
+}
+
+.survey-card__deadline-label {
+  font-weight: a.$font-weight-medium;
+  margin-right: a.$space-1;
+}
+
+.survey-card__link {
+  display: inline-block;
+  background-color: a.$color-primary;
+  color: a.$color-surface;
+  padding: a.$space-2 a.$space-4;
+  border-radius: a.$radius-full;
+  font-weight: a.$font-weight-medium;
+  white-space: nowrap;
+  @include a.transition(background-color);
+
+  &:hover {
+    background-color: a.$color-primary-dark;
+    text-decoration: none;
+  }
+}

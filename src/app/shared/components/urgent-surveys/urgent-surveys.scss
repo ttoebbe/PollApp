@@ -1,0 +1,41 @@
+@use 'styles/abstracts' as a;
+
+// ─── Dringende Umfragen – Bereich oben auf der Startseite ─────────────────────
+.urgent {
+  background-color: #fff8f0;
+  border: 1px solid a.$color-accent;
+  border-radius: a.$radius-md;
+  padding: a.$space-4;
+  margin-bottom: a.$space-6;
+}
+
+.urgent__title {
+  font-size: a.$font-size-base;
+  font-weight: a.$font-weight-bold;
+  color: a.$color-accent;
+  margin-bottom: a.$space-3;
+}
+
+.urgent__list {
+  @include a.flex-column;
+  gap: a.$space-2;
+  list-style: none;
+}
+
+.urgent__link {
+  @include a.flex-between;
+  gap: a.$space-4;
+  color: a.$color-text;
+  @include a.transition(color);
+
+  &:hover {
+    color: a.$color-primary;
+    text-decoration: none;
+  }
+}
+
+.urgent__date {
+  color: a.$color-danger;
+  font-size: a.$font-size-base;
+  white-space: nowrap;
+}

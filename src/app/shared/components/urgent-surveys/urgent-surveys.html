@@ -1,0 +1,15 @@
+<section class="urgent" aria-label="Ending soon">
+  <h2 class="urgent__title">⏰ Ending Soon</h2>
+  <ul class="urgent__list" role="list">
+    @for (survey of surveys(); track survey.id) {
+      <li class="urgent__item">
+        <a class="urgent__link" [routerLink]="['/survey', survey.id]">
+          <span class="urgent__name">{{ survey.title }}</span>
+          <span class="urgent__date">
+            {{ survey.deadline | date: 'dd.MM.yyyy HH:mm' }}
+          </span>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

@@ -1,0 +1,21 @@
+<section class="results" aria-label="Current results">
+  <h3 class="results__title">Results ({{ totalVotes() }} votes)</h3>
+  <ul class="results__list" role="list">
+    @for (option of options(); track option.id) {
+      <li class="results__item">
+        <span class="results__label">{{ option.label }}</span>
+        <div
+          class="results__bar-wrap"
+          role="progressbar"
+          [attr.aria-valuenow]="option.getPercentage(totalVotes())"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [attr.aria-label]="option.label + ': ' + option.getPercentage(totalVotes()) + '%'"
+        >
+          <div class="results__bar" [style.width.%]="option.getPercentage(totalVotes())"></div>
+        </div>
+        <span class="results__percent"> {{ option.getPercentage(totalVotes()) }}% </span>
+      </li>
+    }
+  </ul>
+</section>

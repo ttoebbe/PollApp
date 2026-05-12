@@ -1,0 +1,46 @@
+<section class="home">
+  <!-- Dringende Umfragen (US1): nur anzeigen wenn vorhanden -->
+  @if (urgentSurveys().length > 0) {
+    <div class="home__urgent">
+      <app-urgent-surveys [surveys]="urgentSurveys()" />
+    </div>
+  }
+
+  <!-- Tab-Navigation (US2) -->
+  <div class="home__tabs" role="tablist" aria-label="Umfragen-Filter">
+    <button
+      class="home__tab"
+      [class.home__tab--active]="activeTab() === 'active'"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'active'"
+      (click)="setTab('active')"
+    >
+      Active ({{ activeSurveys().length }})
+    </button>
+    <button
+      class="home__tab"
+      [class.home__tab--active]="activeTab() === 'past'"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'past'"
+      (click)="setTab('past')"
+    >
+      Past ({{ pastSurveys().length }})
+    </button>
+  </div>
+
+  <!-- Ladeindikator -->
+  @if (isLoading()) {
+    <p class="home__loading" aria-live="polite">Loading surveys…</p>
+  } @else {
+    <!-- Umfragen-Liste -->
+    <ul class="home__list" role="list">
+      @for (survey of activeTab() === 'active' ? activeSurveys() : pastSurveys(); track survey.id) {
+        <li>
+          <app-survey-card [survey]="survey" [isPast]="activeTab() === 'past'" />
+        </li>
+      } @empty {
+        <li class="home__empty">No surveys found.</li>
+      }
+    </ul>
+  }
+</section>

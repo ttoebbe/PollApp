@@ -1,0 +1,171 @@
+@use 'styles/abstracts' as a;
+@use 'sass:color';
+
+// ─── Neue-Umfrage-Seite ───────────────────────────────────────────────────────
+.create {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.create__back {
+  display: inline-block;
+  color: a.$color-text-muted;
+  margin-bottom: a.$space-4;
+  @include a.transition(color);
+
+  &:hover {
+    color: a.$color-primary;
+    text-decoration: none;
+  }
+}
+
+.create__header {
+  @include a.flex-column;
+  gap: a.$space-2;
+  margin-bottom: a.$space-6;
+}
+
+.create__title {
+  font-size: a.$font-size-2xl;
+  font-weight: a.$font-weight-bold;
+}
+
+// ─── Formular ─────────────────────────────────────────────────────────────────
+.create__form {
+  @include a.flex-column;
+  gap: a.$space-5;
+}
+
+// ─── Einzelnes Formularfeld ───────────────────────────────────────────────────
+.form-field {
+  @include a.flex-column;
+  gap: a.$space-2;
+  border: none;
+  padding: 0;
+}
+
+.form-field__label {
+  font-weight: a.$font-weight-medium;
+  font-size: a.$font-size-base;
+  display: flex;
+  gap: a.$space-1;
+  align-items: baseline;
+}
+
+.form-field__required {
+  color: a.$color-danger;
+}
+
+.form-field__optional,
+.form-field__hint {
+  color: a.$color-text-muted;
+  font-weight: a.$font-weight-normal;
+  font-size: a.$font-size-base;
+}
+
+.form-field__input {
+  padding: a.$space-3 a.$space-4;
+  border: 1px solid a.$color-border;
+  border-radius: a.$radius-md;
+  font-family: inherit;
+  font-size: a.$font-size-base;
+  color: a.$color-text;
+  background-color: a.$color-surface;
+  @include a.transition(border-color);
+
+  &:focus {
+    outline: none;
+    border-color: a.$color-primary;
+  }
+
+  &--error {
+    border-color: a.$color-danger;
+  }
+
+  &--textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+.form-field__error {
+  color: a.$color-danger;
+  font-size: a.$font-size-base;
+}
+
+// ─── Optionen-Zeile (Eingabe + Entfernen-Button) ──────────────────────────────
+.create__option-row {
+  display: flex;
+  gap: a.$space-2;
+  align-items: center;
+  margin-bottom: a.$space-2;
+}
+
+.create__option-remove {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: a.$radius-full;
+  color: a.$color-danger;
+  font-size: a.$font-size-base;
+  @include a.flex-center;
+  @include a.transition(background-color);
+
+  &:hover {
+    background-color: color.adjust(#e05252, $lightness: 30%);
+  }
+}
+
+.create__option-add {
+  color: a.$color-primary;
+  font-size: a.$font-size-base;
+  font-weight: a.$font-weight-medium;
+  padding: a.$space-1 0;
+  text-align: left;
+  @include a.transition(color);
+
+  &:hover {
+    color: a.$color-primary-dark;
+  }
+}
+
+// ─── Aktions-Buttons (Speichern / Abbrechen) ──────────────────────────────────
+.create__actions {
+  display: flex;
+  gap: a.$space-4;
+  justify-content: flex-end;
+  padding-top: a.$space-4;
+  border-top: 1px solid a.$color-border;
+}
+
+.create__btn-cancel {
+  padding: a.$space-3 a.$space-5;
+  border-radius: a.$radius-md;
+  color: a.$color-text-muted;
+  font-size: a.$font-size-base;
+  @include a.transition(color);
+
+  &:hover {
+    color: a.$color-text;
+    text-decoration: none;
+  }
+}
+
+.create__btn-submit {
+  padding: a.$space-3 a.$space-6;
+  border-radius: a.$radius-md;
+  background-color: a.$color-primary;
+  color: a.$color-surface;
+  font-weight: a.$font-weight-medium;
+  font-size: a.$font-size-base;
+  @include a.transition(background-color);
+
+  &:hover:not(:disabled) {
+    background-color: a.$color-primary-dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

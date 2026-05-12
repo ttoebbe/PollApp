@@ -1,1 +1,67 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/abstracts' as a;
+
+// ─── Box-Sizing Reset ─────────────────────────────────────────────────────────
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// ─── Basis-Typografie ─────────────────────────────────────────────────────────
+html {
+  font-size: 100%; // 16px Basis
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: a.$font-family-base;
+  font-size: a.$font-size-base;
+  line-height: a.$line-height-base;
+  color: a.$color-text;
+  background-color: a.$color-bg;
+  min-height: 100vh;
+}
+
+// ─── Typografie-Grundlagen ────────────────────────────────────────────────────
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: a.$font-weight-bold;
+  line-height: 1.2;
+}
+
+a {
+  color: a.$color-primary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ─── Buttons: Basis-Reset ─────────────────────────────────────────────────────
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+}
+
+// ─── Bilder: Immer responsive ─────────────────────────────────────────────────
+img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+// ─── Fokus-Sichtbarkeit (Barrierefreiheit) ────────────────────────────────────
+:focus-visible {
+  outline: 2px solid a.$color-primary;
+  outline-offset: 2px;
+}

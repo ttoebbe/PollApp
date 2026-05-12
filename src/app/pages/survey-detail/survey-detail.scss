@@ -1,0 +1,61 @@
+@use 'styles/abstracts' as a;
+
+// ─── Detailansicht ────────────────────────────────────────────────────────────
+.detail__back {
+  display: inline-block;
+  color: a.$color-text-muted;
+  margin-bottom: a.$space-4;
+  @include a.transition(color);
+
+  &:hover {
+    color: a.$color-primary;
+    text-decoration: none;
+  }
+}
+
+.detail__header {
+  @include a.flex-column;
+  gap: a.$space-2;
+  margin-bottom: a.$space-6;
+}
+
+.detail__title {
+  font-size: a.$font-size-2xl;
+  font-weight: a.$font-weight-bold;
+}
+
+.detail__description {
+  color: a.$color-text-muted;
+  font-size: a.$font-size-base;
+}
+
+.detail__deadline {
+  color: a.$color-text-muted;
+  font-size: a.$font-size-base;
+}
+
+// ─── Desktop-Split: Vote links / Ergebnis rechts (US5) ───────────────────────
+.detail__content {
+  @include a.flex-column;
+  gap: a.$space-6;
+
+  @include a.respond('md') {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: a.$space-8;
+    align-items: start;
+  }
+}
+
+.detail__section-title {
+  font-size: a.$font-size-lg;
+  font-weight: a.$font-weight-bold;
+  margin-bottom: a.$space-4;
+}
+
+.detail__loading,
+.detail__not-found {
+  color: a.$color-text-muted;
+  text-align: center;
+  padding: a.$space-8;
+}

@@ -1,0 +1,30 @@
+@use 'styles/abstracts' as a;
+
+// ─── Abstimmungs-Buttons ──────────────────────────────────────────────────────
+.vote-options {
+  @include a.flex-column;
+  gap: a.$space-3;
+  list-style: none;
+}
+
+.vote-options__btn {
+  width: 100%;
+  padding: a.$space-3 a.$space-5;
+  border: 2px solid a.$color-primary;
+  border-radius: a.$radius-md;
+  background-color: transparent;
+  color: a.$color-primary;
+  font-weight: a.$font-weight-medium;
+  text-align: left;
+  @include a.transition(background-color, 0.15s);
+
+  &:hover {
+    background-color: a.$color-primary;
+    color: a.$color-surface;
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-primary;
+    outline-offset: 2px;
+  }
+}

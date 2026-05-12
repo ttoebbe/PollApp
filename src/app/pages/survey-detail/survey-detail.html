@@ -1,0 +1,31 @@
+@if (survey(); as s) {
+  <article class="detail">
+    <!-- Kopfbereich: Titel, Beschreibung, Deadline -->
+    <header class="detail__header">
+      <a class="detail__back" routerLink="/" aria-label="Back to survey list">← Back</a>
+      <h1 class="detail__title">{{ s.title }}</h1>
+      @if (s.description) {
+        <p class="detail__description">{{ s.description }}</p>
+      }
+      @if (s.deadline) {
+        <p class="detail__deadline">Deadline: {{ s.deadline | date: 'dd.MM.yyyy HH:mm' }}</p>
+      }
+    </header>
+
+    <!-- Desktop: Abstimmung links, Ergebnis rechts (US5) -->
+    <div class="detail__content">
+      <section class="detail__vote" aria-label="Cast your vote">
+        <h2 class="detail__section-title">Cast Your Vote</h2>
+        <app-vote-options [options]="options()" (voted)="onVote($event)" />
+      </section>
+
+      <section class="detail__results" aria-label="Current results">
+        <app-results-bar [options]="options()" />
+      </section>
+    </div>
+  </article>
+} @else if (isLoading()) {
+  <p class="detail__loading" aria-live="polite">Loading survey…</p>
+} @else {
+  <p class="detail__not-found">Survey not found. <a routerLink="/">Back to list</a></p>
+}
