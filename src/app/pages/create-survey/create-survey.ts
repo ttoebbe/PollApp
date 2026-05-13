@@ -44,9 +44,9 @@ export class CreateSurvey {
     this.options.push(this.fb.control('', Validators.required));
   }
 
-  removeOption(i: number): void {
+  removeOption(index: number): void {
     if (this.options.length <= 2) return;
-    this.options.removeAt(i);
+    this.options.removeAt(index);
   }
 
   async submit(): Promise<void> {
@@ -57,20 +57,20 @@ export class CreateSurvey {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
     try {
-      const v = this.form.value as {
+      const formValues = this.form.value as {
         title: string;
         description: string;
         category: string;
         deadline: string;
         options: string[];
       };
-      const labels = v.options.map((o) => o.trim()).filter(Boolean);
+      const labels = formValues.options.map((label) => label.trim()).filter(Boolean);
       const survey = await this.surveyService.createSurvey(
         {
-          title: v.title.trim(),
-          description: v.description?.trim() || null,
-          category: v.category,
-          deadline: new Date(v.deadline).toISOString(),
+          title: formValues.title.trim(),
+          description: formValues.description?.trim() || null,
+          category: formValues.category,
+          deadline: new Date(formValues.deadline).toISOString(),
         },
         labels,
       );
@@ -84,8 +84,8 @@ export class CreateSurvey {
 
   /** datetime-local default: jetzt + 7 Tage, im lokalen Format */
   private defaultDeadlineLocal(): string {
-    const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const pad = (n: number) => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const deadline = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const padWithZero = (value: number) => String(value).padStart(2, '0');
+    return `${deadline.getFullYear()}-${padWithZero(deadline.getMonth() + 1)}-${padWithZero(deadline.getDate())}T${padWithZero(deadline.getHours())}:${padWithZero(deadline.getMinutes())}`;
   }
 }

@@ -49,11 +49,11 @@ export class SurveyDetail implements OnInit {
   }
 
   async onVote(optionId: string): Promise<void> {
-    const s = this.survey();
-    if (!s) return;
+    const currentSurvey = this.survey();
+    if (!currentSurvey) return;
     try {
       await this.surveyService.vote(optionId);
-      localStorage.setItem(`pollapp:voted:${s.id}`, '1');
+      localStorage.setItem(`pollapp:voted:${currentSurvey.id}`, '1');
       this.hasVoted.set(true);
     } catch {
       this.errorMessage.set('Voting failed — please try again.');

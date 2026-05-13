@@ -23,7 +23,7 @@ export class SurveyService {
 
   /** Optionen einer bestimmten Umfrage (computed view) */
   optionsFor(surveyId: string) {
-    return computed(() => this._options().filter((o) => o.survey_id === surveyId));
+    return computed(() => this._options().filter((option) => option.survey_id === surveyId));
   }
 
   /** Lädt alle Umfragen aus Supabase */
@@ -35,7 +35,7 @@ export class SurveyService {
         .select('*')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      this._surveys.set((data ?? []).map((s: Survey) => new SurveyModel(s)));
+      this._surveys.set((data ?? []).map((rawSurvey: Survey) => new SurveyModel(rawSurvey)));
     } finally {
       this._isLoading.set(false);
     }
@@ -53,12 +53,12 @@ export class SurveyService {
       if (optionsRes.error) throw optionsRes.error;
 
       const survey = new SurveyModel(surveyRes.data as Survey);
-      const options = (optionsRes.data ?? []).map((o: Option) => new OptionModel(o));
+      const options = (optionsRes.data ?? []).map((option: Option) => new OptionModel(option));
 
       // State updaten
       this._options.set(options);
       const existing = this._surveys();
-      if (!existing.find((s) => s.id === survey.id)) {
+      if (!existing.find((knownSurvey) => knownSurvey.id === survey.id)) {
         this._surveys.set([survey, ...existing]);
       }
       return survey;
@@ -81,8 +81,8 @@ export class SurveyService {
     const surveyModel = new SurveyModel(created as Survey);
 
     const rows = labels.map((label) => ({ survey_id: surveyModel.id, label }));
-    const { error: optErr } = await this.supabase.client.from('options').insert(rows);
-    if (optErr) throw optErr;
+    const { error: optionsError } = await this.supabase.client.from('options').insert(rows);
+    if (optionsError) throw optionsError;
 
     this._surveys.update((curr) => [surveyModel, ...curr]);
     return surveyModel;
@@ -95,9 +95,11 @@ export class SurveyService {
     });
     if (error) throw error;
     // lokal updaten
-    this._options.update((opts) =>
-      opts.map((o) =>
-        o.id === optionId ? new OptionModel({ ...o, vote_count: o.vote_count + 1 }) : o,
+    this._options.update((currentOptions) =>
+      currentOptions.map((option) =>
+        option.id === optionId
+          ? new OptionModel({ ...option, vote_count: option.vote_count + 1 })
+          : option,
       ),
     );
   }

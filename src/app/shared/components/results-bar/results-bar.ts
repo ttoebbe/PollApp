@@ -13,13 +13,15 @@ import { OptionModel } from '../../models/option.model';
 export class ResultsBar {
   readonly options = input.required<OptionModel[]>();
 
-  readonly totalVotes = computed(() => this.options().reduce((sum, o) => sum + o.vote_count, 0));
+  readonly totalVotes = computed(() =>
+    this.options().reduce((total, option) => total + option.vote_count, 0),
+  );
 
-  letter(i: number): string {
-    return OptionModel.letter(i);
+  letter(index: number): string {
+    return OptionModel.letter(index);
   }
 
-  percentage(o: OptionModel): number {
-    return o.getPercentage(this.totalVotes());
+  percentage(option: OptionModel): number {
+    return option.getPercentage(this.totalVotes());
   }
 }

@@ -17,8 +17,8 @@ export class VoteOptions {
 
   readonly selectedId = signal<string | null>(null);
 
-  letter(i: number): string {
-    return OptionModel.letter(i);
+  letter(index: number): string {
+    return OptionModel.letter(index);
   }
 
   select(id: string): void {

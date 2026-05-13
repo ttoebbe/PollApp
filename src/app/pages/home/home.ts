@@ -22,20 +22,20 @@ export class Home implements OnInit {
 
   readonly activeSurveys = computed(() =>
     this.surveys()
-      .filter((s) => s.isActive())
-      .sort((a, b) => this.byDeadlineAsc(a, b)),
+      .filter((survey) => survey.isActive())
+      .sort((first, second) => this.byDeadlineAsc(first, second)),
   );
 
   readonly pastSurveys = computed(() =>
     this.surveys()
-      .filter((s) => !s.isActive())
-      .sort((a, b) => this.byDeadlineAsc(b, a)),
+      .filter((survey) => !survey.isActive())
+      .sort((first, second) => this.byDeadlineAsc(second, first)),
   );
 
   /** Bald endende Umfragen (≤ 48h), chronologisch sortiert (US1) */
   readonly urgentSurveys = computed(() =>
     this.activeSurveys()
-      .filter((s) => s.isUrgent())
+      .filter((survey) => survey.isUrgent())
       .slice(0, 3),
   );
 
@@ -48,10 +48,13 @@ export class Home implements OnInit {
   }
 
   /** Sortiert Umfragen aufsteigend nach Deadline (kein Deadline ⇒ ans Ende) */
-  private byDeadlineAsc(a: { deadline: string | null }, b: { deadline: string | null }): number {
-    if (!a.deadline && !b.deadline) return 0;
-    if (!a.deadline) return 1;
-    if (!b.deadline) return -1;
-    return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+  private byDeadlineAsc(
+    first: { deadline: string | null },
+    second: { deadline: string | null },
+  ): number {
+    if (!first.deadline && !second.deadline) return 0;
+    if (!first.deadline) return 1;
+    if (!second.deadline) return -1;
+    return new Date(first.deadline).getTime() - new Date(second.deadline).getTime();
   }
 }
