@@ -59,6 +59,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/angular-projects/PollApp/",
               "budgets": [
                 {
                   "type": "initial",
