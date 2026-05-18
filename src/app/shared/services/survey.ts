@@ -41,18 +41,26 @@ export class SurveyService {
     }
   }
 
-  /** Lädt eine einzelne Umfrage + zugehörige Optionen */
-  async loadSurveyWithOptions(id: string): Promise<SurveyModel | null> {
+  /** Lädt eine einzelne Umfrage + zugehörige Optionen anhand der fortlaufenden Nummer */
+  async loadSurveyWithOptions(surveyNumber: number): Promise<SurveyModel | null> {
     this._isLoading.set(true);
     try {
-      const [surveyRes, optionsRes] = await Promise.all([
-        this.supabase.client.from('surveys').select('*').eq('id', id).single(),
-        this.supabase.client.from('options').select('*').eq('survey_id', id).order('created_at'),
-      ]);
+      const surveyRes = await this.supabase.client
+        .from('surveys')
+        .select('*')
+        .eq('survey_number', surveyNumber)
+        .single();
       if (surveyRes.error) throw surveyRes.error;
-      if (optionsRes.error) throw optionsRes.error;
 
       const survey = new SurveyModel(surveyRes.data as Survey);
+
+      const optionsRes = await this.supabase.client
+        .from('options')
+        .select('*')
+        .eq('survey_id', survey.id)
+        .order('created_at');
+      if (optionsRes.error) throw optionsRes.error;
+
       const options = (optionsRes.data ?? []).map((option: Option) => new OptionModel(option));
 
       // State updaten
@@ -69,7 +77,7 @@ export class SurveyService {
 
   /** Erstellt neue Umfrage inkl. Optionen */
   async createSurvey(
-    survey: Omit<Survey, 'id' | 'created_at'>,
+    survey: Omit<Survey, 'id' | 'survey_number' | 'created_at'>,
     labels: string[],
   ): Promise<SurveyModel> {
     const { data: created, error } = await this.supabase.client

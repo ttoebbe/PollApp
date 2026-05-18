@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
 import { SurveyService } from '../../shared/services/survey';
 import { UrgentSurveys } from '../../shared/components/urgent-surveys/urgent-surveys';
 import { SurveyCard } from '../../shared/components/survey-card/survey-card';
@@ -7,7 +8,7 @@ import { SurveyCard } from '../../shared/components/survey-card/survey-card';
 /** Startseite: Hero + "Your surveys" Highlights + Active/Past Liste. */
 @Component({
   selector: 'app-home',
-  imports: [UrgentSurveys, SurveyCard, RouterLink],
+  imports: [UrgentSurveys, SurveyCard, RouterLink, NgOptimizedImage],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

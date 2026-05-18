@@ -74,7 +74,7 @@ export class CreateSurvey {
         },
         labels,
       );
-      this.router.navigate(['/survey', survey.id]);
+      this.router.navigate(['/survey', survey.survey_number]);
     } catch {
       this.errorMessage.set('Saving failed — please try again.');
     } finally {

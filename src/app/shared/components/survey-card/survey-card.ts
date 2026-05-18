@@ -1,5 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgTemplateOutlet } from '@angular/common';
 import { SurveyModel } from '../../models/survey.model';
 
 /**
@@ -9,7 +10,7 @@ import { SurveyModel } from '../../models/survey.model';
  */
 @Component({
   selector: 'app-survey-card',
-  imports: [RouterLink],
+  imports: [RouterLink, NgTemplateOutlet],
   templateUrl: './survey-card.html',
   styleUrl: './survey-card.scss',
 })

@@ -28,21 +28,22 @@ export class SurveyDetail implements OnInit {
   readonly options = this.surveyService.optionsFor('');
 
   async ngOnInit(): Promise<void> {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (!id) {
+    const raw = this.route.snapshot.paramMap.get('number');
+    const surveyNumber = raw ? parseInt(raw, 10) : NaN;
+    if (isNaN(surveyNumber)) {
       this.router.navigate(['/']);
       return;
     }
     try {
-      const survey = await this.surveyService.loadSurveyWithOptions(id);
+      const survey = await this.surveyService.loadSurveyWithOptions(surveyNumber);
       this.survey.set(survey);
-      // Optionen anhand der ID neu binden
+      // Optionen anhand der UUID neu binden (FK bleibt UUID)
       Object.defineProperty(this, 'options', {
-        value: this.surveyService.optionsFor(id),
+        value: this.surveyService.optionsFor(survey!.id),
         writable: false,
       });
-      // localStorage-Check: bereits abgestimmt?
-      this.hasVoted.set(localStorage.getItem(`pollapp:voted:${id}`) === '1');
+      // localStorage-Check: UUID als stabiler Schlüssel
+      this.hasVoted.set(localStorage.getItem(`pollapp:voted:${survey!.id}`) === '1');
     } catch {
       this.errorMessage.set('Survey not found.');
     }

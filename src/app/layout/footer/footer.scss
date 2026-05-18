@@ -8,12 +8,32 @@
     max-width: a.$container-max;
     margin-inline: auto;
     padding: a.$space-6 a.$space-7;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: a.$space-5;
+
+    @media (max-width: a.$breakpoint-mobile) {
+      flex-direction: column;
+      gap: a.$space-2;
+      padding-inline: a.$space-4;
+    }
   }
 
   &__text {
     font-family: a.$font-family-base;
     font-size: a.$fs-body-sm;
     color: rgb(255 255 255 / 0.5);
+  }
+
+  &__link {
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-sm;
+    color: rgb(255 255 255 / 0.5);
+    text-decoration: none;
+
+    &:hover {
+      color: a.$color-orange-light;
+    }
   }
 }

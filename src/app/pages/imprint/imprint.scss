@@ -1,0 +1,68 @@
+@use '../../../styles/abstracts' as a;
+
+:host {
+  display: block;
+}
+
+.imprint {
+  max-width: a.$container-max;
+  margin-inline: auto;
+  padding: a.$space-7;
+  display: flex;
+  flex-direction: column;
+  gap: a.$space-7;
+
+  @media (max-width: a.$breakpoint-mobile) {
+    padding-inline: a.$space-4;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-1;
+    color: a.$color-orange-light;
+    font-family: a.$font-family-base;
+    font-weight: a.$font-weight-medium;
+    text-decoration: none;
+    width: fit-content;
+
+    &:hover {
+      color: a.$color-orange;
+    }
+  }
+
+  &__title {
+    font-family: a.$font-family-display;
+    font-size: clamp(40px, 5vw, a.$fs-page-title);
+    line-height: 1;
+    color: a.$color-orange;
+    margin: 0;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-5;
+    background: a.$color-surface-overlay-dark;
+    border-radius: a.$radius-card-detail;
+    padding: a.$space-7 a.$space-8;
+
+    @media (max-width: a.$breakpoint-mobile) {
+      padding: a.$space-5;
+      border-radius: a.$radius-md;
+    }
+  }
+
+  &__text {
+    margin: 0;
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-lg;
+    line-height: 1.6;
+    color: a.$color-text-on-dark;
+
+    strong {
+      color: a.$color-orange-light;
+      font-weight: a.$font-weight-bold;
+    }
+  }
+}

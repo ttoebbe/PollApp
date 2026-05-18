@@ -3,6 +3,7 @@ import type { Survey } from '../interfaces/survey.interface';
 /** Modell für eine Umfrage — kapselt Daten und Hilfsmethoden */
 export class SurveyModel implements Survey {
   id: string;
+  survey_number: number;
   title: string;
   description: string | null;
   category: string | null;
@@ -11,6 +12,7 @@ export class SurveyModel implements Survey {
 
   constructor(data: Survey) {
     this.id = data.id;
+    this.survey_number = data.survey_number;
     this.title = data.title;
     this.description = data.description;
     this.category = data.category ?? null;
@@ -18,8 +20,8 @@ export class SurveyModel implements Survey {
     this.created_at = data.created_at;
   }
 
-  /** Gibt ein Objekt ohne 'id' / 'created_at' zurück — für Supabase INSERT */
-  getCleanAddJson(): Omit<Survey, 'id' | 'created_at'> {
+  /** Gibt ein Objekt ohne 'id' / 'survey_number' / 'created_at' zurück — für Supabase INSERT */
+  getCleanAddJson(): Omit<Survey, 'id' | 'survey_number' | 'created_at'> {
     return {
       title: this.title,
       description: this.description,

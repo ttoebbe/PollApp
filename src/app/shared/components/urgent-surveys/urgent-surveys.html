@@ -6,7 +6,7 @@
       <li class="ending-soon__cell">
         <a
           class="hl-card"
-          [routerLink]="['/survey', survey.id]"
+          [routerLink]="['/survey', survey.survey_number]"
           [attr.aria-label]="'Open survey ' + survey.title"
         >
           <span class="hl-card__meta">{{ survey.category ?? 'General' }}</span>
