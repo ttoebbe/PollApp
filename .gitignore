@@ -1,47 +1,42 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
+# Kompilierte Ausgabe
 /dist
 /tmp
 /out-tsc
-/bazel-out
 
-# Node
+# Abhängigkeiten
 /node_modules
-npm-debug.log
-yarn-error.log
 
-# IDEs and editors
+# Logs
+npm-debug.log*
+yarn-error.log*
+
+# Angular-Cache
+/.angular/cache
+
+# Tests & Coverage
+/coverage
+__screenshots__/
+
+# Editoren & IDEs
 .idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
+*.iml
 *.sublime-workspace
 
-# Visual Studio Code
+# Visual Studio Code — Projekteinstellungen werden geteilt, Workspace-spezifisches nicht
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/mcp.json
-.history/*
+.history/
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
-
-# System files
+# Betriebssystem-Dateien
 .DS_Store
 Thumbs.db
+Desktop.ini
 
-# Supabase-Zugangsdaten (niemals committen)
+# Supabase-Zugangsdaten — niemals committen
 src/environments/environment.ts
+.env
+.env*.local
