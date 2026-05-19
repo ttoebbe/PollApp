@@ -1,4 +1,4 @@
-// ─── Design-Tokens: Farben ────────────────────────────────────────────────────
+
 $color-primary: #5b5ef4;
 $color-primary-dark: #4547c2;
 $color-accent: #f4a25b;
@@ -12,23 +12,21 @@ $color-border: #e0e0ec;
 $color-text: #1a1a2e;
 $color-text-muted: #6b6b8a;
 
-// ─── Design-Tokens: Abstände ──────────────────────────────────────────────────
-$space-1: 0.25rem; //  4px
-$space-2: 0.5rem; //  8px
-$space-3: 0.75rem; // 12px
-$space-4: 1rem; // 16px
-$space-5: 1.5rem; // 24px
-$space-6: 2rem; // 32px
-$space-8: 3rem; // 48px
+$space-1: 0.25rem; 
+$space-2: 0.5rem; 
+$space-3: 0.75rem; 
+$space-4: 1rem; 
+$space-5: 1.5rem; 
+$space-6: 2rem; 
+$space-8: 3rem; 
 
-// ─── Design-Tokens: Typografie ────────────────────────────────────────────────
 $font-family-base:
   'Inter',
   system-ui,
   -apple-system,
   sans-serif;
-$font-size-base: 1rem; // 16px Minimum
-$font-size-sm: 1rem; // 16px (kein Wert kleiner als 16px)
+$font-size-base: 1rem; 
+$font-size-sm: 1rem; 
 $font-size-lg: 1.25rem;
 $font-size-xl: 1.5rem;
 $font-size-2xl: 2rem;
@@ -37,18 +35,15 @@ $font-weight-medium: 500;
 $font-weight-bold: 700;
 $line-height-base: 1.5;
 
-// ─── Design-Tokens: Border-Radius ─────────────────────────────────────────────
 $radius-sm: 4px;
 $radius-md: 8px;
 $radius-lg: 16px;
 $radius-full: 9999px;
 
-// ─── Design-Tokens: Schatten ──────────────────────────────────────────────────
 $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
 $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
 $shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
 
-// ─── Breakpoints ──────────────────────────────────────────────────────────────
 $breakpoints: (
   'sm': 480px,
   'md': 768px,

@@ -1,10 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { OptionModel } from '../../models/option.model';
 
-/**
- * Ergebnis-Anzeige mit horizontalen Balken (Frame398 aus Figma).
- * Zeigt jede Option mit Label + Prozent-Balken + Live-Stimmenzahl.
- */
 @Component({
   selector: 'app-results-bar',
   templateUrl: './results-bar.html',

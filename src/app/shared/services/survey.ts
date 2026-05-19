@@ -5,10 +5,6 @@ import { OptionModel } from '../models/option.model';
 import type { Survey } from '../interfaces/survey.interface';
 import type { Option } from '../interfaces/option.interface';
 
-/**
- * Verwaltet Umfragen + Optionen + Stimmen (Supabase-Backend).
- * Signals-basierte State-Verwaltung: surveys(), options(), isLoading().
- */
 @Injectable({ providedIn: 'root' })
 export class SurveyService {
   private readonly supabase = inject(SupabaseService);
@@ -21,12 +17,10 @@ export class SurveyService {
   readonly options = this._options.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
 
-  /** Optionen einer bestimmten Umfrage (computed view) */
   optionsFor(surveyId: string) {
     return computed(() => this._options().filter((option) => option.survey_id === surveyId));
   }
 
-  /** Lädt alle Umfragen aus Supabase */
   async loadSurveys(): Promise<void> {
     this._isLoading.set(true);
     try {
@@ -41,7 +35,6 @@ export class SurveyService {
     }
   }
 
-  /** Lädt eine einzelne Umfrage + zugehörige Optionen anhand der fortlaufenden Nummer */
   async loadSurveyWithOptions(surveyNumber: number): Promise<SurveyModel | null> {
     this._isLoading.set(true);
     try {
@@ -63,7 +56,6 @@ export class SurveyService {
 
       const options = (optionsRes.data ?? []).map((option: Option) => new OptionModel(option));
 
-      // State updaten
       this._options.set(options);
       const existing = this._surveys();
       if (!existing.find((knownSurvey) => knownSurvey.id === survey.id)) {
@@ -75,7 +67,6 @@ export class SurveyService {
     }
   }
 
-  /** Erstellt neue Umfrage inkl. Optionen */
   async createSurvey(
     survey: Omit<Survey, 'id' | 'survey_number' | 'created_at'>,
     labels: string[],
@@ -96,13 +87,12 @@ export class SurveyService {
     return surveyModel;
   }
 
-  /** Stimmen für eine Option (transactional via RPC — siehe Migration) */
   async vote(optionId: string): Promise<void> {
     const { error } = await this.supabase.client.rpc('increment_vote', {
       option_id: optionId,
     });
     if (error) throw error;
-    // lokal updaten
+    
     this._options.update((currentOptions) =>
       currentOptions.map((option) =>
         option.id === optionId

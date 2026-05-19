@@ -30,7 +30,6 @@
   }
 }
 
-// ─── Hero ────────────────────────────────────────────────────────────────────
 .hero {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
@@ -112,7 +111,6 @@
   }
 }
 
-// ─── Highlights ──────────────────────────────────────────────────────────────
 .highlights {
   display: flex;
   flex-direction: column;
@@ -130,7 +128,6 @@
   }
 }
 
-// ─── Surveys-Liste ───────────────────────────────────────────────────────────
 .surveys {
   display: flex;
   flex-direction: column;
@@ -173,7 +170,6 @@
   }
 }
 
-// Underline-Tabs (wie Figma: Text + farbiger Underbar)
 .tab {
   position: relative;
   padding: a.$space-1 0 a.$space-2;

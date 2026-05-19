@@ -5,10 +5,6 @@ import { SurveyModel } from '../../shared/models/survey.model';
 import { VoteOptions } from '../../shared/components/vote-options/vote-options';
 import { ResultsBar } from '../../shared/components/results-bar/results-bar';
 
-/**
- * Detail-View einer Umfrage (US4 + US5).
- * Layout: Voting-Karte links, Results-Karte rechts (Desktop) — stackt mobil.
- */
 @Component({
   selector: 'app-survey-detail',
   imports: [VoteOptions, ResultsBar, RouterLink],
@@ -24,7 +20,6 @@ export class SurveyDetail implements OnInit {
   readonly hasVoted = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  /** Computed-View auf Optionen für die aktuelle Umfrage */
   readonly options = this.surveyService.optionsFor('');
 
   async ngOnInit(): Promise<void> {
@@ -37,12 +32,12 @@ export class SurveyDetail implements OnInit {
     try {
       const survey = await this.surveyService.loadSurveyWithOptions(surveyNumber);
       this.survey.set(survey);
-      // Optionen anhand der UUID neu binden (FK bleibt UUID)
+      
       Object.defineProperty(this, 'options', {
         value: this.surveyService.optionsFor(survey!.id),
         writable: false,
       });
-      // localStorage-Check: UUID als stabiler Schlüssel
+      
       this.hasVoted.set(localStorage.getItem(`pollapp:voted:${survey!.id}`) === '1');
     } catch {
       this.errorMessage.set('Survey not found.');

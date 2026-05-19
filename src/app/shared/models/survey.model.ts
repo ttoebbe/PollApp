@@ -1,6 +1,5 @@
 import type { Survey } from '../interfaces/survey.interface';
 
-/** Modell für eine Umfrage — kapselt Daten und Hilfsmethoden */
 export class SurveyModel implements Survey {
   id: string;
   survey_number: number;
@@ -20,7 +19,6 @@ export class SurveyModel implements Survey {
     this.created_at = data.created_at;
   }
 
-  /** Gibt ein Objekt ohne 'id' / 'survey_number' / 'created_at' zurück — für Supabase INSERT */
   getCleanAddJson(): Omit<Survey, 'id' | 'survey_number' | 'created_at'> {
     return {
       title: this.title,
@@ -30,23 +28,17 @@ export class SurveyModel implements Survey {
     };
   }
 
-  /** True, wenn die Deadline noch in der Zukunft liegt (oder fehlt) */
   isActive(): boolean {
     if (!this.deadline) return true;
     return new Date(this.deadline) > new Date();
   }
 
-  /** True, wenn die Deadline innerhalb der nächsten 48 Stunden endet */
   isUrgent(): boolean {
     if (!this.deadline) return false;
     const hoursLeft = (new Date(this.deadline).getTime() - Date.now()) / 36e5;
     return hoursLeft > 0 && hoursLeft <= 48;
   }
 
-  /**
-   * Liefert einen kurzen, menschen­lesbaren Hinweis bis zum Ende.
-   * Beispiele: "Ends in 5h", "Ends in 1 Day", "Ends in 12 Days", "Ended"
-   */
   endsInLabel(): string {
     if (!this.deadline) return 'No deadline';
     const ms = new Date(this.deadline).getTime() - Date.now();

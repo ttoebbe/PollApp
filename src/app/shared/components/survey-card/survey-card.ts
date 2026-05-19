@@ -3,11 +3,6 @@ import { RouterLink } from '@angular/router';
 import { NgTemplateOutlet } from '@angular/common';
 import { SurveyModel } from '../../models/survey.model';
 
-/**
- * Listen-Eintrag einer Umfrage auf dem Homescreen (Active/Past Tab).
- * Dunkles, halb-transparentes Card-Layout mit asymmetrischem Radius (5/50/5/5).
- * Past-Surveys werden als <article> (nicht klickbar) gerendert.
- */
 @Component({
   selector: 'app-survey-card',
   imports: [RouterLink, NgTemplateOutlet],

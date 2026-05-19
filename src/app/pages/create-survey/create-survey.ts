@@ -4,11 +4,6 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { SurveyService } from '../../shared/services/survey';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
 
-/**
- * Create-Survey-Seite (US3).
- * Eigenständige Route, visuell ans Figma angelehnt (helle Karte mit
- * asymmetrischem Radius, Form auf dunklem Inner-Container).
- */
 @Component({
   selector: 'app-create-survey',
   imports: [ReactiveFormsModule, RouterLink],
@@ -82,7 +77,6 @@ export class CreateSurvey {
     }
   }
 
-  /** datetime-local default: jetzt + 7 Tage, im lokalen Format */
   private defaultDeadlineLocal(): string {
     const deadline = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const padWithZero = (value: number) => String(value).padStart(2, '0');

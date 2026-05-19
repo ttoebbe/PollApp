@@ -1,43 +1,31 @@
-// ─── Poll App — Design Tokens ────────────────────────────────────────────────
-// Generiert aus dem Figma-Design (Poll App Design.fig).
-// Alle Farben, Schriften, Radien etc. wurden 1:1 aus den Design-Frames übernommen.
 
-// ─── Farben ──────────────────────────────────────────────────────────────────
-// Brand
-$color-bg-dark: rgb(53 39 58); // #35273A — Haupt-Hintergrund (Home)
-$color-bg-light: rgb(254 253 255); // #FEFDFF — heller Hintergrund (Create-Survey)
-$color-surface-card: rgb(250 245 254); // #FAF5FE — helle Karte (Highlights)
-$color-surface-overlay-dark: rgb(217 217 217 / 0.08); // Listen-Item auf dunkel
-$color-surface-overlay-light: rgb(142 112 153 / 0.16); // Form-Container auf hell
-$color-surface-result-card: rgb(142 112 153 / 0.1); // Single-View Karte
+$color-bg-dark: rgb(53 39 58); 
+$color-bg-light: rgb(254 253 255); 
+$color-surface-card: rgb(250 245 254); 
+$color-surface-overlay-dark: rgb(217 217 217 / 0.08); 
+$color-surface-overlay-light: rgb(142 112 153 / 0.16); 
+$color-surface-result-card: rgb(142 112 153 / 0.1); 
 
-// Akzente (Orange-Palette)
-$color-orange: rgb(255 183 112); // #FFB770 — primärer Akzent (Logo, Tabs, Bars)
-$color-orange-light: rgb(255 207 161); // #FFCFA1 — CTA-Button-Background, Listen-Highlight
-$color-orange-pale: rgb(254 233 212); // #FEE9D4 — inaktiver Status, Tab-inactive
-$color-orange-deep: rgb(238 146 54); // #EE9236 — Headlines auf hell, "Create new survey"
-$color-orange-text: rgb(215 148 81); // #D79451 — Kategorie-Texte
+$color-orange: rgb(255 183 112); 
+$color-orange-light: rgb(255 207 161); 
+$color-orange-pale: rgb(254 233 212); 
+$color-orange-deep: rgb(238 146 54); 
+$color-orange-text: rgb(215 148 81); 
 
-// Neutrals
-$color-text-dark: rgb(34 18 39); // #221227 — primärer Text
-$color-text-muted: rgb(53 39 58); // #35273A — sekundärer Text auf hell
-$color-text-on-dark: rgb(254 253 255); // weiß auf dunklem Background
+$color-text-dark: rgb(34 18 39); 
+$color-text-muted: rgb(53 39 58); 
+$color-text-on-dark: rgb(254 253 255); 
 $color-white: rgb(255 255 255);
-$color-purple-soft: rgb(108 86 144); // dezentes Lila
-$color-purple-deep: rgb(41 6 87); // tiefes Lila (im Logo)
-$color-gray-track: rgb(237 237 237); // Hintergrund Result-Bar
+$color-purple-soft: rgb(108 86 144); 
+$color-purple-deep: rgb(41 6 87); 
+$color-gray-track: rgb(237 237 237); 
 $color-divider: rgb(217 217 217 / 0.2);
 
-// Semantic
 $color-primary: $color-orange;
 $color-bg: $color-bg-dark;
 $color-text: $color-text-on-dark;
 $color-danger: rgb(220 80 80);
 
-// ─── Schriften ───────────────────────────────────────────────────────────────
-// "Nerko One" für Headlines (Hero, Section-Titel, Survey-Titel auf Highlights)
-// "Mulish" für UI/Body
-// "Nokora" wird im Figma für Buttons genutzt → wir nehmen Mulish 700 als Fallback
 $font-family-base: 'Mulish', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $font-family-display: 'Nerko One', 'Mulish', cursive;
 $font-family-button: 'Mulish', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -51,33 +39,30 @@ $font-weight-extra: 800;
 $font-size-base: 16px;
 $line-height-base: 1.4;
 
-// Type-Scale (aus Figma)
-$fs-hero: 100px; // "Collect Feedback, Unlock Ideas"
-$fs-hero-sub: 24px; // Hero-Subline
-$fs-section: 72px; // "Your surveys"
-$fs-page-title: 56px; // "Create new survey"
-$fs-survey-title-lg: 48px; // Detail-Headline
-$fs-survey-title-card: 26px; // Highlights-Card-Titel
-$fs-survey-title-list: 24px; // Listen-Item-Titel
-$fs-section-label: 32px; // "Ending soon surveys"
+$fs-hero: 100px; 
+$fs-hero-sub: 24px; 
+$fs-section: 72px; 
+$fs-page-title: 56px; 
+$fs-survey-title-lg: 48px; 
+$fs-survey-title-card: 26px; 
+$fs-survey-title-list: 24px; 
+$fs-section-label: 32px; 
 $fs-body-lg: 18px;
 $fs-body: 16px;
 $fs-body-sm: 14px;
 $fs-tag: 12px;
 
-// ─── Radien (Figma-Signature: asymmetrisch oben-rechts) ─────────────────────
 $radius-sm: 5px;
 $radius-md: 10px;
 $radius-pill: 20px;
-$radius-card-list: 5px 50px 5px 5px; // Listen-Item
-$radius-card-hl: 0 80px 0 0; // Highlights-Card
-$radius-card-detail: 0 100px 0 0; // Detail Survey-Card
-$radius-card-form: 5px 100px 5px 5px; // Create-Survey Außenkarte
-$radius-card-form-inner: 5px 80px 5px 5px; // Create-Survey Form-Container
-$radius-input: 5px 20px 5px 5px; // Inputs / Answer-Pills
-$radius-tag: 0 14px 0 0; // Status-/End-Date-Pills
+$radius-card-list: 5px 50px 5px 5px; 
+$radius-card-hl: 0 80px 0 0; 
+$radius-card-detail: 0 100px 0 0; 
+$radius-card-form: 5px 100px 5px 5px; 
+$radius-card-form-inner: 5px 80px 5px 5px; 
+$radius-input: 5px 20px 5px 5px; 
+$radius-tag: 0 14px 0 0; 
 
-// ─── Spacing ─────────────────────────────────────────────────────────────────
 $space-1: 4px;
 $space-2: 8px;
 $space-3: 12px;
@@ -90,13 +75,11 @@ $space-9: 56px;
 $space-10: 64px;
 $space-12: 80px;
 
-// ─── Layout ──────────────────────────────────────────────────────────────────
-$container-max: 1218px; // Figma-Hauptcontainer 1440 - 2×111
+$container-max: 1218px; 
 $header-height: 86px;
 $breakpoint-mobile: 600px;
 $breakpoint-tablet: 900px;
 $breakpoint-desktop: 1100px;
 
-// ─── Schatten ────────────────────────────────────────────────────────────────
 $shadow-card: 0 4px 4px rgb(0 0 0 / 0.25);
 $shadow-soft: 0 4px 12px rgb(0 0 0 / 0.15);

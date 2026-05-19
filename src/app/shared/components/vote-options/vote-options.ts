@@ -1,10 +1,6 @@
 import { Component, input, output, signal } from '@angular/core';
 import { OptionModel } from '../../models/option.model';
 
-/**
- * Antwort-Pills im Detail-View (Property1Default9 aus Figma).
- * Single-Choice: User wählt eine Option, drückt "Submit" → emit vote.
- */
 @Component({
   selector: 'app-vote-options',
   templateUrl: './vote-options.html',

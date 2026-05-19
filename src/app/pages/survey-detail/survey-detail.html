@@ -31,7 +31,7 @@
     </header>
 
     <div class="detail__grid">
-      <!-- Voting-Karte -->
+      
       <section class="card card--vote" aria-labelledby="vote-heading">
         <h2 id="vote-heading" class="card__title">Cast your vote</h2>
         @if (hasVoted()) {
@@ -49,7 +49,6 @@
         ></app-vote-options>
       </section>
 
-      <!-- Results-Karte -->
       <section class="card card--results" aria-labelledby="results-heading">
         <h2 id="results-heading" class="card__title">Survey results</h2>
         <app-results-bar [options]="options()"></app-results-bar>

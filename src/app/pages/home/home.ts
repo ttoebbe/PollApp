@@ -5,7 +5,6 @@ import { SurveyService } from '../../shared/services/survey';
 import { UrgentSurveys } from '../../shared/components/urgent-surveys/urgent-surveys';
 import { SurveyCard } from '../../shared/components/survey-card/survey-card';
 
-/** Startseite: Hero + "Your surveys" Highlights + Active/Past Liste. */
 @Component({
   selector: 'app-home',
   imports: [UrgentSurveys, SurveyCard, RouterLink, NgOptimizedImage],
@@ -18,7 +17,6 @@ export class Home implements OnInit {
   readonly surveys = this.surveyService.surveys;
   readonly isLoading = this.surveyService.isLoading;
 
-  /** Tabs: 'active' | 'past' (US2) */
   readonly activeTab = signal<'active' | 'past'>('active');
 
   readonly activeSurveys = computed(() =>
@@ -33,7 +31,6 @@ export class Home implements OnInit {
       .sort((first, second) => this.byDeadlineAsc(second, first)),
   );
 
-  /** Bald endende Umfragen (≤ 48h), chronologisch sortiert (US1) */
   readonly urgentSurveys = computed(() =>
     this.activeSurveys()
       .filter((survey) => survey.isUrgent())
@@ -48,7 +45,6 @@ export class Home implements OnInit {
     this.activeTab.set(tab);
   }
 
-  /** Sortiert Umfragen aufsteigend nach Deadline (kein Deadline ⇒ ans Ende) */
   private byDeadlineAsc(
     first: { deadline: string | null },
     second: { deadline: string | null },
