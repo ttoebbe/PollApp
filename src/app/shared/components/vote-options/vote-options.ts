@@ -1,33 +1,47 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal } from '@angular/core';
 import { OptionModel } from '../../models/option.model';
 
 @Component({
   selector: 'app-vote-options',
   templateUrl: './vote-options.html',
   styleUrl: './vote-options.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VoteOptions {
   readonly options = input.required<OptionModel[]>();
   readonly disabled = input(false);
-  readonly vote = output<string>();
-  readonly selectionChange = output<string | null>();
+  readonly allowMultiple = input(false);
 
-  readonly selectedId = signal<string | null>(null);
+  /** Gibt die aktuell ausgewählten Option-IDs zurück */
+  readonly selectionChange = output<string[]>();
+
+  readonly selectedIds = signal<Set<string>>(new Set());
 
   letter(index: number): string {
     return OptionModel.letter(index);
   }
 
-  select(id: string): void {
-    if (this.disabled()) return;
-    this.selectedId.set(id);
-    this.selectionChange.emit(id);
+  isSelected(id: string): boolean {
+    return this.selectedIds().has(id);
   }
 
-  submit(): void {
-    const id = this.selectedId();
-    if (!id || this.disabled()) return;
-    this.vote.emit(id);
-    this.selectedId.set(null);
+  select(id: string): void {
+    if (this.disabled()) return;
+
+    if (this.allowMultiple()) {
+      this.selectedIds.update((current) => {
+        const next = new Set(current);
+        if (next.has(id)) {
+          next.delete(id);
+        } else {
+          next.add(id);
+        }
+        return next;
+      });
+    } else {
+      this.selectedIds.set(new Set([id]));
+    }
+
+    this.selectionChange.emit([...this.selectedIds()]);
   }
 }

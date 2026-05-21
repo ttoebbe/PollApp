@@ -7,33 +7,18 @@
 .create {
   max-width: a.$container-max;
   margin-inline: auto;
-  padding: a.$space-7;
-  display: flex;
-  flex-direction: column;
-  gap: a.$space-5;
+  padding: a.$space-7 a.$space-7 a.$space-12;
 
-  @media (max-width: a.$breakpoint-mobile) {
-    padding: a.$space-5 a.$space-4;
-  }
-
-  &__back {
-    display: inline-flex;
-    align-items: center;
-    gap: a.$space-1;
-    color: a.$color-orange-light;
-    text-decoration: none;
-    width: fit-content;
-    font-weight: a.$font-weight-medium;
-    &:hover {
-      color: a.$color-orange;
-    }
+  @media (max-width: a.$breakpoint-tablet) {
+    padding: a.$space-5 a.$space-4 a.$space-8;
   }
 
   &__card {
-    background: a.$color-bg-light;
+    background: a.$color-surface-overlay-dark;
+    border: 1px solid a.$color-divider;
     border-radius: a.$radius-card-form;
-    padding: a.$space-8 a.$space-9 a.$space-9;
-    color: a.$color-text-dark;
+    padding: a.$space-8;
+    color: a.$color-text-on-dark;
 
     @media (max-width: a.$breakpoint-tablet) {
       padding: a.$space-6 a.$space-5;
@@ -42,64 +27,116 @@
   }
 
   &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: a.$space-4;
     margin-bottom: a.$space-7;
+  }
+
+  &__header-left {
     display: flex;
     flex-direction: column;
     gap: a.$space-2;
   }
 
+  &__badge {
+    display: inline-block;
+    padding: a.$space-1 a.$space-3;
+    background: a.$color-orange-pale;
+    color: a.$color-orange-text;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-bold;
+    border-radius: a.$radius-tag;
+    width: fit-content;
+  }
+
   &__title {
     font-family: a.$font-family-display;
-    font-size: clamp(40px, 5vw, a.$fs-page-title);
-    color: a.$color-orange-deep;
-    line-height: 1;
+    font-size: clamp(32px, 5vw, 56px);
+    color: a.$color-orange;
+    line-height: 1.1;
     margin: 0;
   }
 
-  &__lede {
-    margin: 0;
-    color: a.$color-text-muted;
-    font-size: a.$fs-body-lg;
+  &__cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-2;
+    padding: 10px 18px;
+    background: rgb(255 255 255 / 0.08);
+    border: 1px solid a.$color-divider;
+    border-radius: a.$radius-md;
+    color: a.$color-text-on-dark;
+    font-size: a.$fs-body;
+    font-weight: a.$font-weight-semi;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: rgb(255 255 255 / 0.14);
+    }
   }
 }
+
+// ─── Formular ────────────────────────────────────────────────────────────────
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: a.$space-5;
+  gap: a.$space-6;
 
-  &__row {
+  &__top-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: a.$space-4;
+    gap: a.$space-5;
+
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: 1fr;
     }
+  }
+
+  &__meta-row {
+    display: flex;
+    align-items: flex-end;
+    gap: a.$space-5;
+    flex-wrap: wrap;
   }
 
   &__field {
     display: flex;
     flex-direction: column;
-    gap: a.$space-1;
+    gap: a.$space-2;
 
     label {
-      font-family: a.$font-family-base;
       font-weight: a.$font-weight-bold;
-      color: a.$color-text-muted;
       font-size: a.$fs-body-sm;
-      letter-spacing: 0.02em;
+      color: a.$color-text-on-dark;
     }
+  }
+
+  &__hint {
+    font-weight: a.$font-weight-regular;
+    opacity: 0.6;
+  }
+
+  // Eingabefeld mit optionalem Clear-Button
+  &__input-wrap {
+    position: relative;
+    display: flex;
+
     input,
-    select,
-    textarea {
+    textarea,
+    select {
       width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid rgb(53 39 58 / 0.15);
+      padding: 10px 14px;
+      background: a.$color-white;
+      border: 1.5px solid transparent;
       border-radius: a.$radius-input;
       font-family: a.$font-family-base;
-      font-size: a.$fs-body-lg;
+      font-size: a.$fs-body;
       color: a.$color-text-dark;
-      background: a.$color-white;
       transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease;
@@ -107,178 +144,308 @@
       &:focus {
         outline: none;
         border-color: a.$color-orange;
-        box-shadow: 0 0 0 3px rgb(255 183 112 / 0.25);
+        box-shadow: 0 0 0 3px rgb(255 183 112 / 0.3);
       }
+
+      &::placeholder {
+        color: rgb(53 39 58 / 0.4);
+      }
+
       &.ng-touched.ng-invalid {
         border-color: a.$color-danger;
         box-shadow: 0 0 0 3px rgb(220 80 80 / 0.15);
       }
-      &::placeholder {
-        color: rgb(53 39 58 / 0.4);
-      }
     }
+
     textarea {
       resize: vertical;
-      min-height: 80px;
-      font-family: a.$font-family-base;
+      min-height: 100px;
     }
   }
 
-  &__hint {
-    color: rgb(53 39 58 / 0.5);
-    font-weight: a.$font-weight-regular;
+  &__input-wrap--textarea {
+    textarea {
+      padding-right: a.$space-7;
+    }
   }
+
+  &__clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgb(53 39 58 / 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+
+    &:hover {
+      color: a.$color-text-dark;
+      background: rgb(53 39 58 / 0.08);
+    }
+
+    &--textarea {
+      top: 10px;
+      transform: none;
+    }
+  }
+
+  // Select mit Custom-Pfeil
+  &__select-wrap {
+    position: relative;
+
+    select {
+      width: 100%;
+      padding: 10px 40px 10px 14px;
+      background: a.$color-white;
+      border: 1.5px solid transparent;
+      border-radius: a.$radius-input;
+      font-family: a.$font-family-base;
+      font-size: a.$fs-body;
+      color: a.$color-text-dark;
+      appearance: none;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+        border-color: a.$color-orange;
+        box-shadow: 0 0 0 3px rgb(255 183 112 / 0.3);
+      }
+    }
+  }
+
+  &__select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgb(53 39 58 / 0.5);
+  }
+
   &__error {
     color: a.$color-danger;
     font-size: a.$fs-body-sm;
     font-weight: a.$font-weight-medium;
+
     &--global {
       padding: a.$space-3 a.$space-4;
-      background: rgb(220 80 80 / 0.08);
+      background: rgb(220 80 80 / 0.1);
       border-radius: a.$radius-sm;
+      border: 1px solid rgb(220 80 80 / 0.3);
     }
   }
 
-  &__options {
+  // ─── Fragen ──────────────────────────────────────────────────────────────
+
+  &__questions {
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-6;
+  }
+
+  &__question {
+    background: rgb(255 255 255 / 0.04);
+    border: 1px solid a.$color-divider;
+    border-radius: a.$radius-md;
+    padding: a.$space-5;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-4;
+  }
+
+  &__question-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__question-num {
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-body-lg;
+    color: a.$color-text-on-dark;
+  }
+
+  &__icon-btn {
+    width: 32px;
+    height: 32px;
+    background: transparent;
     border: none;
+    cursor: pointer;
+    color: rgb(255 255 255 / 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: a.$radius-sm;
+    padding: 0;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease;
+
+    &:hover {
+      color: a.$color-danger;
+      background: rgb(220 80 80 / 0.1);
+    }
+  }
+
+  // ─── Antworten ───────────────────────────────────────────────────────────
+
+  &__answers {
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-3;
+  }
+
+  &__answers-header {
+    display: flex;
+    align-items: center;
+    gap: a.$space-5;
+  }
+
+  &__answers-label {
+    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-body-sm;
+    color: a.$color-text-on-dark;
+  }
+
+  &__checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-2;
+    font-size: a.$fs-body-sm;
+    color: rgb(255 255 255 / 0.7);
+    cursor: pointer;
+
+    input[type='checkbox'] {
+      width: 16px;
+      height: 16px;
+      accent-color: a.$color-orange;
+      cursor: pointer;
+    }
+  }
+
+  &__answer-list {
+    list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: a.$space-3;
-
-    legend {
-      font-weight: a.$font-weight-bold;
-      color: a.$color-text-muted;
-      font-size: a.$fs-body-sm;
-      letter-spacing: 0.02em;
-      padding: 0;
-      margin-bottom: a.$space-2;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: a.$space-2;
-    }
+    gap: a.$space-2;
   }
 
-  &__option {
-    display: flex;
-    flex-direction: column;
-    gap: a.$space-1;
-  }
-
-  &__option-row {
+  &__answer-item {
     display: flex;
     align-items: center;
     gap: a.$space-3;
-    input {
-      flex: 1;
-      &.ng-touched.ng-invalid {
-        border-color: a.$color-danger;
-        box-shadow: 0 0 0 3px rgb(220 80 80 / 0.15);
-      }
-    }
   }
 
-  &__option-error {
-    padding-left: calc(24px + a.$space-3);
-  }
   &__letter {
     flex: 0 0 24px;
     font-weight: a.$font-weight-bold;
-    color: a.$color-text-dark;
+    color: a.$color-text-on-dark;
+    font-size: a.$fs-body;
   }
-  &__remove {
-    flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
-    border: none;
+
+  &__add-link {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-2;
     background: transparent;
-    border-radius: 50%;
-    font-size: 22px;
-    line-height: 1;
-    color: a.$color-text-muted;
+    border: none;
+    padding: 0;
+    color: a.$color-text-on-dark;
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-semi;
     cursor: pointer;
-    transition: background 0.15s ease;
-    &:hover {
-      background: rgb(53 39 58 / 0.06);
-      color: a.$color-danger;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      color: a.$color-orange;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      text-decoration: none;
     }
   }
-  &__add {
+
+  // ─── "Add next question"-Button ──────────────────────────────────────────
+
+  &__add-question {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-2;
     align-self: flex-start;
     background: transparent;
-    border: 1.5px dashed rgb(53 39 58 / 0.3);
+    border: 1.5px solid a.$color-divider;
     border-radius: a.$radius-md;
-    padding: 10px 14px;
-    color: a.$color-orange-deep;
+    padding: 10px 18px;
+    color: a.$color-text-on-dark;
     font-family: a.$font-family-base;
-    font-weight: a.$font-weight-bold;
+    font-size: a.$fs-body;
+    font-weight: a.$font-weight-semi;
     cursor: pointer;
     transition:
       border-color 0.15s ease,
       color 0.15s ease;
-    &:hover:not(:disabled) {
+
+    &:hover {
       border-color: a.$color-orange;
-      color: a.$color-orange-deep;
-    }
-    &:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+      color: a.$color-orange;
     }
   }
 
+  // ─── Footer-Aktionen ─────────────────────────────────────────────────────
+
   &__actions {
     display: flex;
-    gap: a.$space-3;
     justify-content: flex-end;
     margin-top: a.$space-3;
   }
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 24px;
-  border-radius: a.$radius-md;
-  font-family: a.$font-family-base;
-  font-weight: a.$font-weight-bold;
-  font-size: a.$fs-body-lg;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    transform 0.1s ease;
+// ─── Publish-Button ──────────────────────────────────────────────────────────
 
-  &--primary {
+.btn {
+  &--publish {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 32px;
     background: a.$color-orange;
+    border: none;
+    border-radius: a.$radius-md;
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-lg;
+    font-weight: a.$font-weight-bold;
     color: a.$color-text-dark;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      transform 0.1s ease;
+
     &:hover:not(:disabled) {
       background: a.$color-orange-deep;
-      color: a.$color-white;
     }
+
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
+
     &:active:not(:disabled) {
       transform: translateY(1px);
-    }
-  }
-  &--ghost {
-    background: transparent;
-    color: a.$color-text-muted;
-    border: 1.5px solid rgb(53 39 58 / 0.2);
-    &:hover {
-      background: rgb(53 39 58 / 0.06);
     }
   }
 }

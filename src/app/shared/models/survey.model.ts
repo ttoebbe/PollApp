@@ -7,6 +7,7 @@ export class SurveyModel implements Survey {
   description: string | null;
   category: string | null;
   deadline: string | null;
+  status: 'draft' | 'published';
   created_at: string;
 
   constructor(data: Survey) {
@@ -16,6 +17,7 @@ export class SurveyModel implements Survey {
     this.description = data.description;
     this.category = data.category ?? null;
     this.deadline = data.deadline;
+    this.status = data.status ?? 'published';
     this.created_at = data.created_at;
   }
 
@@ -25,6 +27,7 @@ export class SurveyModel implements Survey {
       description: this.description,
       category: this.category,
       deadline: this.deadline,
+      status: this.status,
     };
   }
 
@@ -47,5 +50,14 @@ export class SurveyModel implements Survey {
     if (hours < 24) return `Ends in ${hours}h`;
     const days = Math.floor(hours / 24);
     return `Ends in ${days} Day${days === 1 ? '' : 's'}`;
+  }
+
+  endsOnLabel(): string {
+    if (!this.deadline) return '';
+    return new Date(this.deadline).toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   }
 }

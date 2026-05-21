@@ -1,145 +1,281 @@
 <section class="create">
-  <a class="create__back" routerLink="/" aria-label="Back to surveys">
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-      <path
-        d="M15 6l-6 6 6 6"
-        stroke="currentColor"
-        stroke-width="2"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-    All surveys
-  </a>
-
   <article class="create__card" aria-labelledby="create-heading">
     <header class="create__header">
-      <h1 id="create-heading" class="create__title">Create new survey</h1>
-      <p class="create__lede">Fill in the details and add at least two answer options.</p>
+      <div class="create__header-left">
+        <span class="create__badge">Draft</span>
+        <h1 id="create-heading" class="create__title">Create new survey</h1>
+      </div>
+      <a routerLink="/" class="create__cancel" aria-label="Cancel and go back">
+        Cancel <span aria-hidden="true">✕</span>
+      </a>
     </header>
 
     <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-      <div class="form__field">
-        <label for="cs-title">Survey title</label>
-        <input
-          id="cs-title"
-          type="text"
-          formControlName="title"
-          placeholder="What should we vote on?"
-          autocomplete="off"
-        />
-        @if (form.controls['title'].touched && form.controls['title'].hasError('required')) {
-          <small class="form__error">Please enter a title.</small>
-        }
-        @if (form.controls['title'].touched && form.controls['title'].hasError('minlength')) {
-          <small class="form__error">At least 3 characters required.</small>
-        }
-        @if (form.controls['title'].touched && form.controls['title'].hasError('whitespace')) {
-          <small class="form__error">Title cannot be whitespace only.</small>
-        }
-        @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
-          <small class="form__error">Title must not exceed 100 characters.</small>
-        }
-      </div>
-
-      <div class="form__row">
+      <!-- Zeile 1: Survey name + Describing text -->
+      <div class="form__top-row">
         <div class="form__field">
-          <label for="cs-cat">Choose category</label>
-          <select id="cs-cat" formControlName="category">
-            @for (c of categories; track c) {
-              <option [value]="c">{{ c }}</option>
+          <label for="cs-title">Survey name</label>
+          <div class="form__input-wrap">
+            <input
+              id="cs-title"
+              type="text"
+              formControlName="title"
+              placeholder="e.g. Team Event Planning"
+              autocomplete="off"
+            />
+            @if (form.controls['title'].value) {
+              <button
+                type="button"
+                class="form__clear"
+                (click)="form.controls['title'].reset('')"
+                aria-label="Clear survey name"
+              >
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path
+                    d="M2 2l12 12M14 2L2 14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
             }
-          </select>
+          </div>
+          @if (form.controls['title'].touched && form.controls['title'].hasError('required')) {
+            <small class="form__error">Please enter a title.</small>
+          }
+          @if (form.controls['title'].touched && form.controls['title'].hasError('minlength')) {
+            <small class="form__error">At least 3 characters required.</small>
+          }
+          @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
+            <small class="form__error">Title must not exceed 100 characters.</small>
+          }
         </div>
 
         <div class="form__field">
-          <label for="cs-deadline">Deadline</label>
-          <input id="cs-deadline" type="datetime-local" formControlName="deadline" />
+          <label for="cs-desc"> Describing text <span class="form__hint">(optional)</span> </label>
+          <div class="form__input-wrap form__input-wrap--textarea">
+            <textarea
+              id="cs-desc"
+              formControlName="description"
+              rows="4"
+              placeholder="Give people a bit more context…"
+            ></textarea>
+            @if (form.controls['description'].value) {
+              <button
+                type="button"
+                class="form__clear form__clear--textarea"
+                (click)="form.controls['description'].reset('')"
+                aria-label="Clear description"
+              >
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path
+                    d="M2 2l12 12M14 2L2 14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            }
+          </div>
           @if (
-            form.controls['deadline'].touched && form.controls['deadline'].hasError('required')
+            form.controls['description'].touched &&
+            form.controls['description'].hasError('whitespace')
           ) {
-            <small class="form__error">Please pick a deadline.</small>
+            <small class="form__error">Description cannot be whitespace only.</small>
           }
+        </div>
+      </div>
+
+      <!-- Zeile 2: Deadline + Category -->
+      <div class="form__meta-row">
+        <div class="form__field">
+          <label for="cs-deadline"> Set end date <span class="form__hint">(optional)</span> </label>
+          <div class="form__input-wrap">
+            <input id="cs-deadline" type="date" formControlName="deadline" />
+            @if (form.controls['deadline'].value) {
+              <button
+                type="button"
+                class="form__clear"
+                (click)="form.controls['deadline'].reset('')"
+                aria-label="Clear end date"
+              >
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                  <path
+                    d="M2 2l12 12M14 2L2 14"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            }
+          </div>
           @if (
             form.controls['deadline'].touched && form.controls['deadline'].hasError('pastDate')
           ) {
             <small class="form__error">Deadline must be in the future.</small>
           }
         </div>
+
+        <div class="form__field">
+          <label for="cs-cat">Choose category</label>
+          <div class="form__select-wrap">
+            <select id="cs-cat" formControlName="category">
+              @for (c of categories; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+            <svg
+              class="form__select-arrow"
+              viewBox="0 0 16 16"
+              width="16"
+              height="16"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 6l4 4 4-4"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
       </div>
 
-      <div class="form__field">
-        <label for="cs-desc">Description <span class="form__hint">(optional)</span></label>
-        <textarea
-          id="cs-desc"
-          formControlName="description"
-          rows="3"
-          placeholder="Give people a bit more context&hellip;"
-        ></textarea>
-        @if (
-          form.controls['description'].touched &&
-          form.controls['description'].hasError('whitespace')
-        ) {
-          <small class="form__error">Description cannot be whitespace only.</small>
+      <!-- Fragen -->
+      <div class="form__questions" formArrayName="questions">
+        @for (qCtrl of questions.controls; track $index; let qi = $index) {
+          <div class="form__question" [formGroupName]="qi">
+            <div class="form__question-header">
+              <span class="form__question-num">{{ qi + 1 }}. Question</span>
+              @if (questions.length > 1) {
+                <button
+                  type="button"
+                  class="form__icon-btn"
+                  (click)="removeQuestion(qi)"
+                  [attr.aria-label]="'Remove question ' + (qi + 1)"
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <path
+                      d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              }
+            </div>
+
+            <div class="form__input-wrap">
+              <input
+                type="text"
+                formControlName="label"
+                placeholder="Which date would work best for you?"
+                [id]="'q-label-' + qi"
+              />
+            </div>
+            @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('required')) {
+              <small class="form__error">Please enter a question.</small>
+            }
+
+            <!-- Antworten -->
+            <div class="form__answers">
+              <div class="form__answers-header">
+                <span class="form__answers-label">Answers</span>
+                <label class="form__checkbox-label">
+                  <input type="checkbox" formControlName="allow_multiple" />
+                  Allow multiple answers.
+                </label>
+              </div>
+
+              <ul class="form__answer-list" role="list" formArrayName="answers">
+                @for (aCtrl of getAnswers(qi).controls; track $index; let ai = $index) {
+                  <li class="form__answer-item">
+                    <span class="form__letter">
+                      {{ ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.'][ai] }}
+                    </span>
+                    <div class="form__input-wrap" style="flex: 1">
+                      <input
+                        type="text"
+                        [formControlName]="ai"
+                        [placeholder]="'Answer ' + (ai + 1)"
+                      />
+                    </div>
+                    @if (getAnswers(qi).length > 2) {
+                      <button
+                        type="button"
+                        class="form__icon-btn"
+                        (click)="removeAnswer(qi, ai)"
+                        [attr.aria-label]="'Remove answer ' + (ai + 1)"
+                      >
+                        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                          <path
+                            d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    }
+                  </li>
+                }
+              </ul>
+
+              <button
+                type="button"
+                class="form__add-link"
+                (click)="addAnswer(qi)"
+                [disabled]="getAnswers(qi).length >= 8"
+              >
+                Add answer
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                  <circle
+                    cx="8"
+                    cy="8"
+                    r="7"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    fill="none"
+                  />
+                  <path
+                    d="M8 5v6M5 8h6"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         }
       </div>
 
-      <fieldset class="form__options" formArrayName="options">
-        <legend>Answer options</legend>
-        <ul role="list">
-          @for (ctrl of options.controls; track $index; let i = $index) {
-            <li class="form__option">
-              <div class="form__option-row">
-                <span class="form__letter">{{
-                  ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.'][i]
-                }}</span>
-                <input type="text" [formControlName]="i" [placeholder]="'Option ' + (i + 1)" />
-                @if (options.length > 2) {
-                  <button
-                    type="button"
-                    class="form__remove"
-                    (click)="removeOption(i)"
-                    [attr.aria-label]="'Remove option ' + (i + 1)"
-                  >
-                    &#215;
-                  </button>
-                }
-              </div>
-              @if (options.at(i).touched && options.at(i).hasError('required')) {
-                <small class="form__error form__option-error">Please enter an answer option.</small>
-              }
-              @if (options.at(i).touched && options.at(i).hasError('whitespace')) {
-                <small class="form__error form__option-error"
-                  >Option cannot be whitespace only.</small
-                >
-              }
-              @if (options.at(i).touched && options.at(i).hasError('maxlength')) {
-                <small class="form__error form__option-error"
-                  >Option must not exceed 60 characters.</small
-                >
-              }
-            </li>
-          }
-        </ul>
-        <button
-          type="button"
-          class="form__add"
-          (click)="addOption()"
-          [disabled]="options.length >= 8"
-        >
-          + Add option
-        </button>
-      </fieldset>
+      <button type="button" class="form__add-question" (click)="addQuestion()">
+        Add next question
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none" />
+          <path d="M8 5v6M5 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
 
       @if (errorMessage()) {
         <p class="form__error form__error--global" role="alert">{{ errorMessage() }}</p>
       }
 
       <div class="form__actions">
-        <a routerLink="/" class="btn btn--ghost">Cancel</a>
-        <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSubmitting()">
-          {{ isSubmitting() ? 'Saving…' : 'Create survey' }}
+        <button type="submit" class="btn btn--publish" [disabled]="form.invalid || isSubmitting()">
+          {{ isSubmitting() ? 'Publishing…' : 'Publish' }}
         </button>
       </div>
     </form>

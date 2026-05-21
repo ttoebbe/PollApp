@@ -11,7 +11,7 @@
   text-align: center;
   color: rgb(255 255 255 / 0.7);
 
-  @media (max-width: a.$breakpoint-mobile) {
+  @media (max-width: a.$breakpoint-tablet) {
     padding: a.$space-7 a.$space-4;
   }
 
@@ -27,6 +27,8 @@
   }
 }
 
+// ─── Artikel-Container ───────────────────────────────────────────────────────
+
 .detail {
   max-width: a.$container-max;
   margin-inline: auto;
@@ -35,23 +37,12 @@
   flex-direction: column;
   gap: a.$space-7;
 
-  @media (max-width: a.$breakpoint-mobile) {
+  @media (max-width: a.$breakpoint-tablet) {
     padding: a.$space-5 a.$space-4;
+    gap: a.$space-5;
   }
 
-  &__back {
-    display: inline-flex;
-    align-items: center;
-    gap: a.$space-1;
-    color: a.$color-orange-light;
-    font-family: a.$font-family-base;
-    font-weight: a.$font-weight-medium;
-    text-decoration: none;
-    width: fit-content;
-    &:hover {
-      color: a.$color-orange;
-    }
-  }
+  // ─── Header ──────────────────────────────────────────────────────────────
 
   &__head {
     background: a.$color-surface-overlay-dark;
@@ -61,8 +52,6 @@
     display: flex;
     flex-direction: column;
     gap: a.$space-3;
-    position: relative;
-    overflow: hidden;
 
     @media (max-width: a.$breakpoint-tablet) {
       border-radius: 5px 60px 5px 5px;
@@ -70,18 +59,42 @@
     }
   }
 
-  &__category {
-    font-family: a.$font-family-base;
+  &__head-meta {
+    display: flex;
+    align-items: center;
+    gap: a.$space-4;
+    flex-wrap: wrap;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: a.$space-1 a.$space-3;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-bold;
+    border-radius: a.$radius-tag;
+
+    &--published {
+      background: a.$color-orange-pale;
+      color: a.$color-orange-text;
+    }
+  }
+
+  &__deadline {
+    font-size: a.$fs-body-sm;
+    color: rgb(255 255 255 / 0.7);
     font-weight: a.$font-weight-medium;
-    font-size: a.$fs-body;
+  }
+
+  &__category-label {
+    font-size: a.$fs-body-sm;
     color: a.$color-orange-light;
-    overflow-wrap: break-word;
+    font-weight: a.$font-weight-medium;
   }
 
   &__title {
     font-family: a.$font-family-display;
-    font-size: clamp(40px, 5vw, a.$fs-survey-title-lg);
-    line-height: 0.95;
+    font-size: clamp(36px, 5vw, a.$fs-survey-title-lg);
+    line-height: 1;
     color: a.$color-orange;
     margin: 0;
     text-wrap: balance;
@@ -97,51 +110,142 @@
     overflow-wrap: break-word;
   }
 
-  &__pill {
-    align-self: flex-start;
-    background: a.$color-orange-light;
-    color: a.$color-text-dark;
-    font-family: a.$font-family-base;
-    font-weight: a.$font-weight-bold;
-    font-size: a.$fs-body-sm;
-    padding: 4px 10px;
-    border-radius: a.$radius-tag;
-    margin-top: a.$space-2;
-  }
+  // ─── Zweispalten-Grid ────────────────────────────────────────────────────
 
   &__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: a.$space-6;
+    align-items: start;
 
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: 1fr;
     }
+  }
+
+  // ─── Linke Spalte: Abstimmen ─────────────────────────────────────────────
+
+  &__vote-col {
+    background: a.$color-surface-card;
+    border-radius: 5px 60px 5px 5px;
+    padding: a.$space-7;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-6;
+    color: a.$color-text-dark;
+
+    @media (max-width: a.$breakpoint-mobile) {
+      padding: a.$space-5 a.$space-4;
+      border-radius: 5px 30px 5px 5px;
+    }
+  }
+
+  &__submit {
+    align-self: center;
+    padding: 13px 32px;
+    background: a.$color-orange;
+    border: none;
+    border-radius: a.$radius-md;
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-lg;
+    font-weight: a.$font-weight-bold;
+    color: a.$color-text-dark;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      transform 0.1s ease;
+
+    &:hover:not(:disabled) {
+      background: a.$color-orange-deep;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+  }
+
+  &__completed {
+    display: flex;
+    align-items: center;
+    gap: a.$space-2;
+    margin: 0;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-semi;
+    color: a.$color-text-muted;
+    align-self: center;
+  }
+
+  &__error {
+    margin: 0;
+    color: a.$color-danger;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-medium;
+  }
+
+  // ─── Rechte Spalte: Ergebnisse ───────────────────────────────────────────
+
+  &__results-col {
+    background: a.$color-white;
+    border-radius: 5px 60px 5px 5px;
+    padding: a.$space-7;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-6;
+    color: a.$color-text-dark;
+
+    @media (max-width: a.$breakpoint-mobile) {
+      padding: a.$space-5 a.$space-4;
+      border-radius: 5px 30px 5px 5px;
+    }
+  }
+
+  &__results-title {
+    font-family: a.$font-family-display;
+    font-size: 28px;
+    line-height: 1;
+    color: a.$color-text-dark;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: a.$space-3;
+    flex-wrap: wrap;
+  }
+
+  &__results-live {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-1;
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-bold;
+    color: a.$color-orange-deep;
+  }
+
+  &__live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: a.$color-orange-deep;
+    animation: pulse 1.4s ease-in-out infinite;
   }
 }
 
-.card {
-  background: a.$color-surface-card;
-  border-radius: 5px 60px 5px 5px;
-  padding: a.$space-7;
+// ─── Fragen-Block (Abstimmung) ────────────────────────────────────────────────
+
+.question-block {
   display: flex;
   flex-direction: column;
-  gap: a.$space-5;
-  color: a.$color-text-dark;
+  gap: a.$space-3;
 
-  @media (max-width: a.$breakpoint-mobile) {
-    padding: a.$space-5 a.$space-4;
-    border-radius: 5px 30px 5px 5px;
-  }
-
-  &--results {
-    background: a.$color-white;
-  }
-
-  &__title {
-    font-family: a.$font-family-display;
-    font-size: 32px;
-    line-height: 1;
+  &__heading {
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-lg;
+    font-weight: a.$font-weight-bold;
     color: a.$color-text-dark;
     margin: 0;
   }
@@ -150,5 +254,36 @@
     margin: 0;
     font-size: a.$fs-body-sm;
     color: a.$color-text-muted;
+    font-style: italic;
+  }
+}
+
+// ─── Ergebnis-Block (pro Frage) ───────────────────────────────────────────────
+
+.result-block {
+  display: flex;
+  flex-direction: column;
+  gap: a.$space-3;
+
+  &__heading {
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body;
+    font-weight: a.$font-weight-bold;
+    color: a.$color-text-dark;
+    margin: 0;
+  }
+}
+
+// ─── Animation ───────────────────────────────────────────────────────────────
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.75);
   }
 }

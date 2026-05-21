@@ -1,18 +1,19 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { OptionModel } from '../../models/option.model';
 
 @Component({
   selector: 'app-results-bar',
   templateUrl: './results-bar.html',
   styleUrl: './results-bar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultsBar {
   readonly options = input.required<OptionModel[]>();
-  readonly previewOptionId = input<string | null>(null);
+  readonly previewOptionIds = input<string[]>([]);
 
   readonly totalVotes = computed(() => {
-    const base = this.options().reduce((total, option) => total + option.vote_count, 0);
-    return this.previewOptionId() !== null ? base + 1 : base;
+    const base = this.options().reduce((sum, o) => sum + o.vote_count, 0);
+    return base + this.previewOptionIds().length;
   });
 
   letter(index: number): string {
@@ -20,10 +21,14 @@ export class ResultsBar {
   }
 
   percentage(option: OptionModel): number {
-    const previewId = this.previewOptionId();
-    const count = option.id === previewId ? option.vote_count + 1 : option.vote_count;
+    const isPreview = this.previewOptionIds().includes(option.id);
+    const count = isPreview ? option.vote_count + 1 : option.vote_count;
     const total = this.totalVotes();
     if (total === 0) return 0;
     return Math.round((count / total) * 100);
+  }
+
+  isPreview(option: OptionModel): boolean {
+    return this.previewOptionIds().includes(option.id);
   }
 }

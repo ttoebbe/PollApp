@@ -1,4 +1,4 @@
-@if (errorMessage()) {
+@if (errorMessage() && !survey()) {
   <div class="state state--error">
     <p>{{ errorMessage() }}</p>
     <a routerLink="/">Back to home</a>
@@ -7,55 +7,90 @@
   <div class="state" aria-live="polite">Loading survey&hellip;</div>
 } @else {
   <article class="detail">
-    <a class="detail__back" routerLink="/" aria-label="Back to surveys">
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-        <path
-          d="M15 6l-6 6 6 6"
-          stroke="currentColor"
-          stroke-width="2"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      All surveys
-    </a>
-
     <header class="detail__head">
-      <span class="detail__category">{{ survey()!.category ?? 'General' }}</span>
+      <div class="detail__head-meta">
+        <span class="detail__badge detail__badge--published">Published</span>
+        @if (survey()!.deadline) {
+          <span class="detail__deadline">Ends on {{ survey()!.endsOnLabel() }}</span>
+        }
+        @if (survey()!.category) {
+          <span class="detail__category-label">Category: {{ survey()!.category }}</span>
+        }
+      </div>
       <h1 class="detail__title">{{ survey()!.title }}</h1>
       @if (survey()!.description) {
         <p class="detail__desc">{{ survey()!.description }}</p>
       }
-      <span class="detail__pill">{{ survey()!.endsInLabel() }}</span>
     </header>
 
     <div class="detail__grid">
-      <section class="card card--vote" aria-labelledby="vote-heading">
-        <h2 id="vote-heading" class="card__title">Cast your vote</h2>
-        @if (hasVoted()) {
-          <p class="card__hint">
-            <span aria-hidden="true">&#10003;</span>
-            Thanks &mdash; your vote has been recorded.
+      <!-- Linke Spalte: Abstimmen -->
+      <section class="detail__vote-col" aria-label="Cast your vote">
+        @for (row of questionRows(); track row.question.id; let qi = $index) {
+          <div class="question-block">
+            <h2 class="question-block__heading">{{ qi + 1 }}. {{ row.question.label }}</h2>
+            @if (row.question.allow_multiple) {
+              <p class="question-block__hint">More than one answers are possible.</p>
+            }
+            <app-vote-options
+              [options]="row.options"
+              [disabled]="hasCompleted()"
+              [allowMultiple]="row.question.allow_multiple"
+              (selectionChange)="onSelectionChange(row.question.id, $event)"
+            ></app-vote-options>
+          </div>
+        }
+
+        @if (hasCompleted()) {
+          <p class="detail__completed" role="status">
+            <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+              <path
+                d="M4 10l5 5 7-8"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Thank you — your answers have been recorded.
           </p>
         } @else {
-          <p class="card__hint">Pick one option and submit your answer.</p>
+          <button
+            type="button"
+            class="detail__submit"
+            [disabled]="!allAnswered() || isSubmitting()"
+            (click)="completeSurvey()"
+          >
+            {{ isSubmitting() ? 'Submitting…' : 'Complete survey' }}
+          </button>
         }
-        <app-vote-options
-          [options]="options()"
-          [disabled]="hasVoted()"
-          (vote)="onVote($event)"
-          (selectionChange)="onSelectionChange($event)"
-        ></app-vote-options>
+
+        @if (errorMessage()) {
+          <p class="detail__error" role="alert">{{ errorMessage() }}</p>
+        }
       </section>
 
-      <section class="card card--results" aria-labelledby="results-heading">
-        <h2 id="results-heading" class="card__title">Survey results</h2>
-        <app-results-bar
-          [options]="options()"
-          [previewOptionId]="selectedOptionId()"
-        ></app-results-bar>
-      </section>
+      <!-- Rechte Spalte: Ergebnisse -->
+      <aside class="detail__results-col" aria-label="Survey results">
+        <h2 class="detail__results-title">
+          Survey results
+          <span class="detail__results-live">
+            <span class="detail__live-dot" aria-hidden="true"></span>
+            LIVE
+          </span>
+        </h2>
+
+        @for (row of questionRows(); track row.question.id; let qi = $index) {
+          <div class="result-block">
+            <h3 class="result-block__heading">{{ qi + 1 }}. {{ row.question.label }}</h3>
+            <app-results-bar
+              [options]="row.options"
+              [previewOptionIds]="previewIds(row.question.id)"
+            ></app-results-bar>
+          </div>
+        }
+      </aside>
     </div>
   </article>
 }

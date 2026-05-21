@@ -1,14 +1,11 @@
-
 export interface Survey {
   id: string;
-  
   survey_number: number;
   title: string;
   description: string | null;
-  
   category: string | null;
-  
   deadline: string | null;
+  status: 'draft' | 'published';
   created_at: string;
 }
 
