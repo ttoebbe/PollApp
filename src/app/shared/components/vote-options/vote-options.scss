@@ -59,7 +59,9 @@
   }
   &__label {
     flex: 1;
+    min-width: 0;
     font-weight: a.$font-weight-medium;
+    overflow-wrap: break-word;
   }
 
   &[aria-disabled='true'] {

@@ -54,6 +54,7 @@
     flex-direction: column;
     gap: a.$space-3;
     position: relative;
+    overflow: hidden;
 
     @media (max-width: a.$breakpoint-tablet) {
       border-radius: 5px 60px 5px 5px;
@@ -66,6 +67,7 @@
     font-weight: a.$font-weight-medium;
     font-size: a.$fs-body;
     color: a.$color-orange-light;
+    overflow-wrap: break-word;
   }
 
   &__title {
@@ -75,6 +77,7 @@
     color: a.$color-orange;
     margin: 0;
     text-wrap: balance;
+    overflow-wrap: break-word;
   }
 
   &__desc {
@@ -83,6 +86,7 @@
     color: rgb(255 255 255 / 0.85);
     max-width: 70ch;
     text-wrap: pretty;
+    overflow-wrap: break-word;
   }
 
   &__pill {

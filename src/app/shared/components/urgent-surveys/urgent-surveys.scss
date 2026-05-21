@@ -20,7 +20,7 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: a.$space-6;
     list-style: none;
     padding: 0;
@@ -48,6 +48,7 @@
   border-radius: a.$radius-card-hl;
   padding: a.$space-7 a.$space-4 a.$space-7;
   min-height: 310px;
+  overflow: hidden;
   text-decoration: none;
   transition:
     transform 0.15s ease,
@@ -65,6 +66,7 @@
     font-size: a.$fs-body-sm;
     color: a.$color-text-muted;
     margin-bottom: a.$space-2;
+    overflow-wrap: break-word;
   }
 
   &__title {
@@ -76,6 +78,7 @@
     margin: 0;
     flex: 1;
     text-wrap: balance;
+    overflow-wrap: break-word;
   }
 
   &__pill {
