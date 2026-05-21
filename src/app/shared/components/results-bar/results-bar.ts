@@ -8,16 +8,22 @@ import { OptionModel } from '../../models/option.model';
 })
 export class ResultsBar {
   readonly options = input.required<OptionModel[]>();
+  readonly previewOptionId = input<string | null>(null);
 
-  readonly totalVotes = computed(() =>
-    this.options().reduce((total, option) => total + option.vote_count, 0),
-  );
+  readonly totalVotes = computed(() => {
+    const base = this.options().reduce((total, option) => total + option.vote_count, 0);
+    return this.previewOptionId() !== null ? base + 1 : base;
+  });
 
   letter(index: number): string {
     return OptionModel.letter(index);
   }
 
   percentage(option: OptionModel): number {
-    return option.getPercentage(this.totalVotes());
+    const previewId = this.previewOptionId();
+    const count = option.id === previewId ? option.vote_count + 1 : option.vote_count;
+    const total = this.totalVotes();
+    if (total === 0) return 0;
+    return Math.round((count / total) * 100);
   }
 }

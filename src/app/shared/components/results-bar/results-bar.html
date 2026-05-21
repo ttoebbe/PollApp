@@ -9,7 +9,7 @@
 
   <ul class="results__list" role="list">
     @for (option of options(); track option.id; let i = $index) {
-      <li class="results__row">
+      <li class="results__row" [class.results__row--preview]="previewOptionId() === option.id">
         <div class="results__row-top">
           <span class="results__letter">{{ letter(i) }}</span>
           <span class="results__label">{{ option.label }}</span>

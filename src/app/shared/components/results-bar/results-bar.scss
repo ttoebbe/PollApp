@@ -51,6 +51,14 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+
+    &--preview &__fill {
+      background: a.$color-orange-deep;
+    }
+
+    &--preview &__pct {
+      font-style: italic;
+    }
   }
   &__row-top {
     display: flex;

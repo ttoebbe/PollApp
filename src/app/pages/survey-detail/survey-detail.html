@@ -31,7 +31,6 @@
     </header>
 
     <div class="detail__grid">
-      
       <section class="card card--vote" aria-labelledby="vote-heading">
         <h2 id="vote-heading" class="card__title">Cast your vote</h2>
         @if (hasVoted()) {
@@ -46,12 +45,16 @@
           [options]="options()"
           [disabled]="hasVoted()"
           (vote)="onVote($event)"
+          (selectionChange)="onSelectionChange($event)"
         ></app-vote-options>
       </section>
 
       <section class="card card--results" aria-labelledby="results-heading">
         <h2 id="results-heading" class="card__title">Survey results</h2>
-        <app-results-bar [options]="options()"></app-results-bar>
+        <app-results-bar
+          [options]="options()"
+          [previewOptionId]="selectedOptionId()"
+        ></app-results-bar>
       </section>
     </div>
   </article>

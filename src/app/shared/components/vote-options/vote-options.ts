@@ -10,6 +10,7 @@ export class VoteOptions {
   readonly options = input.required<OptionModel[]>();
   readonly disabled = input(false);
   readonly vote = output<string>();
+  readonly selectionChange = output<string | null>();
 
   readonly selectedId = signal<string | null>(null);
 
@@ -20,6 +21,7 @@ export class VoteOptions {
   select(id: string): void {
     if (this.disabled()) return;
     this.selectedId.set(id);
+    this.selectionChange.emit(id);
   }
 
   submit(): void {

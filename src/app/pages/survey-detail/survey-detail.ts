@@ -19,6 +19,7 @@ export class SurveyDetail implements OnInit {
   readonly survey = signal<SurveyModel | null>(null);
   readonly hasVoted = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly selectedOptionId = signal<string | null>(null);
 
   readonly options = this.surveyService.optionsFor('');
 
@@ -32,21 +33,26 @@ export class SurveyDetail implements OnInit {
     try {
       const survey = await this.surveyService.loadSurveyWithOptions(surveyNumber);
       this.survey.set(survey);
-      
+
       Object.defineProperty(this, 'options', {
         value: this.surveyService.optionsFor(survey!.id),
         writable: false,
       });
-      
+
       this.hasVoted.set(localStorage.getItem(`pollapp:voted:${survey!.id}`) === '1');
     } catch {
       this.errorMessage.set('Survey not found.');
     }
   }
 
+  onSelectionChange(id: string | null): void {
+    this.selectedOptionId.set(id);
+  }
+
   async onVote(optionId: string): Promise<void> {
     const currentSurvey = this.survey();
     if (!currentSurvey) return;
+    this.selectedOptionId.set(null);
     try {
       await this.surveyService.vote(optionId);
       localStorage.setItem(`pollapp:voted:${currentSurvey.id}`, '1');
