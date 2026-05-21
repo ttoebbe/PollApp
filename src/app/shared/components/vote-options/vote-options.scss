@@ -35,6 +35,7 @@
 
   &:hover:not([aria-disabled='true']) {
     border-color: a.$color-orange-light;
+    background: rgb(255 207 161 / 0.08);
   }
 
   &--selected {

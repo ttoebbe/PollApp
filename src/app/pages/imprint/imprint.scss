@@ -25,6 +25,7 @@
     font-weight: a.$font-weight-medium;
     text-decoration: none;
     width: fit-content;
+    transition: color 0.15s ease;
 
     &:hover {
       color: a.$color-orange;
@@ -111,6 +112,7 @@
   &__mail {
     color: a.$color-orange-light;
     text-decoration: none;
+    transition: color 0.15s ease;
 
     &:hover {
       color: a.$color-orange;
