@@ -29,8 +29,17 @@
           placeholder="What should we vote on?"
           autocomplete="off"
         />
-        @if (form.controls['title'].touched && form.controls['title'].invalid) {
-          <small class="form__error">Please enter a title (min. 3 characters).</small>
+        @if (form.controls['title'].touched && form.controls['title'].hasError('required')) {
+          <small class="form__error">Please enter a title.</small>
+        }
+        @if (form.controls['title'].touched && form.controls['title'].hasError('minlength')) {
+          <small class="form__error">At least 3 characters required.</small>
+        }
+        @if (form.controls['title'].touched && form.controls['title'].hasError('whitespace')) {
+          <small class="form__error">Title cannot be whitespace only.</small>
+        }
+        @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
+          <small class="form__error">Title must not exceed 100 characters.</small>
         }
       </div>
 
@@ -47,8 +56,15 @@
         <div class="form__field">
           <label for="cs-deadline">Deadline</label>
           <input id="cs-deadline" type="datetime-local" formControlName="deadline" />
-          @if (form.controls['deadline'].touched && form.controls['deadline'].invalid) {
+          @if (
+            form.controls['deadline'].touched && form.controls['deadline'].hasError('required')
+          ) {
             <small class="form__error">Please pick a deadline.</small>
+          }
+          @if (
+            form.controls['deadline'].touched && form.controls['deadline'].hasError('pastDate')
+          ) {
+            <small class="form__error">Deadline must be in the future.</small>
           }
         </div>
       </div>
@@ -61,6 +77,12 @@
           rows="3"
           placeholder="Give people a bit more context&hellip;"
         ></textarea>
+        @if (
+          form.controls['description'].touched &&
+          form.controls['description'].hasError('whitespace')
+        ) {
+          <small class="form__error">Description cannot be whitespace only.</small>
+        }
       </div>
 
       <fieldset class="form__options" formArrayName="options">
@@ -68,19 +90,34 @@
         <ul role="list">
           @for (ctrl of options.controls; track $index; let i = $index) {
             <li class="form__option">
-              <span class="form__letter">{{
-                ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.'][i]
-              }}</span>
-              <input type="text" [formControlName]="i" [placeholder]="'Option ' + (i + 1)" />
-              @if (options.length > 2) {
-                <button
-                  type="button"
-                  class="form__remove"
-                  (click)="removeOption(i)"
-                  [attr.aria-label]="'Remove option ' + (i + 1)"
+              <div class="form__option-row">
+                <span class="form__letter">{{
+                  ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.'][i]
+                }}</span>
+                <input type="text" [formControlName]="i" [placeholder]="'Option ' + (i + 1)" />
+                @if (options.length > 2) {
+                  <button
+                    type="button"
+                    class="form__remove"
+                    (click)="removeOption(i)"
+                    [attr.aria-label]="'Remove option ' + (i + 1)"
+                  >
+                    &#215;
+                  </button>
+                }
+              </div>
+              @if (options.at(i).touched && options.at(i).hasError('required')) {
+                <small class="form__error form__option-error">Please enter an answer option.</small>
+              }
+              @if (options.at(i).touched && options.at(i).hasError('whitespace')) {
+                <small class="form__error form__option-error"
+                  >Option cannot be whitespace only.</small
                 >
-                  &#215;
-                </button>
+              }
+              @if (options.at(i).touched && options.at(i).hasError('maxlength')) {
+                <small class="form__error form__option-error"
+                  >Option must not exceed 60 characters.</small
+                >
               }
             </li>
           }

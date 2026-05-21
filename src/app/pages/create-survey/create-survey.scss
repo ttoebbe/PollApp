@@ -105,6 +105,10 @@
         border-color: a.$color-orange;
         box-shadow: 0 0 0 3px rgb(255 183 112 / 0.25);
       }
+      &.ng-touched.ng-invalid {
+        border-color: a.$color-danger;
+        box-shadow: 0 0 0 3px rgb(220 80 80 / 0.15);
+      }
       &::placeholder {
         color: rgb(53 39 58 / 0.4);
       }
@@ -160,11 +164,25 @@
 
   &__option {
     display: flex;
+    flex-direction: column;
+    gap: a.$space-1;
+  }
+
+  &__option-row {
+    display: flex;
     align-items: center;
     gap: a.$space-3;
     input {
       flex: 1;
+      &.ng-touched.ng-invalid {
+        border-color: a.$color-danger;
+        box-shadow: 0 0 0 3px rgb(220 80 80 / 0.15);
+      }
     }
+  }
+
+  &__option-error {
+    padding-left: calc(24px + a.$space-3);
   }
   &__letter {
     flex: 0 0 24px;

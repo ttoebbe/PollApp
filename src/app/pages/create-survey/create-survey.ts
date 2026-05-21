@@ -3,6 +3,10 @@ import { Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SurveyService } from '../../shared/services/survey';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
+import {
+  futureDateValidator,
+  noWhitespaceValidator,
+} from '../../shared/validators/survey.validators';
 
 @Component({
   selector: 'app-create-survey',
@@ -20,13 +24,21 @@ export class CreateSurvey {
   readonly errorMessage = signal<string | null>(null);
 
   readonly form: FormGroup = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(3)]],
-    description: [''],
+    title: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        noWhitespaceValidator,
+      ],
+    ],
+    description: ['', noWhitespaceValidator],
     category: ['Team activities', Validators.required],
-    deadline: [this.defaultDeadlineLocal(), Validators.required],
+    deadline: [this.defaultDeadlineLocal(), [Validators.required, futureDateValidator]],
     options: this.fb.array([
-      this.fb.control('', Validators.required),
-      this.fb.control('', Validators.required),
+      this.fb.control('', [Validators.required, noWhitespaceValidator, Validators.maxLength(60)]),
+      this.fb.control('', [Validators.required, noWhitespaceValidator, Validators.maxLength(60)]),
     ]),
   });
 
@@ -36,7 +48,9 @@ export class CreateSurvey {
 
   addOption(): void {
     if (this.options.length >= 8) return;
-    this.options.push(this.fb.control('', Validators.required));
+    this.options.push(
+      this.fb.control('', [Validators.required, noWhitespaceValidator, Validators.maxLength(60)]),
+    );
   }
 
   removeOption(index: number): void {
