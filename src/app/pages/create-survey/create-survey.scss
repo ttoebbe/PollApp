@@ -245,6 +245,17 @@
 
   // ─── Fragen ──────────────────────────────────────────────────────────────
 
+  &__questions-wrap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: a.$space-5;
+    align-items: start;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   &__questions {
     display: flex;
     flex-direction: column;
@@ -380,13 +391,16 @@
     }
   }
 
-  // ─── "Add next question"-Button ──────────────────────────────────────────
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: a.$space-3;
+  }
 
   &__add-question {
     display: inline-flex;
     align-items: center;
     gap: a.$space-2;
-    align-self: flex-start;
     background: transparent;
     border: 1.5px solid a.$color-divider;
     border-radius: a.$radius-md;
@@ -404,14 +418,6 @@
       border-color: a.$color-orange;
       color: a.$color-orange;
     }
-  }
-
-  // ─── Footer-Aktionen ─────────────────────────────────────────────────────
-
-  &__actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: a.$space-3;
   }
 }
 
