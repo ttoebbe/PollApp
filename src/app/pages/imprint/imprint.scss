@@ -65,4 +65,55 @@
       font-weight: a.$font-weight-bold;
     }
   }
+
+  &__section-title {
+    font-family: a.$font-family-display;
+    font-size: a.$fs-body-lg;
+    font-weight: a.$font-weight-bold;
+    color: a.$color-orange-light;
+    margin: 0;
+  }
+
+  &__contact {
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-4;
+    margin: 0;
+  }
+
+  &__contact-row {
+    display: flex;
+    gap: a.$space-3;
+
+    @media (max-width: a.$breakpoint-mobile) {
+      flex-direction: column;
+      gap: a.$space-1;
+    }
+  }
+
+  &__contact-label {
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-medium;
+    color: rgb(255 255 255 / 0.5);
+    min-width: 80px;
+    padding-top: 2px;
+  }
+
+  &__contact-value {
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-lg;
+    line-height: 1.6;
+    color: a.$color-text-on-dark;
+    margin: 0;
+  }
+
+  &__mail {
+    color: a.$color-orange-light;
+    text-decoration: none;
+
+    &:hover {
+      color: a.$color-orange;
+    }
+  }
 }
