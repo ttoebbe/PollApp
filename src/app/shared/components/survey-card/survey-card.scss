@@ -16,6 +16,7 @@
   transition:
     background 0.15s ease,
     transform 0.15s ease;
+  overflow: hidden;
   cursor: pointer;
 
   &:hover {
@@ -37,6 +38,7 @@
     font-size: a.$fs-body;
     color: a.$color-orange-light;
     margin-bottom: a.$space-1;
+    overflow-wrap: break-word;
   }
 
   &__title {
@@ -47,6 +49,7 @@
     color: a.$color-text-on-dark;
     margin: 0;
     text-wrap: balance;
+    overflow-wrap: break-word;
   }
 
   &__desc {
@@ -58,6 +61,7 @@
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    overflow-wrap: break-word;
   }
 
   &__pill {
