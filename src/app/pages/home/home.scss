@@ -37,7 +37,7 @@
   align-items: center;
 
   @media (max-width: a.$breakpoint-tablet) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   &__text {
@@ -148,7 +148,7 @@
     gap: a.$space-4;
 
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 

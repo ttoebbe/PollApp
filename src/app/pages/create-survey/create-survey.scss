@@ -12,6 +12,10 @@
   flex-direction: column;
   gap: a.$space-5;
 
+  @media (max-width: a.$breakpoint-mobile) {
+    padding: a.$space-5 a.$space-4;
+  }
+
   &__back {
     display: inline-flex;
     align-items: center;
@@ -69,7 +73,7 @@
     grid-template-columns: 1fr 1fr;
     gap: a.$space-4;
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 

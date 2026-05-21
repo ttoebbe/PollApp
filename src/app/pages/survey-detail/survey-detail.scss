@@ -11,6 +11,10 @@
   text-align: center;
   color: rgb(255 255 255 / 0.7);
 
+  @media (max-width: a.$breakpoint-mobile) {
+    padding: a.$space-7 a.$space-4;
+  }
+
   &--error {
     color: a.$color-orange-light;
   }
@@ -30,6 +34,10 @@
   display: flex;
   flex-direction: column;
   gap: a.$space-7;
+
+  @media (max-width: a.$breakpoint-mobile) {
+    padding: a.$space-5 a.$space-4;
+  }
 
   &__back {
     display: inline-flex;
@@ -107,7 +115,7 @@
     gap: a.$space-6;
 
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 }
@@ -120,6 +128,11 @@
   flex-direction: column;
   gap: a.$space-5;
   color: a.$color-text-dark;
+
+  @media (max-width: a.$breakpoint-mobile) {
+    padding: a.$space-5 a.$space-4;
+    border-radius: 5px 30px 5px 5px;
+  }
 
   &--results {
     background: a.$color-white;
