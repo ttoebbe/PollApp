@@ -1,24 +1,23 @@
+$color-bg-dark: rgb(53 39 58);
+$color-bg-light: rgb(254 253 255);
+$color-surface-card: rgb(250 245 254);
+$color-surface-overlay-dark: rgb(217 217 217 / 0.08);
+$color-surface-overlay-light: rgb(142 112 153 / 0.16);
+$color-surface-result-card: rgb(142 112 153 / 0.1);
 
-$color-bg-dark: rgb(53 39 58); 
-$color-bg-light: rgb(254 253 255); 
-$color-surface-card: rgb(250 245 254); 
-$color-surface-overlay-dark: rgb(217 217 217 / 0.08); 
-$color-surface-overlay-light: rgb(142 112 153 / 0.16); 
-$color-surface-result-card: rgb(142 112 153 / 0.1); 
+$color-orange: rgb(255 183 112);
+$color-orange-light: rgb(255 207 161);
+$color-orange-pale: rgb(254 233 212);
+$color-orange-deep: rgb(238 146 54);
+$color-orange-text: rgb(215 148 81);
 
-$color-orange: rgb(255 183 112); 
-$color-orange-light: rgb(255 207 161); 
-$color-orange-pale: rgb(254 233 212); 
-$color-orange-deep: rgb(238 146 54); 
-$color-orange-text: rgb(215 148 81); 
-
-$color-text-dark: rgb(34 18 39); 
-$color-text-muted: rgb(53 39 58); 
-$color-text-on-dark: rgb(254 253 255); 
+$color-text-dark: rgb(34 18 39);
+$color-text-muted: rgb(53 39 58);
+$color-text-on-dark: rgb(254 253 255);
 $color-white: rgb(255 255 255);
-$color-purple-soft: rgb(108 86 144); 
-$color-purple-deep: rgb(41 6 87); 
-$color-gray-track: rgb(237 237 237); 
+$color-purple-soft: rgb(108 86 144);
+$color-purple-deep: rgb(41 6 87);
+$color-gray-track: rgb(237 237 237);
 $color-divider: rgb(217 217 217 / 0.2);
 
 $color-primary: $color-orange;
@@ -39,29 +38,29 @@ $font-weight-extra: 800;
 $font-size-base: 16px;
 $line-height-base: 1.4;
 
-$fs-hero: 100px; 
-$fs-hero-sub: 24px; 
-$fs-section: 72px; 
-$fs-page-title: 56px; 
-$fs-survey-title-lg: 48px; 
-$fs-survey-title-card: 26px; 
-$fs-survey-title-list: 24px; 
-$fs-section-label: 32px; 
+$fs-hero: 100px;
+$fs-hero-sub: 24px;
+$fs-section: 72px;
+$fs-page-title: 56px;
+$fs-survey-title-lg: 48px;
+$fs-survey-title-card: 26px;
+$fs-survey-title-list: 24px;
+$fs-section-label: 32px;
 $fs-body-lg: 18px;
 $fs-body: 16px;
-$fs-body-sm: 14px;
-$fs-tag: 12px;
+$fs-body-sm: 16px;
+$fs-tag: 16px;
 
 $radius-sm: 5px;
 $radius-md: 10px;
 $radius-pill: 20px;
-$radius-card-list: 5px 50px 5px 5px; 
-$radius-card-hl: 0 80px 0 0; 
-$radius-card-detail: 0 100px 0 0; 
-$radius-card-form: 5px 100px 5px 5px; 
-$radius-card-form-inner: 5px 80px 5px 5px; 
-$radius-input: 5px 20px 5px 5px; 
-$radius-tag: 0 14px 0 0; 
+$radius-card-list: 5px 50px 5px 5px;
+$radius-card-hl: 0 80px 0 0;
+$radius-card-detail: 0 100px 0 0;
+$radius-card-form: 5px 100px 5px 5px;
+$radius-card-form-inner: 5px 80px 5px 5px;
+$radius-input: 5px 20px 5px 5px;
+$radius-tag: 0 14px 0 0;
 
 $space-1: 4px;
 $space-2: 8px;
@@ -75,7 +74,7 @@ $space-9: 56px;
 $space-10: 64px;
 $space-12: 80px;
 
-$container-max: 1218px; 
+$container-max: 1218px;
 $header-height: 86px;
 $breakpoint-mobile: 600px;
 $breakpoint-tablet: 900px;
