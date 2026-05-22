@@ -54,6 +54,51 @@
       >
         Past survey
       </button>
+
+      @if (isDropdownOpen()) {
+        <div class="dropdown-backdrop" (click)="toggleDropdown()" aria-hidden="true"></div>
+      }
+
+      <div class="category-filter" [class.category-filter--open]="isDropdownOpen()">
+        <button
+          class="category-filter__toggle"
+          (click)="toggleDropdown()"
+          [attr.aria-expanded]="isDropdownOpen()"
+          aria-haspopup="listbox"
+        >
+          {{ selectedCategory() ?? 'Sort by categories' }}
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+            <path d="M7 10l5 5 5-5z" />
+          </svg>
+        </button>
+
+        @if (isDropdownOpen()) {
+          <ul class="category-filter__menu" role="listbox" aria-label="Category filter">
+            <li>
+              <button
+                role="option"
+                [attr.aria-selected]="selectedCategory() === null"
+                [class.is-selected]="selectedCategory() === null"
+                (click)="setCategory(null)"
+              >
+                All categories
+              </button>
+            </li>
+            @for (cat of categories; track cat) {
+              <li>
+                <button
+                  role="option"
+                  [attr.aria-selected]="selectedCategory() === cat"
+                  [class.is-selected]="selectedCategory() === cat"
+                  (click)="setCategory(cat)"
+                >
+                  {{ cat }}
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
     </div>
 
     @if (isLoading()) {
