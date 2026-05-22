@@ -70,7 +70,7 @@ export class SurveyDetail implements OnInit {
         return;
       }
       this.survey.set(survey);
-      this.questions.set(this.surveyService.questions());
+      this.questions.set(this.surveyService.questions().filter((q) => q.survey_id === survey.id));
       this.hasCompleted.set(localStorage.getItem(`pollapp:completed:${survey.id}`) === '1');
     } catch {
       this.errorMessage.set('Survey not found.');
