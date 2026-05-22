@@ -12,7 +12,6 @@ export class VoteOptions {
   readonly disabled = input(false);
   readonly allowMultiple = input(false);
 
-  /** Gibt die aktuell ausgewählten Option-IDs zurück */
   readonly selectionChange = output<string[]>();
 
   readonly selectedIds = signal<Set<string>>(new Set());

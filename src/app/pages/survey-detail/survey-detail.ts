@@ -37,10 +37,8 @@ export class SurveyDetail implements OnInit {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  /** questionId → ausgewählte OptionIds */
   readonly selections = signal<Map<string, string[]>>(new Map());
 
-  /** Kombinierte Ansicht: Frage + zugehörige Optionen */
   readonly questionRows = computed<QuestionRow[]>(() => {
     const allOptions = this.surveyService.options();
     return this.questions().map((q) => ({

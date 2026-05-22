@@ -7,7 +7,6 @@ import type { Survey } from '../interfaces/survey.interface';
 import type { Option } from '../interfaces/option.interface';
 import type { Question } from '../interfaces/question.interface';
 
-/** Daten für eine neue Frage beim Erstellen einer Umfrage */
 export interface QuestionInput {
   label: string;
   allow_multiple: boolean;
@@ -110,7 +109,6 @@ export class SurveyService {
     if (error) throw error;
     const survey = new SurveyModel(created as Survey);
 
-    // Runde 1: alle Fragen parallel einfügen
     const questionResults = await Promise.all(
       questionInputs.map((qi, i) =>
         this.supabase.client
@@ -129,7 +127,6 @@ export class SurveyService {
       if (qError) throw qError;
     }
 
-    // Runde 2: alle Options-Batches parallel einfügen (question_id aus Runde 1)
     const optionResults = await Promise.all(
       questionInputs.map((qi, i) => {
         const rows = qi.answers.map((label) => ({
