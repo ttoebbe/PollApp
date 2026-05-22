@@ -24,9 +24,11 @@
     text-decoration: none;
     transition: opacity 0.15s ease;
 
-    &:hover {
-      text-decoration: none;
-      opacity: 0.9;
+    @media (hover: hover) {
+      &:hover {
+        text-decoration: none;
+        opacity: 0.9;
+      }
     }
   }
 
@@ -51,10 +53,12 @@
       color: a.$color-text-dark;
     }
 
-    &:hover {
-      background: a.$color-orange;
-      text-decoration: none;
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover {
+        background: a.$color-orange;
+        text-decoration: none;
+        transform: translateY(-2px);
+      }
     }
     &:active {
       transform: translateY(1px);

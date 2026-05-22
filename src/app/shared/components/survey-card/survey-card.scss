@@ -20,16 +20,20 @@
   overflow: hidden;
   cursor: pointer;
 
-  &:hover {
-    background: rgb(255 255 255 / 0.1);
-    text-decoration: none;
+  @media (hover: hover) {
+    &:hover {
+      background: rgb(255 255 255 / 0.1);
+      text-decoration: none;
+    }
   }
 
   &--past {
     cursor: not-allowed;
     opacity: 0.55;
-    &:hover {
-      background: a.$color-surface-overlay-dark;
+    @media (hover: hover) {
+      &:hover {
+        background: a.$color-surface-overlay-dark;
+      }
     }
   }
 

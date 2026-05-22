@@ -84,10 +84,12 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    &:hover {
-      background: a.$color-orange;
-      text-decoration: none;
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover {
+        background: a.$color-orange;
+        text-decoration: none;
+        transform: translateY(-2px);
+      }
     }
     &:active {
       transform: translateY(1px);
@@ -107,8 +109,10 @@
     filter: drop-shadow(0 8px 24px rgb(0 0 0 / 0.35));
     transition: transform 0.3s ease;
 
-    &:hover {
-      transform: scale(1.02);
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.02);
+      }
     }
 
     @media (max-width: a.$breakpoint-tablet) {
@@ -209,9 +213,11 @@
       border-color 0.15s ease,
       color 0.15s ease;
 
-    &:hover {
-      border-color: a.$color-orange-light;
-      color: a.$color-orange-light;
+    @media (hover: hover) {
+      &:hover {
+        border-color: a.$color-orange-light;
+        color: a.$color-orange-light;
+      }
     }
 
     svg {
@@ -252,7 +258,13 @@
         background 0.1s ease,
         color 0.1s ease;
 
-      &:hover,
+      @media (hover: hover) {
+        &:hover {
+          background: rgb(255 255 255 / 0.07);
+          color: a.$color-orange-light;
+        }
+      }
+
       &.is-selected {
         background: rgb(255 255 255 / 0.07);
         color: a.$color-orange-light;
@@ -287,9 +299,11 @@
     transition: background 0.15s ease;
   }
 
-  &:hover {
-    color: a.$color-orange-light;
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    &:hover {
+      color: a.$color-orange-light;
+      transform: translateY(-2px);
+    }
   }
 
   &:active {

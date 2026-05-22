@@ -76,9 +76,11 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    &:hover {
-      background: rgb(255 255 255 / 0.14);
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover {
+        background: rgb(255 255 255 / 0.14);
+        transform: translateY(-2px);
+      }
     }
 
     &:active {
@@ -193,9 +195,11 @@
       color 0.15s ease,
       background 0.15s ease;
 
-    &:hover {
-      color: a.$color-text-dark;
-      background: rgb(53 39 58 / 0.08);
+    @media (hover: hover) {
+      &:hover {
+        color: a.$color-text-dark;
+        background: rgb(53 39 58 / 0.08);
+      }
     }
 
     &--textarea {
@@ -305,10 +309,12 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    &:hover {
-      color: a.$color-danger;
-      background: rgb(220 80 80 / 0.1);
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover {
+        color: a.$color-danger;
+        background: rgb(220 80 80 / 0.1);
+        transform: translateY(-2px);
+      }
     }
 
     &:active {
@@ -390,9 +396,11 @@
       color 0.15s ease,
       transform 0.1s ease;
 
-    &:hover:not(:disabled) {
-      color: a.$color-orange;
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        color: a.$color-orange;
+        transform: translateY(-2px);
+      }
     }
 
     &:active:not(:disabled) {
@@ -431,10 +439,12 @@
       color 0.15s ease,
       transform 0.1s ease;
 
-    &:hover {
-      border-color: a.$color-orange;
-      color: a.$color-orange;
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover {
+        border-color: a.$color-orange;
+        color: a.$color-orange;
+        transform: translateY(-2px);
+      }
     }
 
     &:active {
@@ -461,9 +471,11 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    &:hover:not(:disabled) {
-      background: a.$color-orange-deep;
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background: a.$color-orange-deep;
+        transform: translateY(-2px);
+      }
     }
 
     &:disabled {
