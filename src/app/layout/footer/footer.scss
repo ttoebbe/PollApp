@@ -20,10 +20,15 @@
     }
   }
 
-  &__text {
-    font-family: a.$font-family-base;
-    font-size: a.$fs-body-sm;
-    color: rgb(255 255 255 / 0.5);
+  &__logo-link {
+    display: inline-flex;
+    color: a.$color-text-on-dark;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
   }
 
   &__link {
