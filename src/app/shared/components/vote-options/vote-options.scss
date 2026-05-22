@@ -31,11 +31,17 @@
   text-align: left;
   transition:
     border-color 0.15s ease,
-    background 0.15s ease;
+    background 0.15s ease,
+    transform 0.1s ease;
 
   &:hover:not([aria-disabled='true']) {
     border-color: a.$color-orange-light;
     background: rgb(255 207 161 / 0.08);
+    transform: translateY(-2px);
+  }
+
+  &:active:not([aria-disabled='true']) {
+    transform: translateY(1px);
   }
 
   &--selected {

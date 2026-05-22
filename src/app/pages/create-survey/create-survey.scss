@@ -72,10 +72,17 @@
     font-weight: a.$font-weight-semi;
     text-decoration: none;
     white-space: nowrap;
-    transition: background 0.15s ease;
+    transition:
+      background 0.15s ease,
+      transform 0.1s ease;
 
     &:hover {
       background: rgb(255 255 255 / 0.14);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
   }
 }
@@ -301,11 +308,17 @@
     padding: 0;
     transition:
       color 0.15s ease,
-      background 0.15s ease;
+      background 0.15s ease,
+      transform 0.1s ease;
 
     &:hover {
       color: a.$color-danger;
       background: rgb(220 80 80 / 0.1);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
   }
 
@@ -381,10 +394,17 @@
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
-    transition: color 0.15s ease;
+    transition:
+      color 0.15s ease,
+      transform 0.1s ease;
 
     &:hover:not(:disabled) {
       color: a.$color-orange;
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(1px);
     }
 
     &:disabled {
@@ -416,11 +436,17 @@
     cursor: pointer;
     transition:
       border-color 0.15s ease,
-      color 0.15s ease;
+      color 0.15s ease,
+      transform 0.1s ease;
 
     &:hover {
       border-color: a.$color-orange;
       color: a.$color-orange;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
   }
 }
@@ -447,6 +473,7 @@
 
     &:hover:not(:disabled) {
       background: a.$color-orange-deep;
+      transform: translateY(-2px);
     }
 
     &:disabled {

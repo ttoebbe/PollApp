@@ -87,6 +87,7 @@
     &:hover {
       background: a.$color-orange;
       text-decoration: none;
+      transform: translateY(-2px);
     }
     &:active {
       transform: translateY(1px);
@@ -185,7 +186,9 @@
   font-weight: a.$font-weight-bold;
   font-size: a.$fs-body-lg;
   line-height: 1;
-  transition: color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    transform 0.1s ease;
 
   &::after {
     content: '';
@@ -201,6 +204,11 @@
 
   &:hover {
     color: a.$color-orange-light;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 
   &--active {

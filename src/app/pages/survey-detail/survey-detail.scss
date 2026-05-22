@@ -157,6 +157,7 @@
 
     &:hover:not(:disabled) {
       background: a.$color-orange-deep;
+      transform: translateY(-2px);
     }
 
     &:disabled {
