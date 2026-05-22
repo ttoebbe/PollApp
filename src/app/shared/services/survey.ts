@@ -110,26 +110,37 @@ export class SurveyService {
     if (error) throw error;
     const survey = new SurveyModel(created as Survey);
 
-    for (let i = 0; i < questionInputs.length; i++) {
-      const qi = questionInputs[i];
-      const { data: qCreated, error: qError } = await this.supabase.client
-        .from('questions')
-        .insert({
-          survey_id: survey.id,
-          label: qi.label,
-          allow_multiple: qi.allow_multiple,
-          order_index: i,
-        })
-        .select()
-        .single();
+    // Runde 1: alle Fragen parallel einfügen
+    const questionResults = await Promise.all(
+      questionInputs.map((qi, i) =>
+        this.supabase.client
+          .from('questions')
+          .insert({
+            survey_id: survey.id,
+            label: qi.label,
+            allow_multiple: qi.allow_multiple,
+            order_index: i,
+          })
+          .select()
+          .single(),
+      ),
+    );
+    for (const { error: qError } of questionResults) {
       if (qError) throw qError;
+    }
 
-      const optionRows = qi.answers.map((label) => ({
-        survey_id: survey.id,
-        question_id: qCreated.id,
-        label,
-      }));
-      const { error: oError } = await this.supabase.client.from('options').insert(optionRows);
+    // Runde 2: alle Options-Batches parallel einfügen (question_id aus Runde 1)
+    const optionResults = await Promise.all(
+      questionInputs.map((qi, i) => {
+        const rows = qi.answers.map((label) => ({
+          survey_id: survey.id,
+          question_id: (questionResults[i].data as Question).id,
+          label,
+        }));
+        return this.supabase.client.from('options').insert(rows);
+      }),
+    );
+    for (const { error: oError } of optionResults) {
       if (oError) throw oError;
     }
 
