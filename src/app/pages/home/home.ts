@@ -22,6 +22,7 @@ export class Home implements OnInit {
   readonly selectedCategory = signal<string | null>(null);
   readonly isDropdownOpen = signal(false);
   readonly categories = SURVEY_CATEGORIES;
+  readonly loadError = signal<string | null>(null);
 
   readonly activeSurveys = computed(() =>
     this.surveys()
@@ -42,7 +43,11 @@ export class Home implements OnInit {
   );
 
   async ngOnInit(): Promise<void> {
-    await this.surveyService.loadSurveys();
+    try {
+      await this.surveyService.loadSurveys();
+    } catch {
+      this.loadError.set('Surveys could not be loaded. Please try again later.');
+    }
   }
 
   setTab(tab: 'active' | 'past'): void {

@@ -164,6 +164,12 @@
     padding: a.$space-7;
   }
 
+  &__error {
+    color: a.$color-danger;
+    text-align: center;
+    padding: a.$space-7;
+  }
+
   &__empty {
     grid-column: 1 / -1;
     text-align: center;

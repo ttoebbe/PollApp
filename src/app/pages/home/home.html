@@ -103,6 +103,8 @@
 
     @if (isLoading()) {
       <p class="surveys__loading" aria-live="polite">Loading surveys&hellip;</p>
+    } @else if (loadError()) {
+      <p class="surveys__error" role="alert">{{ loadError() }}</p>
     } @else {
       <ul class="surveys__list" role="list">
         @for (
