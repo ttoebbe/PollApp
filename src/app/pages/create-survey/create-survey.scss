@@ -401,6 +401,7 @@
   }
 
   &__add-question {
+    align-self: end;
     display: inline-flex;
     align-items: center;
     gap: a.$space-2;
