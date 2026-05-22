@@ -175,6 +175,12 @@
     }
   }
 
+  &__input-wrap--date {
+    .form__clear {
+      right: 38px;
+    }
+  }
+
   &__clear {
     position: absolute;
     right: 10px;
