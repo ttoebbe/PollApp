@@ -50,6 +50,9 @@
           @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
             <small class="form__error">Title must not exceed 100 characters.</small>
           }
+          @if (form.controls['title'].touched && form.controls['title'].hasError('whitespace')) {
+            <small class="form__error">Title cannot be whitespace only.</small>
+          }
         </div>
 
         <div class="form__field">
@@ -185,6 +188,9 @@
               </div>
               @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('required')) {
                 <small class="form__error">Please enter a question.</small>
+              }
+              @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('whitespace')) {
+                <small class="form__error">Question cannot be whitespace only.</small>
               }
 
               <!-- Antworten -->
