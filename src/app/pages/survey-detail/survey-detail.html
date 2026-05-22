@@ -24,7 +24,6 @@
     </header>
 
     <div class="detail__grid">
-      <!-- Linke Spalte: Abstimmen -->
       <section class="detail__vote-col" aria-label="Cast your vote">
         @for (row of questionRows(); track row.question.id; let qi = $index) {
           <div class="question-block">
@@ -71,7 +70,6 @@
         }
       </section>
 
-      <!-- Rechte Spalte: Ergebnisse -->
       <aside class="detail__results-col" aria-label="Survey results">
         <h2 class="detail__results-title">
           Survey results

@@ -11,7 +11,6 @@
     </header>
 
     <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-      <!-- Zeile 1: Survey name + Describing text -->
       <div class="form__top-row">
         <div class="form__field">
           <label for="cs-title">Survey name</label>
@@ -91,7 +90,6 @@
         </div>
       </div>
 
-      <!-- Zeile 2: Deadline + Category -->
       <div class="form__meta-row">
         <div class="form__field">
           <label for="cs-deadline"> Set end date <span class="form__hint">(optional)</span> </label>
@@ -150,7 +148,6 @@
         </div>
       </div>
 
-      <!-- Fragen + "Add next question" nebeneinander -->
       <div class="form__questions-wrap">
         <div class="form__questions" formArrayName="questions">
           @for (qCtrl of questions.controls; track $index; let qi = $index) {
@@ -193,7 +190,6 @@
                 <small class="form__error">Question cannot be whitespace only.</small>
               }
 
-              <!-- Antworten -->
               <div class="form__answers">
                 <div class="form__answers-header">
                   <span class="form__answers-label">Answers</span>

@@ -27,8 +27,6 @@
   }
 }
 
-// ─── Artikel-Container ───────────────────────────────────────────────────────
-
 .detail {
   max-width: a.$container-max;
   margin-inline: auto;
@@ -41,8 +39,6 @@
     padding: a.$space-5 a.$space-4;
     gap: a.$space-5;
   }
-
-  // ─── Header ──────────────────────────────────────────────────────────────
 
   &__head {
     background: a.$color-surface-overlay-dark;
@@ -110,8 +106,6 @@
     overflow-wrap: break-word;
   }
 
-  // ─── Zweispalten-Grid ────────────────────────────────────────────────────
-
   &__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -122,8 +116,6 @@
       grid-template-columns: 1fr;
     }
   }
-
-  // ─── Linke Spalte: Abstimmen ─────────────────────────────────────────────
 
   &__vote-col {
     background: a.$color-surface-card;
@@ -188,8 +180,6 @@
     font-weight: a.$font-weight-medium;
   }
 
-  // ─── Rechte Spalte: Ergebnisse ───────────────────────────────────────────
-
   &__results-col {
     background: a.$color-white;
     border-radius: 5px 60px 5px 5px;
@@ -236,8 +226,6 @@
   }
 }
 
-// ─── Fragen-Block (Abstimmung) ────────────────────────────────────────────────
-
 .question-block {
   display: flex;
   flex-direction: column;
@@ -259,8 +247,6 @@
   }
 }
 
-// ─── Ergebnis-Block (pro Frage) ───────────────────────────────────────────────
-
 .result-block {
   display: flex;
   flex-direction: column;
@@ -274,8 +260,6 @@
     margin: 0;
   }
 }
-
-// ─── Animation ───────────────────────────────────────────────────────────────
 
 @keyframes pulse {
   0%,
