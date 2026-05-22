@@ -113,7 +113,7 @@
     align-items: start;
 
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 
@@ -237,6 +237,7 @@
     font-weight: a.$font-weight-bold;
     color: a.$color-text-dark;
     margin: 0;
+    overflow-wrap: break-word;
   }
 
   &__hint {
@@ -258,6 +259,7 @@
     font-weight: a.$font-weight-bold;
     color: a.$color-text-dark;
     margin: 0;
+    overflow-wrap: break-word;
   }
 }
 
