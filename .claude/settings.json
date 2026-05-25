@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys,json,os,subprocess; d=json.load(sys.stdin); f=d.get('tool_input',{}).get('file_path',''); ext=os.path.splitext(f)[1].lower() if f else ''; r=subprocess.run(['npx','eslint','--format','compact',f],capture_output=True,text=True,cwd='d:/13_GitHub/DeveloperAkademie/036_PollApp/PollApp') if f and ext in ('.ts','.html') else None; r and r.stdout.strip() and print('ESLint:\\n'+r.stdout)\" 2>nul",
+            "statusMessage": "Running ESLint..."
+          }
+        ]
+      }
+    ]
+  }
+}
