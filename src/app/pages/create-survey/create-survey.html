@@ -29,7 +29,7 @@
                 (click)="form.controls['title'].reset('')"
                 aria-label="Clear survey name"
               >
-                <img src="img/icons/close.svg" width="14" height="14" alt="" aria-hidden="true" />
+                <img src="img/icons/close.svg" width="14" height="14" alt="" />
               </button>
             }
           </div>
@@ -65,7 +65,7 @@
                 (click)="form.controls['description'].reset('')"
                 aria-label="Clear description"
               >
-                <img src="img/icons/close.svg" width="14" height="14" alt="" aria-hidden="true" />
+                <img src="img/icons/close.svg" width="14" height="14" alt="" />
               </button>
             }
           </div>
@@ -92,7 +92,7 @@
                 (click)="form.controls['deadline'].reset('')"
                 aria-label="Clear end date"
               >
-                <img src="img/icons/close.svg" width="14" height="14" alt="" aria-hidden="true" />
+                <img src="img/icons/close.svg" width="14" height="14" alt="" />
               </button>
             }
           </div>
@@ -119,7 +119,6 @@
               width="16"
               height="16"
               alt=""
-              aria-hidden="true"
             />
           </div>
         </div>
@@ -138,13 +137,7 @@
                     (click)="removeQuestion(qi)"
                     [attr.aria-label]="'Remove question ' + (qi + 1)"
                   >
-                    <img
-                      src="img/icons/delete-icon.svg"
-                      width="18"
-                      height="18"
-                      alt=""
-                      aria-hidden="true"
-                    />
+                    <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
                   </button>
                 }
               </div>
@@ -195,13 +188,7 @@
                           (click)="removeAnswer(qi, ai)"
                           [attr.aria-label]="'Remove answer ' + (ai + 1)"
                         >
-                          <img
-                            src="img/icons/delete-icon.svg"
-                            width="18"
-                            height="18"
-                            alt=""
-                            aria-hidden="true"
-                          />
+                          <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
                         </button>
                       }
                     </li>
@@ -215,13 +202,7 @@
                   [disabled]="getAnswers(qi).length >= 8"
                 >
                   Add answer
-                  <img
-                    src="img/icons/add_circle.svg"
-                    width="16"
-                    height="16"
-                    alt=""
-                    aria-hidden="true"
-                  />
+                  <img src="img/icons/add_circle.svg" width="16" height="16" alt="" />
                 </button>
               </div>
             </div>
@@ -230,7 +211,7 @@
 
         <button type="button" class="form__add-question" (click)="addQuestion()">
           Add next question
-          <img src="img/icons/add_circle.svg" width="16" height="16" alt="" aria-hidden="true" />
+          <img src="img/icons/add_circle.svg" width="16" height="16" alt="" />
         </button>
       </div>
 

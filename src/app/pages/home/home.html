@@ -8,21 +8,23 @@
       </p>
       <a class="hero__cta" routerLink="/create">
         <span>New survey</span>
-        <img src="img/icons/add_circle.svg" width="22" height="22" alt="" aria-hidden="true" />
+        <img src="img/icons/add_circle.svg" width="22" height="22" alt="" />
       </a>
     </div>
 
-    <div class="hero__visual">
+    <figure class="hero__visual">
       <img
         class="hero__visual-img"
         ngSrc="img/hero-visual.png"
-        alt=""
+        alt="Illustration of people collecting feedback and sharing ideas through online surveys"
         width="420"
         height="420"
         priority
-        aria-hidden="true"
       />
-    </div>
+      <figcaption class="visually-hidden">
+        Hero illustration for the Poll App survey platform
+      </figcaption>
+    </figure>
   </section>
 
   <section class="highlights" aria-labelledby="highlights-heading">
@@ -65,13 +67,7 @@
           aria-haspopup="listbox"
         >
           {{ selectedCategory() ?? 'Sort by categories' }}
-          <img
-            src="img/icons/arrow_drop_down.svg"
-            width="16"
-            height="16"
-            alt=""
-            aria-hidden="true"
-          />
+          <img src="img/icons/arrow_drop_down.svg" width="16" height="16" alt="" />
         </button>
 
         @if (isDropdownOpen()) {
