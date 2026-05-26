@@ -8,6 +8,14 @@ import {
   noWhitespaceValidator,
 } from '../../shared/validators/survey.validators';
 
+interface SurveyFormValue {
+  title: string;
+  description: string;
+  category: string;
+  deadline: string;
+  questions: { label: string; allow_multiple: boolean; answers: string[] }[];
+}
+
 @Component({
   selector: 'app-create-survey',
   imports: [ReactiveFormsModule, RouterLink],
@@ -72,41 +80,55 @@ export class CreateSurvey {
   }
 
   async submit(): Promise<void> {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return;
-    }
+    if (!this.canSubmit()) return;
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
     try {
-      const v = this.form.value as {
-        title: string;
-        description: string;
-        category: string;
-        deadline: string;
-        questions: Array<{ label: string; allow_multiple: boolean; answers: string[] }>;
-      };
-
-      const survey = await this.surveyService.createSurvey(
-        {
-          title: v.title.trim(),
-          description: v.description?.trim() || null,
-          category: v.category,
-          deadline: v.deadline ? new Date(v.deadline).toISOString() : null,
-          status: 'published',
-        },
-        v.questions.map((q) => ({
-          label: q.label.trim(),
-          allow_multiple: q.allow_multiple,
-          answers: q.answers.map((a) => a.trim()).filter(Boolean),
-        })),
-      );
-      this.router.navigate(['/survey', survey.survey_number]);
+      await this.createAndNavigate();
     } catch {
       this.errorMessage.set('Saving failed — please try again.');
     } finally {
       this.isSubmitting.set(false);
     }
+  }
+
+  private async createAndNavigate(): Promise<void> {
+    const survey = await this.surveyService.createSurvey(
+      this.buildSurveyInput(),
+      this.buildQuestionInputs(),
+    );
+    this.router.navigate(['/survey', survey.survey_number]);
+  }
+
+  private get formValue(): SurveyFormValue {
+    return this.form.value as SurveyFormValue;
+  }
+
+  private canSubmit(): boolean {
+    if (this.form.invalid || this.isSubmitting()) {
+      this.form.markAllAsTouched();
+      return false;
+    }
+    return true;
+  }
+
+  private buildSurveyInput() {
+    const v = this.formValue;
+    return {
+      title: v.title.trim(),
+      description: v.description?.trim() || null,
+      category: v.category,
+      deadline: v.deadline ? new Date(v.deadline).toISOString() : null,
+      status: 'published' as const,
+    };
+  }
+
+  private buildQuestionInputs() {
+    return this.formValue.questions.map((q) => ({
+      label: q.label.trim(),
+      allow_multiple: q.allow_multiple,
+      answers: q.answers.map((a) => a.trim()).filter(Boolean),
+    }));
   }
 
   private buildQuestion(): FormGroup {
