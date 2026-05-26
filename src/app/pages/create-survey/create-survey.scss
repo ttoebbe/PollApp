@@ -246,6 +246,10 @@
     color: rgb(53 39 58 / 0.5);
   }
 
+  &__error-slot {
+    min-height: 20px;
+  }
+
   &__error {
     color: a.$color-danger;
     font-size: a.$fs-body-sm;

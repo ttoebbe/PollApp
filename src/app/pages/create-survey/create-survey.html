@@ -33,18 +33,20 @@
               </button>
             }
           </div>
-          @if (form.controls['title'].touched && form.controls['title'].hasError('required')) {
-            <small class="form__error">Please enter a title.</small>
-          }
-          @if (form.controls['title'].touched && form.controls['title'].hasError('minlength')) {
-            <small class="form__error">At least 3 characters required.</small>
-          }
-          @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
-            <small class="form__error">Title must not exceed 100 characters.</small>
-          }
-          @if (form.controls['title'].touched && form.controls['title'].hasError('whitespace')) {
-            <small class="form__error">Title cannot be whitespace only.</small>
-          }
+          <div class="form__error-slot">
+            @if (form.controls['title'].touched && form.controls['title'].hasError('required')) {
+              <small class="form__error">Please enter a title.</small>
+            }
+            @if (form.controls['title'].touched && form.controls['title'].hasError('minlength')) {
+              <small class="form__error">At least 3 characters required.</small>
+            }
+            @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
+              <small class="form__error">Title must not exceed 100 characters.</small>
+            }
+            @if (form.controls['title'].touched && form.controls['title'].hasError('whitespace')) {
+              <small class="form__error">Title cannot be whitespace only.</small>
+            }
+          </div>
         </div>
 
         <div class="form__field">
@@ -67,12 +69,14 @@
               </button>
             }
           </div>
-          @if (
-            form.controls['description'].touched &&
-            form.controls['description'].hasError('whitespace')
-          ) {
-            <small class="form__error">Description cannot be whitespace only.</small>
-          }
+          <div class="form__error-slot">
+            @if (
+              form.controls['description'].touched &&
+              form.controls['description'].hasError('whitespace')
+            ) {
+              <small class="form__error">Description cannot be whitespace only.</small>
+            }
+          </div>
         </div>
       </div>
 
@@ -92,11 +96,13 @@
               </button>
             }
           </div>
-          @if (
-            form.controls['deadline'].touched && form.controls['deadline'].hasError('pastDate')
-          ) {
-            <small class="form__error">Deadline must be in the future.</small>
-          }
+          <div class="form__error-slot">
+            @if (
+              form.controls['deadline'].touched && form.controls['deadline'].hasError('pastDate')
+            ) {
+              <small class="form__error">Deadline must be in the future.</small>
+            }
+          </div>
         </div>
 
         <div class="form__field">
@@ -151,12 +157,14 @@
                   [id]="'q-label-' + qi"
                 />
               </div>
-              @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('required')) {
-                <small class="form__error">Please enter a question.</small>
-              }
-              @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('whitespace')) {
-                <small class="form__error">Question cannot be whitespace only.</small>
-              }
+              <div class="form__error-slot">
+                @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('required')) {
+                  <small class="form__error">Please enter a question.</small>
+                }
+                @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('whitespace')) {
+                  <small class="form__error">Question cannot be whitespace only.</small>
+                }
+              </div>
 
               <div class="form__answers">
                 <div class="form__answers-header">
