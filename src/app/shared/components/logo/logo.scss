@@ -12,8 +12,8 @@
   color: inherit;
 
   &__mark {
-    width: 69px;
-    height: 50px;
+    width: clamp(80px, 11vw, 130px);
+    height: auto;
     flex-shrink: 0;
   }
 
@@ -28,8 +28,8 @@
 
   &[data-size='sm'] {
     .logo__mark {
-      width: 48px;
-      height: 35px;
+      width: clamp(60px, 8vw, 90px);
+      height: auto;
     }
     .logo__wordmark {
       font-size: 18px;
@@ -37,8 +37,8 @@
   }
   &[data-size='lg'] {
     .logo__mark {
-      width: 92px;
-      height: 67px;
+      width: clamp(110px, 15vw, 170px);
+      height: auto;
     }
     .logo__wordmark {
       font-size: 36px;
