@@ -8,9 +8,7 @@
       </p>
       <a class="hero__cta" routerLink="/create">
         <span>New survey</span>
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor">
-          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4Z" />
-        </svg>
+        <img src="img/icons/add_circle.svg" width="22" height="22" alt="" aria-hidden="true" />
       </a>
     </div>
 
@@ -67,9 +65,13 @@
           aria-haspopup="listbox"
         >
           {{ selectedCategory() ?? 'Sort by categories' }}
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
-            <path d="M7 10l5 5 5-5z" />
-          </svg>
+          <img
+            src="img/icons/arrow_drop_down.svg"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+          />
         </button>
 
         @if (isDropdownOpen()) {

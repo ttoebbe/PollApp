@@ -17,16 +17,7 @@
       >
         <span class="vote-pill__check" aria-hidden="true">
           @if (isSelected(option.id)) {
-            <svg viewBox="0 0 16 16" width="14" height="14">
-              <path
-                d="M2 8l4 4 8-9"
-                stroke="currentColor"
-                stroke-width="2.5"
-                fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <img src="img/icons/check.svg" width="14" height="14" alt="" />
           }
         </span>
         <span class="vote-pill__letter">{{ letter(i) }}</span>
