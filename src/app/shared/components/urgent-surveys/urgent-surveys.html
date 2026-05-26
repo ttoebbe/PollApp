@@ -11,7 +11,7 @@
         >
           <span class="hl-card__meta">{{ survey.category ?? 'General' }}</span>
           <h3 class="hl-card__title">{{ survey.title }}</h3>
-          <span class="hl-card__pill">{{ survey.endsInLabel() }}</span>
+          <span class="hl-card__pill">{{ endsInLabel(survey) }}</span>
         </a>
       </li>
     } @empty {

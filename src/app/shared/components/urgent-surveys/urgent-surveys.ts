@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SurveyModel } from '../../models/survey.model';
+import type { Survey } from '../../interfaces/survey.interface';
+import { getSurveyEndsInLabel } from '../../services/survey';
 
 @Component({
   selector: 'app-urgent-surveys',
@@ -9,5 +10,9 @@ import { SurveyModel } from '../../models/survey.model';
   styleUrl: './urgent-surveys.scss',
 })
 export class UrgentSurveys {
-  readonly surveys = input.required<SurveyModel[]>();
+  readonly surveys = input.required<Survey[]>();
+
+  endsInLabel(survey: Survey): string {
+    return getSurveyEndsInLabel(survey);
+  }
 }

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
-import { SurveyService } from '../../shared/services/survey';
+import { SurveyService, isSurveyActive, isSurveyUrgent } from '../../shared/services/survey';
 import { UrgentSurveys } from '../../shared/components/urgent-surveys/urgent-surveys';
 import { SurveyCard } from '../../shared/components/survey-card/survey-card';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
@@ -26,19 +26,19 @@ export class Home implements OnInit {
 
   readonly activeSurveys = computed(() =>
     this.surveys()
-      .filter((survey) => survey.isActive() && this.matchesCategory(survey))
+      .filter((survey) => isSurveyActive(survey) && this.matchesCategory(survey))
       .sort((first, second) => this.byDeadlineAsc(first, second)),
   );
 
   readonly pastSurveys = computed(() =>
     this.surveys()
-      .filter((survey) => !survey.isActive() && this.matchesCategory(survey))
+      .filter((survey) => !isSurveyActive(survey) && this.matchesCategory(survey))
       .sort((first, second) => this.byDeadlineAsc(second, first)),
   );
 
   readonly urgentSurveys = computed(() =>
     this.activeSurveys()
-      .filter((survey) => survey.isUrgent())
+      .filter((survey) => isSurveyUrgent(survey))
       .slice(0, 3),
   );
 

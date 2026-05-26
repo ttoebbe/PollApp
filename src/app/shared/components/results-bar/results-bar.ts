@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
-import { OptionModel } from '../../models/option.model';
+import type { Option } from '../../interfaces/option.interface';
+import { getOptionLetter } from '../../services/survey';
 
 @Component({
   selector: 'app-results-bar',
@@ -8,7 +9,7 @@ import { OptionModel } from '../../models/option.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResultsBar {
-  readonly options = input.required<OptionModel[]>();
+  readonly options = input.required<Option[]>();
   readonly previewOptionIds = input<string[]>([]);
 
   readonly totalVotes = computed(() => {
@@ -17,10 +18,10 @@ export class ResultsBar {
   });
 
   letter(index: number): string {
-    return OptionModel.letter(index);
+    return getOptionLetter(index);
   }
 
-  percentage(option: OptionModel): number {
+  percentage(option: Option): number {
     const isPreview = this.previewOptionIds().includes(option.id);
     const count = isPreview ? option.vote_count + 1 : option.vote_count;
     const total = this.totalVotes();
@@ -28,7 +29,7 @@ export class ResultsBar {
     return Math.round((count / total) * 100);
   }
 
-  isPreview(option: OptionModel): boolean {
+  isPreview(option: Option): boolean {
     return this.previewOptionIds().includes(option.id);
   }
 }

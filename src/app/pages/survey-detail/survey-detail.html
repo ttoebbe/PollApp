@@ -11,7 +11,7 @@
       <div class="detail__head-meta">
         <span class="detail__badge detail__badge--published">Published</span>
         @if (survey()!.deadline) {
-          <span class="detail__deadline">Ends on {{ survey()!.endsOnLabel() }}</span>
+          <span class="detail__deadline">Ends on {{ endsOnLabel() }}</span>
         }
         @if (survey()!.category) {
           <span class="detail__category-label">Category: {{ survey()!.category }}</span>

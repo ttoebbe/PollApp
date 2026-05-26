@@ -7,16 +7,16 @@ import {
   computed,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { SurveyService } from '../../shared/services/survey';
-import { SurveyModel } from '../../shared/models/survey.model';
-import { QuestionModel } from '../../shared/models/question.model';
-import { OptionModel } from '../../shared/models/option.model';
+import { SurveyService, getSurveyEndsOnLabel } from '../../shared/services/survey';
+import type { Survey } from '../../shared/interfaces/survey.interface';
+import type { Question } from '../../shared/interfaces/question.interface';
+import type { Option } from '../../shared/interfaces/option.interface';
 import { VoteOptions } from '../../shared/components/vote-options/vote-options';
 import { ResultsBar } from '../../shared/components/results-bar/results-bar';
 
 interface QuestionRow {
-  question: QuestionModel;
-  options: OptionModel[];
+  question: Question;
+  options: Option[];
 }
 
 @Component({
@@ -31,13 +31,17 @@ export class SurveyDetail implements OnInit {
   private readonly router = inject(Router);
   private readonly surveyService = inject(SurveyService);
 
-  readonly survey = signal<SurveyModel | null>(null);
-  readonly questions = signal<QuestionModel[]>([]);
+  readonly survey = signal<Survey | null>(null);
+  readonly questions = signal<Question[]>([]);
   readonly hasCompleted = signal(false);
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
-
   readonly selections = signal<Map<string, string[]>>(new Map());
+
+  readonly endsOnLabel = computed(() => {
+    const s = this.survey();
+    return s ? getSurveyEndsOnLabel(s) : '';
+  });
 
   readonly questionRows = computed<QuestionRow[]>(() => {
     const allOptions = this.surveyService.options();
@@ -61,18 +65,7 @@ export class SurveyDetail implements OnInit {
       this.router.navigate(['/']);
       return;
     }
-    try {
-      const survey = await this.surveyService.loadSurveyWithOptions(surveyNumber);
-      if (!survey) {
-        this.errorMessage.set('Survey not found.');
-        return;
-      }
-      this.survey.set(survey);
-      this.questions.set(this.surveyService.questions().filter((q) => q.survey_id === survey.id));
-      this.hasCompleted.set(localStorage.getItem(`pollapp:completed:${survey.id}`) === '1');
-    } catch {
-      this.errorMessage.set('Survey not found.');
-    }
+    await this.loadSurvey(surveyNumber);
   }
 
   onSelectionChange(questionId: string, ids: string[]): void {
@@ -90,24 +83,46 @@ export class SurveyDetail implements OnInit {
   async completeSurvey(): Promise<void> {
     const currentSurvey = this.survey();
     if (!currentSurvey || this.hasCompleted() || this.isSubmitting()) return;
-
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
     try {
-      const votePromises: Promise<void>[] = [];
-      for (const optionIds of this.selections().values()) {
-        for (const optionId of optionIds) {
-          votePromises.push(this.surveyService.vote(optionId));
-        }
-      }
-      await Promise.all(votePromises);
-      localStorage.setItem(`pollapp:completed:${currentSurvey.id}`, '1');
-      this.hasCompleted.set(true);
-      this.selections.set(new Map());
+      await this.submitVotes();
+      this.markCompleted(currentSurvey.id);
     } catch {
       this.errorMessage.set('Voting failed — please try again.');
     } finally {
       this.isSubmitting.set(false);
     }
+  }
+
+  private markCompleted(surveyId: string): void {
+    localStorage.setItem(`pollapp:completed:${surveyId}`, '1');
+    this.hasCompleted.set(true);
+    this.selections.set(new Map());
+  }
+
+  private async loadSurvey(surveyNumber: number): Promise<void> {
+    try {
+      const survey = await this.surveyService.loadSurveyWithOptions(surveyNumber);
+      if (!survey) {
+        this.errorMessage.set('Survey not found.');
+        return;
+      }
+      this.survey.set(survey);
+      this.questions.set(this.surveyService.questions().filter((q) => q.survey_id === survey.id));
+      this.hasCompleted.set(localStorage.getItem(`pollapp:completed:${survey.id}`) === '1');
+    } catch {
+      this.errorMessage.set('Survey not found.');
+    }
+  }
+
+  private async submitVotes(): Promise<void> {
+    const votePromises: Promise<void>[] = [];
+    for (const optionIds of this.selections().values()) {
+      for (const optionId of optionIds) {
+        votePromises.push(this.surveyService.vote(optionId));
+      }
+    }
+    await Promise.all(votePromises);
   }
 }
