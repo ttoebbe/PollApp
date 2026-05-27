@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  OnInit,
+  signal,
+  computed,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { SurveyService, isSurveyActive, isSurveyUrgent } from '../../shared/services/survey';
@@ -11,6 +18,7 @@ import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
   imports: [UrgentSurveys, SurveyCard, RouterLink, NgOptimizedImage],
   templateUrl: './home.html',
   styleUrl: './home.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home implements OnInit {
   private readonly surveyService = inject(SurveyService);

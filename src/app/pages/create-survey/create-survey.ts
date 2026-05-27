@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SurveyService } from '../../shared/services/survey';
+import { SurveyService, getOptionLetter } from '../../shared/services/survey';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
 import {
   futureDateValidator,
@@ -28,6 +28,7 @@ export class CreateSurvey {
   private readonly router = inject(Router);
   private readonly surveyService = inject(SurveyService);
 
+  readonly getOptionLetter = getOptionLetter;
   readonly categories = SURVEY_CATEGORIES;
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);

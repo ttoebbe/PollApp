@@ -1,14 +1,14 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgTemplateOutlet } from '@angular/common';
 import type { Survey } from '../../interfaces/survey.interface';
 import { getSurveyEndsInLabel } from '../../services/survey';
 
 @Component({
   selector: 'app-survey-card',
-  imports: [RouterLink, NgTemplateOutlet],
+  imports: [RouterLink],
   templateUrl: './survey-card.html',
   styleUrl: './survey-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SurveyCard {
   readonly survey = input.required<Survey>();

@@ -1,6 +1,11 @@
 @if (isPast()) {
   <article class="survey-card survey-card--past" aria-disabled="true">
-    <ng-container *ngTemplateOutlet="body" />
+    <div class="survey-card__meta">{{ category() }}</div>
+    <h3 class="survey-card__title">{{ survey().title }}</h3>
+    @if (survey().description) {
+      <p class="survey-card__desc">{{ survey().description }}</p>
+    }
+    <span class="survey-card__pill">{{ endsLabel() }}</span>
   </article>
 } @else {
   <a
@@ -8,15 +13,11 @@
     [routerLink]="['/survey', survey().survey_number]"
     [attr.aria-label]="'Open survey ' + survey().title"
   >
-    <ng-container *ngTemplateOutlet="body" />
+    <div class="survey-card__meta">{{ category() }}</div>
+    <h3 class="survey-card__title">{{ survey().title }}</h3>
+    @if (survey().description) {
+      <p class="survey-card__desc">{{ survey().description }}</p>
+    }
+    <span class="survey-card__pill">{{ endsLabel() }}</span>
   </a>
 }
-
-<ng-template #body>
-  <div class="survey-card__meta">{{ category() }}</div>
-  <h3 class="survey-card__title">{{ survey().title }}</h3>
-  @if (survey().description) {
-    <p class="survey-card__desc">{{ survey().description }}</p>
-  }
-  <span class="survey-card__pill">{{ endsLabel() }}</span>
-</ng-template>

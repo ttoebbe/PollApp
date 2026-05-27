@@ -144,9 +144,24 @@ FormGroup {
 - Must NOT set `standalone: true` inside Angular decorators (default in Angular v20+)
 - Use signals for state management
 - Use `computed()` for derived state — niemals Logik direkt im Template
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
+- `ChangeDetectionStrategy.OnPush` in **jeder** Komponente — keine Ausnahmen (auch layout/, shared/)
 - Do NOT use `@HostBinding` / `@HostListener` — host-Objekt im Decorator verwenden
 - Use `NgOptimizedImage` for all static images
+- `DestroyRef` für Cleanup von Subscriptions (Supabase Channels, RxJS):
+  ```typescript
+  private readonly destroyRef = inject(DestroyRef);
+  // im ngOnInit / Konstruktor:
+  const channel = supabase.channel('...').subscribe();
+  this.destroyRef.onDestroy(() => supabase.removeChannel(channel));
+  ```
+- `effect()` für reaktive Side Effects (z.B. localStorage-Sync):
+  ```typescript
+  effect(() => localStorage.setItem('key', JSON.stringify(this.data())));
+  ```
+- Utility-Funktionen aus Services im Template verfügbar machen:
+  ```typescript
+  readonly getOptionLetter = getOptionLetter; // importierte Funktion als Klassenmember
+  ```
 
 ## Templates
 
@@ -156,6 +171,7 @@ FormGroup {
 - Nur native Control Flow: `@if`, `@for`, `@switch` (kein `*ngIf`, `*ngFor`)
 - Do NOT use `ngClass` → `class` bindings verwenden
 - Do NOT use `ngStyle` → `style` bindings verwenden
+- Do NOT use `*ngTemplateOutlet` — Template-Inhalt stattdessen in beide Branches duplizieren (bei kleinen Blöcken) oder Sub-Komponente erstellen
 
 ## SCSS: Projektstruktur
 
@@ -177,9 +193,12 @@ FormGroup {
 ### TypeScript / Angular
 
 - [ ] Alle Funktionen ≤ 14 Zeilen? (ohne JSDoc, schließende Klammern)
+- [ ] `ChangeDetectionStrategy.OnPush` in **jeder** Komponente gesetzt?
 - [ ] Keine Logik in HTML-Templates? (kein Array-Literal-Zugriff, kein Ternär-Operator im `@for`)
+- [ ] Kein `*ngTemplateOutlet` verwendet?
 - [ ] Keine duplizierte Template-Logik?
 - [ ] Jedes HTML-Template ≤ 100 Zeilen?
+- [ ] Utility-Funktionen als Klassenmember exponiert (nicht direkt im Template aufgerufen)?
 - [ ] `npm run lint` ohne Fehler?
 - [ ] `npm run build` ohne Fehler?
 

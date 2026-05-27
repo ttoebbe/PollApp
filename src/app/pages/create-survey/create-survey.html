@@ -172,7 +172,7 @@
                   @for (aCtrl of getAnswers(qi).controls; track $index; let ai = $index) {
                     <li class="form__answer-item">
                       <span class="form__letter">
-                        {{ ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.'][ai] }}
+                        {{ getOptionLetter(ai) }}
                       </span>
                       <div class="form__input-wrap" style="flex: 1">
                         <input
