@@ -25,9 +25,9 @@
 
     <div class="detail__grid">
       <section class="detail__vote-col" aria-label="Cast your vote">
-        @for (row of questionRows(); track row.question.id; let qi = $index) {
+        @for (row of questionRows(); track row.question.id) {
           <div class="question-block">
-            <h2 class="question-block__heading">{{ qi + 1 }}. {{ row.question.label }}</h2>
+            <h2 class="question-block__heading">{{ row.heading }}</h2>
             @if (row.question.allow_multiple) {
               <p class="question-block__hint">More than one answers are possible.</p>
             }
@@ -70,9 +70,9 @@
           </span>
         </h2>
 
-        @for (row of questionRows(); track row.question.id; let qi = $index) {
+        @for (row of questionRows(); track row.question.id) {
           <div class="result-block">
-            <h3 class="result-block__heading">{{ qi + 1 }}. {{ row.question.label }}</h3>
+            <h3 class="result-block__heading">{{ row.heading }}</h3>
             <app-results-bar
               [options]="row.options"
               [previewOptionIds]="previewIds(row.question.id)"

@@ -105,16 +105,13 @@
       <p class="surveys__error" role="alert">{{ loadError() }}</p>
     } @else {
       <ul class="surveys__list" role="list">
-        @for (
-          survey of activeTab() === 'active' ? activeSurveys() : pastSurveys();
-          track survey.id
-        ) {
+        @for (survey of displayedSurveys(); track survey.id) {
           <li>
-            <app-survey-card [survey]="survey" [isPast]="activeTab() === 'past'"></app-survey-card>
+            <app-survey-card [survey]="survey" [isPast]="isPastTab()"></app-survey-card>
           </li>
         } @empty {
           <li class="surveys__empty">
-            @if (activeTab() === 'active') {
+            @if (!isPastTab()) {
               No active surveys yet. <a routerLink="/create">Create your first one</a>.
             } @else {
               No past surveys.

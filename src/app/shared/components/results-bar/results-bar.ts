@@ -17,6 +17,8 @@ export class ResultsBar {
     return base + this.previewOptionIds().length;
   });
 
+  readonly votesLabel = computed(() => (this.totalVotes() === 1 ? 'vote' : 'votes'));
+
   letter(index: number): string {
     return getOptionLetter(index);
   }

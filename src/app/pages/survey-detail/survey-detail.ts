@@ -17,6 +17,7 @@ import { ResultsBar } from '../../shared/components/results-bar/results-bar';
 interface QuestionRow {
   question: Question;
   options: Option[];
+  heading: string;
 }
 
 @Component({
@@ -45,9 +46,10 @@ export class SurveyDetail implements OnInit {
 
   readonly questionRows = computed<QuestionRow[]>(() => {
     const allOptions = this.surveyService.options();
-    return this.questions().map((q) => ({
+    return this.questions().map((q, index) => ({
       question: q,
       options: allOptions.filter((o) => o.question_id === q.id),
+      heading: `${index + 1}. ${q.label}`,
     }));
   });
 

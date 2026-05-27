@@ -50,6 +50,12 @@ export class Home implements OnInit {
       .slice(0, 3),
   );
 
+  readonly displayedSurveys = computed(() =>
+    this.activeTab() === 'active' ? this.activeSurveys() : this.pastSurveys(),
+  );
+
+  readonly isPastTab = computed(() => this.activeTab() === 'past');
+
   async ngOnInit(): Promise<void> {
     try {
       await this.surveyService.loadSurveys();

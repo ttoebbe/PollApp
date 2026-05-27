@@ -4,7 +4,7 @@
       <span class="results__dot" aria-hidden="true"></span>
       LIVE
     </span>
-    <span class="results__total">{{ totalVotes() }} vote{{ totalVotes() === 1 ? '' : 's' }}</span>
+    <span class="results__total">{{ totalVotes() }} {{ votesLabel() }}</span>
   </div>
 
   <ul class="results__list" role="list">
