@@ -1,28 +1,30 @@
-<ul
-  class="vote-list"
+<div
   [attr.role]="allowMultiple() ? 'group' : 'radiogroup'"
   aria-label="Answer options"
+  style="display: contents"
 >
-  @for (option of options(); track option.id; let i = $index) {
-    <li>
-      <button
-        type="button"
-        class="vote-pill"
-        [class.vote-pill--selected]="isSelected(option.id)"
-        [class.vote-pill--multi]="allowMultiple()"
-        [attr.aria-checked]="isSelected(option.id)"
-        [attr.aria-disabled]="disabled()"
-        [attr.role]="allowMultiple() ? 'checkbox' : 'radio'"
-        (click)="select(option.id)"
-      >
-        <span class="vote-pill__check" aria-hidden="true">
-          @if (isSelected(option.id)) {
-            <img src="img/icons/check.svg" width="14" height="14" alt="" />
-          }
-        </span>
-        <span class="vote-pill__letter">{{ letter(i) }}</span>
-        <span class="vote-pill__label">{{ option.label }}</span>
-      </button>
-    </li>
-  }
-</ul>
+  <ul class="vote-list">
+    @for (option of options(); track option.id; let i = $index) {
+      <li>
+        <button
+          type="button"
+          class="vote-pill"
+          [class.vote-pill--selected]="isSelected(option.id)"
+          [class.vote-pill--multi]="allowMultiple()"
+          [attr.aria-checked]="isSelected(option.id)"
+          [attr.aria-disabled]="disabled()"
+          [attr.role]="allowMultiple() ? 'checkbox' : 'radio'"
+          (click)="select(option.id)"
+        >
+          <span class="vote-pill__check" aria-hidden="true">
+            @if (isSelected(option.id)) {
+              <img src="img/icons/check.svg" width="14" height="14" alt="" />
+            }
+          </span>
+          <span class="vote-pill__letter">{{ letter(i) }}</span>
+          <span class="vote-pill__label">{{ option.label }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</div>
