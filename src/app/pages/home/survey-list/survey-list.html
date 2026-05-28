@@ -1,0 +1,28 @@
+<div
+  id="tab-panel-surveys"
+  role="tabpanel"
+  [attr.aria-labelledby]="activeTab() === 'active' ? 'tab-active' : 'tab-past'"
+  tabindex="0"
+>
+  @if (isLoading()) {
+    <p class="surveys__loading" aria-live="polite">Loading surveys&hellip;</p>
+  } @else if (loadError()) {
+    <p class="surveys__error" role="alert">{{ loadError() }}</p>
+  } @else {
+    <ul class="surveys__list" role="list">
+      @for (survey of surveys(); track survey.id) {
+        <li>
+          <app-survey-card [survey]="survey" [isPast]="isPast()"></app-survey-card>
+        </li>
+      } @empty {
+        <li class="surveys__empty">
+          @if (!isPast()) {
+            No active surveys yet. <a routerLink="/create">Create your first one</a>.
+          } @else {
+            No past surveys.
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

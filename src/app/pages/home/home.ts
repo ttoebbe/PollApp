@@ -10,12 +10,13 @@ import { RouterLink } from '@angular/router';
 import { NgOptimizedImage } from '@angular/common';
 import { SurveyService, isSurveyActive, isSurveyUrgent } from '../../shared/services/survey';
 import { UrgentSurveys } from '../../shared/components/urgent-surveys/urgent-surveys';
-import { SurveyCard } from '../../shared/components/survey-card/survey-card';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
+import { SurveyFilter } from './survey-filter/survey-filter';
+import { SurveyList } from './survey-list/survey-list';
 
 @Component({
   selector: 'app-home',
-  imports: [UrgentSurveys, SurveyCard, RouterLink, NgOptimizedImage],
+  imports: [UrgentSurveys, RouterLink, NgOptimizedImage, SurveyFilter, SurveyList],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +29,6 @@ export class Home implements OnInit {
 
   readonly activeTab = signal<'active' | 'past'>('active');
   readonly selectedCategory = signal<string | null>(null);
-  readonly isDropdownOpen = signal(false);
   readonly categories = SURVEY_CATEGORIES;
   readonly loadError = signal<string | null>(null);
 
@@ -66,24 +66,10 @@ export class Home implements OnInit {
 
   setTab(tab: 'active' | 'past'): void {
     this.activeTab.set(tab);
-    this.isDropdownOpen.set(false);
-  }
-
-  onTabKeydown(event: KeyboardEvent, current: 'active' | 'past'): void {
-    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-    event.preventDefault();
-    const next = current === 'active' ? 'past' : 'active';
-    this.setTab(next);
-    document.getElementById(next === 'active' ? 'tab-active' : 'tab-past')?.focus();
   }
 
   setCategory(category: string | null): void {
     this.selectedCategory.set(category);
-    this.isDropdownOpen.set(false);
-  }
-
-  toggleDropdown(): void {
-    this.isDropdownOpen.update((open) => !open);
   }
 
   private matchesCategory(survey: { category: string | null }): boolean {

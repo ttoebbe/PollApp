@@ -1,0 +1,42 @@
+@use '../../../../styles/abstracts' as a;
+
+:host {
+  display: block;
+}
+
+.surveys__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: a.$space-4;
+
+  @media (max-width: a.$breakpoint-tablet) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.surveys__loading {
+  color: rgb(255 255 255 / 0.6);
+  text-align: center;
+  padding: a.$space-7;
+}
+
+.surveys__error {
+  color: a.$color-danger;
+  text-align: center;
+  padding: a.$space-7;
+}
+
+.surveys__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: rgb(255 255 255 / 0.6);
+  padding: a.$space-7;
+
+  a {
+    color: a.$color-orange;
+    text-decoration: underline;
+  }
+}

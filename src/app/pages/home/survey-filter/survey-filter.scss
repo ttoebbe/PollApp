@@ -1,0 +1,143 @@
+@use '../../../../styles/abstracts' as a;
+
+:host {
+  display: block;
+}
+
+.surveys__filters {
+  display: flex;
+  gap: a.$space-5;
+  align-items: center;
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+}
+
+.category-filter {
+  position: relative;
+  margin-inline-start: auto;
+  z-index: 10;
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: a.$space-2;
+    padding: a.$space-2 a.$space-4;
+    background: transparent;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: a.$radius-md;
+    color: rgb(255 255 255 / 0.7);
+    font-family: a.$font-family-base;
+    font-size: a.$fs-body-lg;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        border-color: a.$color-orange-light;
+        color: a.$color-orange-light;
+      }
+    }
+
+    svg {
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+  }
+
+  &--open .category-filter__toggle svg {
+    transform: rotate(180deg);
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + a.$space-2);
+    right: 0;
+    min-width: 200px;
+    list-style: none;
+    padding: a.$space-2 0;
+    margin: 0;
+    background: a.$color-bg-dark;
+    border: 1px solid a.$color-divider;
+    border-radius: a.$radius-md;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+
+    li button {
+      display: block;
+      width: 100%;
+      padding: a.$space-2 a.$space-5;
+      background: transparent;
+      border: none;
+      color: rgb(255 255 255 / 0.7);
+      font-family: a.$font-family-base;
+      font-size: a.$fs-body-lg;
+      text-align: left;
+      cursor: pointer;
+      transition:
+        background 0.1s ease,
+        color 0.1s ease;
+
+      @media (hover: hover) {
+        &:hover {
+          background: rgb(255 255 255 / 0.07);
+          color: a.$color-orange-light;
+        }
+      }
+
+      &.is-selected {
+        background: rgb(255 255 255 / 0.07);
+        color: a.$color-orange-light;
+      }
+    }
+  }
+}
+
+.tab {
+  position: relative;
+  padding: a.$space-1 0 a.$space-2;
+  background: transparent;
+  border: none;
+  color: rgb(255 255 255 / 0.65);
+  font-family: a.$font-family-base;
+  font-weight: a.$font-weight-bold;
+  font-size: a.$fs-body-lg;
+  line-height: 1;
+  transition:
+    color 0.15s ease,
+    transform 0.1s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: transparent;
+    transition: background 0.15s ease;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: a.$color-orange-light;
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &--active {
+    color: a.$color-orange;
+    &::after {
+      background: a.$color-orange;
+    }
+  }
+}

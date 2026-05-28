@@ -34,108 +34,19 @@
 
   <section class="surveys" aria-labelledby="surveys-heading">
     <h2 id="surveys-heading" class="visually-hidden">All surveys</h2>
-
-    <div class="surveys__filters">
-      <div role="tablist" aria-label="Survey filter">
-        <button
-          id="tab-active"
-          class="tab"
-          [class.tab--active]="activeTab() === 'active'"
-          role="tab"
-          [attr.aria-selected]="activeTab() === 'active'"
-          [attr.tabindex]="activeTab() === 'active' ? 0 : -1"
-          aria-controls="tab-panel-surveys"
-          (click)="setTab('active')"
-          (keydown)="onTabKeydown($event, 'active')"
-        >
-          Active survey
-        </button>
-        <button
-          id="tab-past"
-          class="tab"
-          [class.tab--active]="activeTab() === 'past'"
-          role="tab"
-          [attr.aria-selected]="activeTab() === 'past'"
-          [attr.tabindex]="activeTab() === 'past' ? 0 : -1"
-          aria-controls="tab-panel-surveys"
-          (click)="setTab('past')"
-          (keydown)="onTabKeydown($event, 'past')"
-        >
-          Past survey
-        </button>
-      </div>
-
-      @if (isDropdownOpen()) {
-        <div class="dropdown-backdrop" (click)="toggleDropdown()" aria-hidden="true"></div>
-      }
-
-      <div class="category-filter" [class.category-filter--open]="isDropdownOpen()">
-        <button
-          class="category-filter__toggle"
-          (click)="toggleDropdown()"
-          [attr.aria-expanded]="isDropdownOpen()"
-          aria-haspopup="listbox"
-        >
-          {{ selectedCategory() ?? 'Sort by categories' }}
-          <img src="img/icons/arrow_drop_down.svg" width="16" height="16" alt="" />
-        </button>
-
-        @if (isDropdownOpen()) {
-          <ul class="category-filter__menu" role="listbox" aria-label="Category filter">
-            <li role="presentation">
-              <button
-                role="option"
-                [attr.aria-selected]="selectedCategory() === null"
-                [class.is-selected]="selectedCategory() === null"
-                (click)="setCategory(null)"
-              >
-                All categories
-              </button>
-            </li>
-            @for (cat of categories; track cat) {
-              <li role="presentation">
-                <button
-                  role="option"
-                  [attr.aria-selected]="selectedCategory() === cat"
-                  [class.is-selected]="selectedCategory() === cat"
-                  (click)="setCategory(cat)"
-                >
-                  {{ cat }}
-                </button>
-              </li>
-            }
-          </ul>
-        }
-      </div>
-    </div>
-
-    <div
-      id="tab-panel-surveys"
-      role="tabpanel"
-      [attr.aria-labelledby]="activeTab() === 'active' ? 'tab-active' : 'tab-past'"
-      tabindex="0"
-    >
-      @if (isLoading()) {
-        <p class="surveys__loading" aria-live="polite">Loading surveys&hellip;</p>
-      } @else if (loadError()) {
-        <p class="surveys__error" role="alert">{{ loadError() }}</p>
-      } @else {
-        <ul class="surveys__list" role="list">
-          @for (survey of displayedSurveys(); track survey.id) {
-            <li>
-              <app-survey-card [survey]="survey" [isPast]="isPastTab()"></app-survey-card>
-            </li>
-          } @empty {
-            <li class="surveys__empty">
-              @if (!isPastTab()) {
-                No active surveys yet. <a routerLink="/create">Create your first one</a>.
-              } @else {
-                No past surveys.
-              }
-            </li>
-          }
-        </ul>
-      }
-    </div>
+    <app-survey-filter
+      [activeTab]="activeTab()"
+      [selectedCategory]="selectedCategory()"
+      [categories]="categories"
+      (tabChange)="setTab($event)"
+      (categoryChange)="setCategory($event)"
+    />
+    <app-survey-list
+      [surveys]="displayedSurveys()"
+      [isLoading]="isLoading()"
+      [loadError]="loadError()"
+      [isPast]="isPastTab()"
+      [activeTab]="activeTab()"
+    />
   </section>
 </section>
