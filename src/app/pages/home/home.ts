@@ -69,6 +69,14 @@ export class Home implements OnInit {
     this.isDropdownOpen.set(false);
   }
 
+  onTabKeydown(event: KeyboardEvent, current: 'active' | 'past'): void {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+    event.preventDefault();
+    const next = current === 'active' ? 'past' : 'active';
+    this.setTab(next);
+    document.getElementById(next === 'active' ? 'tab-active' : 'tab-past')?.focus();
+  }
+
   setCategory(category: string | null): void {
     this.selectedCategory.set(category);
     this.isDropdownOpen.set(false);

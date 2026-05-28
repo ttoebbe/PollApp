@@ -1,5 +1,5 @@
 @if (isPast()) {
-  <article class="survey-card survey-card--past" aria-disabled="true">
+  <article class="survey-card survey-card--past">
     <div class="survey-card__meta">{{ category() }}</div>
     <h3 class="survey-card__title">{{ survey().title }}</h3>
     @if (survey().description) {

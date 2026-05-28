@@ -35,25 +35,35 @@
   <section class="surveys" aria-labelledby="surveys-heading">
     <h2 id="surveys-heading" class="visually-hidden">All surveys</h2>
 
-    <div class="surveys__filters" role="tablist" aria-label="Umfragen-Filter">
-      <button
-        class="tab"
-        [class.tab--active]="activeTab() === 'active'"
-        role="tab"
-        [attr.aria-selected]="activeTab() === 'active'"
-        (click)="setTab('active')"
-      >
-        Active survey
-      </button>
-      <button
-        class="tab"
-        [class.tab--active]="activeTab() === 'past'"
-        role="tab"
-        [attr.aria-selected]="activeTab() === 'past'"
-        (click)="setTab('past')"
-      >
-        Past survey
-      </button>
+    <div class="surveys__filters">
+      <div role="tablist" aria-label="Survey filter">
+        <button
+          id="tab-active"
+          class="tab"
+          [class.tab--active]="activeTab() === 'active'"
+          role="tab"
+          [attr.aria-selected]="activeTab() === 'active'"
+          [attr.tabindex]="activeTab() === 'active' ? 0 : -1"
+          aria-controls="tab-panel-surveys"
+          (click)="setTab('active')"
+          (keydown)="onTabKeydown($event, 'active')"
+        >
+          Active survey
+        </button>
+        <button
+          id="tab-past"
+          class="tab"
+          [class.tab--active]="activeTab() === 'past'"
+          role="tab"
+          [attr.aria-selected]="activeTab() === 'past'"
+          [attr.tabindex]="activeTab() === 'past' ? 0 : -1"
+          aria-controls="tab-panel-surveys"
+          (click)="setTab('past')"
+          (keydown)="onTabKeydown($event, 'past')"
+        >
+          Past survey
+        </button>
+      </div>
 
       @if (isDropdownOpen()) {
         <div class="dropdown-backdrop" (click)="toggleDropdown()" aria-hidden="true"></div>
@@ -72,7 +82,7 @@
 
         @if (isDropdownOpen()) {
           <ul class="category-filter__menu" role="listbox" aria-label="Category filter">
-            <li>
+            <li role="presentation">
               <button
                 role="option"
                 [attr.aria-selected]="selectedCategory() === null"
@@ -83,7 +93,7 @@
               </button>
             </li>
             @for (cat of categories; track cat) {
-              <li>
+              <li role="presentation">
                 <button
                   role="option"
                   [attr.aria-selected]="selectedCategory() === cat"
@@ -99,26 +109,33 @@
       </div>
     </div>
 
-    @if (isLoading()) {
-      <p class="surveys__loading" aria-live="polite">Loading surveys&hellip;</p>
-    } @else if (loadError()) {
-      <p class="surveys__error" role="alert">{{ loadError() }}</p>
-    } @else {
-      <ul class="surveys__list" role="list">
-        @for (survey of displayedSurveys(); track survey.id) {
-          <li>
-            <app-survey-card [survey]="survey" [isPast]="isPastTab()"></app-survey-card>
-          </li>
-        } @empty {
-          <li class="surveys__empty">
-            @if (!isPastTab()) {
-              No active surveys yet. <a routerLink="/create">Create your first one</a>.
-            } @else {
-              No past surveys.
-            }
-          </li>
-        }
-      </ul>
-    }
+    <div
+      id="tab-panel-surveys"
+      role="tabpanel"
+      [attr.aria-labelledby]="activeTab() === 'active' ? 'tab-active' : 'tab-past'"
+      tabindex="0"
+    >
+      @if (isLoading()) {
+        <p class="surveys__loading" aria-live="polite">Loading surveys&hellip;</p>
+      } @else if (loadError()) {
+        <p class="surveys__error" role="alert">{{ loadError() }}</p>
+      } @else {
+        <ul class="surveys__list" role="list">
+          @for (survey of displayedSurveys(); track survey.id) {
+            <li>
+              <app-survey-card [survey]="survey" [isPast]="isPastTab()"></app-survey-card>
+            </li>
+          } @empty {
+            <li class="surveys__empty">
+              @if (!isPastTab()) {
+                No active surveys yet. <a routerLink="/create">Create your first one</a>.
+              } @else {
+                No past surveys.
+              }
+            </li>
+          }
+        </ul>
+      }
+    </div>
   </section>
 </section>
