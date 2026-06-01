@@ -3,6 +3,7 @@ import { SupabaseService } from './supabase';
 import type { Survey } from '../interfaces/survey.interface';
 import type { Option } from '../interfaces/option.interface';
 import type { Question } from '../interfaces/question.interface';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface QuestionInput {
   label: string;
@@ -227,5 +228,40 @@ export class SurveyService {
     const results = await Promise.all(this.mapOptionInserts(surveyId, inputs, questionResults));
     const failed = results.find(({ error }) => error);
     if (failed?.error) throw failed.error;
+  }
+
+  subscribeToOptionUpdates(surveyId: string): RealtimeChannel {
+    return this.supabase.client
+      .channel('option-vote-channel')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'options', filter: `survey_id=eq.${surveyId}` },
+        (payload) => this.handleOptionUpdate(payload.new as Option),
+      )
+      .subscribe();
+  }
+
+  subscribeToSurveyInserts(): RealtimeChannel {
+    return this.supabase.client
+      .channel('survey-insert-channel')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'surveys' }, (payload) =>
+        this.handleSurveyInsert(payload.new as Survey),
+      )
+      .subscribe();
+  }
+
+  unsubscribeChannel(channel: RealtimeChannel): void {
+    this.supabase.client.removeChannel(channel);
+  }
+
+  private handleOptionUpdate(updated: Option): void {
+    this._options.update((curr) => curr.map((o) => (o.id === updated.id ? updated : o)));
+  }
+
+  private handleSurveyInsert(survey: Survey): void {
+    if (survey.status !== 'published') return;
+    this._surveys.update((curr) =>
+      curr.find((s) => s.id === survey.id) ? curr : [survey, ...curr],
+    );
   }
 }

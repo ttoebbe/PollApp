@@ -5,6 +5,7 @@ import {
   OnInit,
   signal,
   computed,
+  DestroyRef,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SurveyService, getSurveyEndsOnLabel } from '../../shared/services/survey';
@@ -31,6 +32,7 @@ export class SurveyDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly surveyService = inject(SurveyService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly survey = signal<Survey | null>(null);
   readonly questions = signal<Question[]>([]);
@@ -110,12 +112,18 @@ export class SurveyDetail implements OnInit {
         this.errorMessage.set('Survey not found.');
         return;
       }
-      this.survey.set(survey);
-      this.questions.set(this.surveyService.questions().filter((q) => q.survey_id === survey.id));
-      this.hasCompleted.set(localStorage.getItem(`pollapp:completed:${survey.id}`) === '1');
+      this.initSurvey(survey);
     } catch {
       this.errorMessage.set('Survey not found.');
     }
+  }
+
+  private initSurvey(survey: Survey): void {
+    this.survey.set(survey);
+    this.questions.set(this.surveyService.questions().filter((q) => q.survey_id === survey.id));
+    this.hasCompleted.set(localStorage.getItem(`pollapp:completed:${survey.id}`) === '1');
+    const channel = this.surveyService.subscribeToOptionUpdates(survey.id);
+    this.destroyRef.onDestroy(() => this.surveyService.unsubscribeChannel(channel));
   }
 
   private async submitVotes(): Promise<void> {

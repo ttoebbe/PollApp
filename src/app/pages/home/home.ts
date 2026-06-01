@@ -5,6 +5,7 @@ import {
   OnInit,
   signal,
   computed,
+  DestroyRef,
 } from '@angular/core';
 // Lädt alle benötigten Angular-Kern-Bausteine: Decorator, Change-Detection-Strategie, Dependency Injection, Lifecycle-Hook und reaktive Hilfsfunktionen.
 
@@ -49,6 +50,7 @@ export class Home implements OnInit {
   // Exportiert die Home-Klasse und erklärt Angular, dass ngOnInit nach der Initialisierung aufgerufen wird.
 
   private readonly surveyService = inject(SurveyService);
+  private readonly destroyRef = inject(DestroyRef);
   // Injiziert den SurveyService, über den alle Umfragedaten geladen und verwaltet werden.
 
   readonly surveys = this.surveyService.surveys;
@@ -99,18 +101,12 @@ export class Home implements OnInit {
   // Computed-Signal: gibt true zurück, wenn der Tab 'past' aktiv ist — vereinfacht Template-Bindings.
 
   async ngOnInit(): Promise<void> {
-    // Lifecycle-Hook: wird einmalig nach der Initialisierung der Komponente aufgerufen.
-
+    const channel = this.surveyService.subscribeToSurveyInserts();
+    this.destroyRef.onDestroy(() => this.surveyService.unsubscribeChannel(channel));
     try {
-      // Startet einen Versuch, die Umfragen zu laden.
-
       await this.surveyService.loadSurveys();
-      // Ruft den Service auf und wartet, bis alle Umfragen aus der Datenbank geladen sind.
     } catch {
-      // Fängt jeden Fehler ab, der beim Laden aufgetreten ist.
-
       this.loadError.set('Surveys could not be loaded. Please try again later.');
-      // Setzt die Fehlermeldung im Signal, damit das Template sie anzeigen kann.
     }
   }
 
