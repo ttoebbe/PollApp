@@ -1,0 +1,169 @@
+@use '../../../../styles/abstracts' as a;
+
+:host {
+  display: contents;
+}
+
+.form {
+  &__top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: a.$space-5;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__meta-row {
+    display: flex;
+    align-items: flex-end;
+    gap: a.$space-5;
+    flex-wrap: wrap;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-2;
+
+    label {
+      font-weight: a.$font-weight-bold;
+      font-size: a.$fs-body-sm;
+      color: a.$color-text-on-dark;
+    }
+  }
+
+  &__hint {
+    font-weight: a.$font-weight-regular;
+    opacity: 0.6;
+  }
+
+  &__input-wrap {
+    position: relative;
+    display: flex;
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      background: a.$color-white;
+      border: 1.5px solid transparent;
+      border-radius: a.$radius-input;
+      font-family: a.$font-family-base;
+      font-size: a.$fs-body;
+      color: a.$color-text-dark;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &:focus {
+        outline: none;
+        border-color: a.$color-orange;
+        box-shadow: 0 0 0 3px rgb(255 183 112 / 0.3);
+      }
+
+      &::placeholder {
+        color: rgb(53 39 58 / 0.4);
+      }
+
+      &.ng-touched.ng-invalid {
+        border-color: a.$color-danger;
+        box-shadow: 0 0 0 3px rgb(220 80 80 / 0.15);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+
+  &__input-wrap--textarea {
+    textarea {
+      padding-right: a.$space-7;
+    }
+  }
+
+  &__input-wrap--date {
+    .form__clear {
+      right: 38px;
+    }
+  }
+
+  &__clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgb(53 39 58 / 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        color: a.$color-text-dark;
+        background: rgb(53 39 58 / 0.08);
+      }
+    }
+
+    &--textarea {
+      top: 10px;
+      transform: none;
+    }
+  }
+
+  &__select-wrap {
+    position: relative;
+
+    select {
+      width: 100%;
+      padding: 10px 40px 10px 14px;
+      background: a.$color-white;
+      border: 1.5px solid transparent;
+      border-radius: a.$radius-input;
+      font-family: a.$font-family-base;
+      font-size: a.$fs-body;
+      color: a.$color-text-dark;
+      appearance: none;
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+        border-color: a.$color-orange;
+        box-shadow: 0 0 0 3px rgb(255 183 112 / 0.3);
+      }
+    }
+  }
+
+  &__select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgb(53 39 58 / 0.5);
+  }
+
+  &__error-slot {
+    min-height: 20px;
+  }
+
+  &__error {
+    color: a.$color-danger;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-medium;
+  }
+}

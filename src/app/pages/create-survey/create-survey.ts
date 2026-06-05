@@ -1,12 +1,21 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { SurveyService, getOptionLetter } from '../../shared/services/survey';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
 import {
   futureDateValidator,
   noWhitespaceValidator,
 } from '../../shared/validators/survey.validators';
+import { SurveyInfoFields } from './survey-info-fields/survey-info-fields';
+import { SurveyQuestionBlock } from './survey-question-block/survey-question-block';
 
 interface SurveyFormValue {
   title: string;
@@ -18,7 +27,7 @@ interface SurveyFormValue {
 
 @Component({
   selector: 'app-create-survey',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, SurveyInfoFields, SurveyQuestionBlock],
   templateUrl: './create-survey.html',
   styleUrl: './create-survey.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +60,26 @@ export class CreateSurvey {
 
   get questions(): FormArray {
     return this.form.get('questions') as FormArray;
+  }
+
+  get titleControl(): FormControl {
+    return this.form.controls['title'] as FormControl;
+  }
+
+  get descriptionControl(): FormControl {
+    return this.form.controls['description'] as FormControl;
+  }
+
+  get deadlineControl(): FormControl {
+    return this.form.controls['deadline'] as FormControl;
+  }
+
+  get categoryControl(): FormControl {
+    return this.form.controls['category'] as FormControl;
+  }
+
+  getQuestion(index: number): FormGroup {
+    return this.questions.at(index) as FormGroup;
   }
 
   getAnswers(questionIndex: number): FormArray {

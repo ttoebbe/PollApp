@@ -11,204 +11,27 @@
     </header>
 
     <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-      <div class="form__top-row">
-        <div class="form__field">
-          <label for="cs-title">Survey name</label>
-          <div class="form__input-wrap">
-            <input
-              id="cs-title"
-              type="text"
-              formControlName="title"
-              placeholder="e.g. Team Event Planning"
-              autocomplete="off"
-            />
-            @if (form.controls['title'].value) {
-              <button
-                type="button"
-                class="form__clear"
-                (click)="form.controls['title'].reset('')"
-                aria-label="Clear survey name"
-              >
-                <img src="img/icons/close.svg" width="14" height="14" alt="" />
-              </button>
-            }
-          </div>
-          <div class="form__error-slot">
-            @if (form.controls['title'].touched && form.controls['title'].hasError('required')) {
-              <small class="form__error">Please enter a title.</small>
-            }
-            @if (form.controls['title'].touched && form.controls['title'].hasError('minlength')) {
-              <small class="form__error">At least 3 characters required.</small>
-            }
-            @if (form.controls['title'].touched && form.controls['title'].hasError('maxlength')) {
-              <small class="form__error">Title must not exceed 100 characters.</small>
-            }
-            @if (form.controls['title'].touched && form.controls['title'].hasError('whitespace')) {
-              <small class="form__error">Title cannot be whitespace only.</small>
-            }
-          </div>
-        </div>
-
-        <div class="form__field">
-          <label for="cs-desc"> Describing text <span class="form__hint">(optional)</span> </label>
-          <div class="form__input-wrap form__input-wrap--textarea">
-            <textarea
-              id="cs-desc"
-              formControlName="description"
-              rows="4"
-              placeholder="Give people a bit more context…"
-            ></textarea>
-            @if (form.controls['description'].value) {
-              <button
-                type="button"
-                class="form__clear form__clear--textarea"
-                (click)="form.controls['description'].reset('')"
-                aria-label="Clear description"
-              >
-                <img src="img/icons/close.svg" width="14" height="14" alt="" />
-              </button>
-            }
-          </div>
-          <div class="form__error-slot">
-            @if (
-              form.controls['description'].touched &&
-              form.controls['description'].hasError('whitespace')
-            ) {
-              <small class="form__error">Description cannot be whitespace only.</small>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="form__meta-row">
-        <div class="form__field">
-          <label for="cs-deadline"> Set end date <span class="form__hint">(optional)</span> </label>
-          <div class="form__input-wrap form__input-wrap--date">
-            <input id="cs-deadline" type="date" formControlName="deadline" />
-            @if (form.controls['deadline'].value) {
-              <button
-                type="button"
-                class="form__clear"
-                (click)="form.controls['deadline'].reset('')"
-                aria-label="Clear end date"
-              >
-                <img src="img/icons/close.svg" width="14" height="14" alt="" />
-              </button>
-            }
-          </div>
-          <div class="form__error-slot">
-            @if (
-              form.controls['deadline'].touched && form.controls['deadline'].hasError('pastDate')
-            ) {
-              <small class="form__error">Deadline must be in the future.</small>
-            }
-          </div>
-        </div>
-
-        <div class="form__field">
-          <label for="cs-cat">Choose category</label>
-          <div class="form__select-wrap">
-            <select id="cs-cat" formControlName="category">
-              @for (c of categories; track c) {
-                <option [value]="c">{{ c }}</option>
-              }
-            </select>
-            <img
-              class="form__select-arrow"
-              src="img/icons/arrow_drop_down.svg"
-              width="16"
-              height="16"
-              alt=""
-            />
-          </div>
-        </div>
-      </div>
+      <app-survey-info-fields
+        [titleControl]="titleControl"
+        [descriptionControl]="descriptionControl"
+        [deadlineControl]="deadlineControl"
+        [categoryControl]="categoryControl"
+        [categories]="categories"
+      />
 
       <div class="form__questions-wrap">
-        <div class="form__questions" formArrayName="questions">
+        <div class="form__questions">
           @for (qCtrl of questions.controls; track $index; let qi = $index) {
-            <div class="form__question" [formGroupName]="qi">
-              <div class="form__question-header">
-                <span class="form__question-num">{{ qi + 1 }}. Question</span>
-                @if (questions.length > 1) {
-                  <button
-                    type="button"
-                    class="form__icon-btn"
-                    (click)="removeQuestion(qi)"
-                    [attr.aria-label]="'Remove question ' + (qi + 1)"
-                  >
-                    <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
-                  </button>
-                }
-              </div>
-
-              <div class="form__input-wrap">
-                <input
-                  type="text"
-                  formControlName="label"
-                  placeholder="Which date would work best for you?"
-                  [id]="'q-label-' + qi"
-                />
-              </div>
-              <div class="form__error-slot">
-                @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('required')) {
-                  <small class="form__error">Please enter a question.</small>
-                }
-                @if (qCtrl.get('label')!.touched && qCtrl.get('label')!.hasError('whitespace')) {
-                  <small class="form__error">Question cannot be whitespace only.</small>
-                }
-              </div>
-
-              <div class="form__answers">
-                <div class="form__answers-header">
-                  <span class="form__answers-label">Answers</span>
-                  <label class="form__checkbox-label">
-                    <input type="checkbox" formControlName="allow_multiple" />
-                    Allow multiple answers.
-                  </label>
-                </div>
-
-                <ul class="form__answer-list" role="list" formArrayName="answers">
-                  @for (aCtrl of getAnswers(qi).controls; track $index; let ai = $index) {
-                    <li class="form__answer-item">
-                      <span class="form__letter">
-                        {{ getOptionLetter(ai) }}
-                      </span>
-                      <div class="form__input-wrap" style="flex: 1">
-                        <input
-                          type="text"
-                          [formControlName]="ai"
-                          [placeholder]="'Answer ' + (ai + 1)"
-                        />
-                      </div>
-                      @if (getAnswers(qi).length > 2) {
-                        <button
-                          type="button"
-                          class="form__icon-btn"
-                          (click)="removeAnswer(qi, ai)"
-                          [attr.aria-label]="'Remove answer ' + (ai + 1)"
-                        >
-                          <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
-                        </button>
-                      }
-                    </li>
-                  }
-                </ul>
-
-                <button
-                  type="button"
-                  class="form__add-link"
-                  (click)="addAnswer(qi)"
-                  [disabled]="getAnswers(qi).length >= 8"
-                >
-                  Add answer
-                  <img src="img/icons/add_circle.svg" width="16" height="16" alt="" />
-                </button>
-              </div>
-            </div>
+            <app-survey-question-block
+              [questionGroup]="getQuestion(qi)"
+              [questionIndex]="qi"
+              [canRemove]="questions.length > 1"
+              (remove)="removeQuestion(qi)"
+              (addAnswer)="addAnswer(qi)"
+              (removeAnswer)="removeAnswer(qi, $event)"
+            />
           }
         </div>
-
         <button type="button" class="form__add-question" (click)="addQuestion()">
           Add next question
           <img src="img/icons/add_circle.svg" width="16" height="16" alt="" />

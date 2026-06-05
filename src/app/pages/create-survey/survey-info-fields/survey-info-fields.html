@@ -1,0 +1,107 @@
+<div class="form__top-row">
+  <div class="form__field">
+    <label for="cs-title">Survey name</label>
+    <div class="form__input-wrap">
+      <input
+        id="cs-title"
+        type="text"
+        [formControl]="titleControl()"
+        placeholder="e.g. Team Event Planning"
+        autocomplete="off"
+      />
+      @if (titleControl().value) {
+        <button
+          type="button"
+          class="form__clear"
+          (click)="titleControl().reset('')"
+          aria-label="Clear survey name"
+        >
+          <img src="img/icons/close.svg" width="14" height="14" alt="" />
+        </button>
+      }
+    </div>
+    <div class="form__error-slot">
+      @if (titleControl().touched && titleControl().hasError('required')) {
+        <small class="form__error">Please enter a title.</small>
+      }
+      @if (titleControl().touched && titleControl().hasError('minlength')) {
+        <small class="form__error">At least 3 characters required.</small>
+      }
+      @if (titleControl().touched && titleControl().hasError('maxlength')) {
+        <small class="form__error">Title must not exceed 100 characters.</small>
+      }
+      @if (titleControl().touched && titleControl().hasError('whitespace')) {
+        <small class="form__error">Title cannot be whitespace only.</small>
+      }
+    </div>
+  </div>
+
+  <div class="form__field">
+    <label for="cs-desc">Describing text <span class="form__hint">(optional)</span></label>
+    <div class="form__input-wrap form__input-wrap--textarea">
+      <textarea
+        id="cs-desc"
+        [formControl]="descriptionControl()"
+        rows="4"
+        placeholder="Give people a bit more context…"
+      ></textarea>
+      @if (descriptionControl().value) {
+        <button
+          type="button"
+          class="form__clear form__clear--textarea"
+          (click)="descriptionControl().reset('')"
+          aria-label="Clear description"
+        >
+          <img src="img/icons/close.svg" width="14" height="14" alt="" />
+        </button>
+      }
+    </div>
+    <div class="form__error-slot">
+      @if (descriptionControl().touched && descriptionControl().hasError('whitespace')) {
+        <small class="form__error">Description cannot be whitespace only.</small>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="form__meta-row">
+  <div class="form__field">
+    <label for="cs-deadline">Set end date <span class="form__hint">(optional)</span></label>
+    <div class="form__input-wrap form__input-wrap--date">
+      <input id="cs-deadline" type="date" [formControl]="deadlineControl()" />
+      @if (deadlineControl().value) {
+        <button
+          type="button"
+          class="form__clear"
+          (click)="deadlineControl().reset('')"
+          aria-label="Clear end date"
+        >
+          <img src="img/icons/close.svg" width="14" height="14" alt="" />
+        </button>
+      }
+    </div>
+    <div class="form__error-slot">
+      @if (deadlineControl().touched && deadlineControl().hasError('pastDate')) {
+        <small class="form__error">Deadline must be in the future.</small>
+      }
+    </div>
+  </div>
+
+  <div class="form__field">
+    <label for="cs-cat">Choose category</label>
+    <div class="form__select-wrap">
+      <select id="cs-cat" [formControl]="categoryControl()">
+        @for (c of categories(); track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+      <img
+        class="form__select-arrow"
+        src="img/icons/arrow_drop_down.svg"
+        width="16"
+        height="16"
+        alt=""
+      />
+    </div>
+  </div>
+</div>

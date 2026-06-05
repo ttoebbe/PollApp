@@ -1,0 +1,77 @@
+<div class="form__question" [formGroup]="questionGroup()">
+  <div class="form__question-header">
+    <span class="form__question-num">{{ questionIndex() + 1 }}. Question</span>
+    @if (canRemove()) {
+      <button
+        type="button"
+        class="form__icon-btn"
+        (click)="remove.emit()"
+        [attr.aria-label]="'Remove question ' + (questionIndex() + 1)"
+      >
+        <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
+      </button>
+    }
+  </div>
+
+  <div class="form__input-wrap">
+    <input
+      type="text"
+      formControlName="label"
+      placeholder="Which date would work best for you?"
+      [id]="'q-label-' + questionIndex()"
+    />
+  </div>
+  <div class="form__error-slot">
+    @if (
+      questionGroup().get('label')!.touched && questionGroup().get('label')!.hasError('required')
+    ) {
+      <small class="form__error">Please enter a question.</small>
+    }
+    @if (
+      questionGroup().get('label')!.touched && questionGroup().get('label')!.hasError('whitespace')
+    ) {
+      <small class="form__error">Question cannot be whitespace only.</small>
+    }
+  </div>
+
+  <div class="form__answers">
+    <div class="form__answers-header">
+      <span class="form__answers-label">Answers</span>
+      <label class="form__checkbox-label">
+        <input type="checkbox" formControlName="allow_multiple" />
+        Allow multiple answers.
+      </label>
+    </div>
+
+    <ul class="form__answer-list" role="list" formArrayName="answers">
+      @for (aCtrl of answers.controls; track $index; let ai = $index) {
+        <li class="form__answer-item">
+          <span class="form__letter">{{ getOptionLetter(ai) }}</span>
+          <div class="form__input-wrap" style="flex: 1">
+            <input type="text" [formControlName]="ai" [placeholder]="'Answer ' + (ai + 1)" />
+          </div>
+          @if (answers.length > 2) {
+            <button
+              type="button"
+              class="form__icon-btn"
+              (click)="removeAnswer.emit(ai)"
+              [attr.aria-label]="'Remove answer ' + (ai + 1)"
+            >
+              <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
+            </button>
+          }
+        </li>
+      }
+    </ul>
+
+    <button
+      type="button"
+      class="form__add-link"
+      (click)="addAnswer.emit()"
+      [disabled]="answers.length >= 8"
+    >
+      Add answer
+      <img src="img/icons/add_circle.svg" width="16" height="16" alt="" />
+    </button>
+  </div>
+</div>
