@@ -120,8 +120,10 @@ PollApp/
       environment.ts          (not committed — listed in .gitignore)
     styles/
       styles.scss
+      _tokens.scss            raw design tokens (colors, spacing, breakpoints, shadows)
+      _abstracts.scss         @forward entry point for tokens
       abstracts/
-        _variables.scss       design tokens (colors, spacing, breakpoints)
+        _variables.scss       SCSS variables
         _mixins.scss          respond(), flex-center(), px-to-rem()
         _index.scss           @forward for all abstracts
 ```
@@ -173,9 +175,9 @@ Voting increments `vote_count` via Supabase update. No auth — multiple votes a
 
 ## Architecture
 
-### Diagramm 1: Komponenten-Hierarchie
+### Diagram 1: Component Hierarchy
 
-> Blau = Layout · Gelb = Pages (geroutet) · Grün = Shared Components
+> Blue = Layout · Yellow = Pages (routed) · Green = Shared Components
 
 ```mermaid
 flowchart TD
@@ -224,7 +226,7 @@ flowchart TD
     class UrgentSurveys,SurveyFilter,SurveyList,SurveyCard,VoteOptions,ResultsBar shared
 ```
 
-### Diagramm 2: Datenfluss — Services & Signals
+### Diagram 2: Data Flow — Services & Signals
 
 ```mermaid
 flowchart LR
@@ -317,59 +319,57 @@ flowchart LR
 
 ---
 
-## Referenz: Imports & Exports
-
-> Arbeitsdokument — Beschreibungen auf Deutsch, wird später überarbeitet.
+## Reference: Imports & Exports
 
 ---
 
-### Interfaces & Typen
+### Interfaces & Types
 
-**Datei:** `src/app/shared/interfaces/survey.interface.ts`
+**File:** `src/app/shared/interfaces/survey.interface.ts`
 
 ```ts
 export interface Survey {
-  id: string;            // Eindeutige UUID der Umfrage
-  survey_number: number; // Fortlaufende Nummer für lesbare URLs (/survey/42)
-  title: string;         // Titel der Umfrage (Pflichtfeld)
-  description: string | null; // Optionale Beschreibung
-  category: string | null;    // Kategorie (z. B. "Feedback") oder null
-  deadline: string | null;    // ISO-Datum-String oder null (kein Ablaufdatum)
-  status: 'draft' | 'published'; // Nur 'published' wird in der App angezeigt
-  created_at: string;    // Erstellungsdatum als ISO-String
+  id: string;                     // unique UUID of the survey
+  survey_number: number;          // sequential number for readable URLs (/survey/42)
+  title: string;                  // survey title (required)
+  description: string | null;     // optional description
+  category: string | null;        // category (e.g. "Feedback") or null
+  deadline: string | null;        // ISO date string or null (no deadline)
+  status: 'draft' | 'published';  // only 'published' surveys are shown in the app
+  created_at: string;             // creation date as ISO string
 }
 
 export const SURVEY_CATEGORIES: readonly string[]
-// Feste Liste aller möglichen Kategorien:
+// Fixed list of all possible categories:
 // 'Team activities' | 'Workplace culture' | 'Feedback' | 'Events' | 'Product' | 'Other'
 
 export type SurveyCategory
-// Union-Typ aus den SURVEY_CATEGORIES-Werten
+// Union type derived from SURVEY_CATEGORIES values
 ```
 
-**Datei:** `src/app/shared/interfaces/question.interface.ts`
+**File:** `src/app/shared/interfaces/question.interface.ts`
 
 ```ts
 export interface Question {
-  id: string; // Eindeutige UUID der Frage
-  survey_id: string; // Fremdschlüssel → surveys.id
-  label: string; // Fragetext (Pflichtfeld)
-  allow_multiple: boolean; // true = Mehrfachauswahl erlaubt
-  order_index: number; // Reihenfolge der Frage innerhalb der Umfrage
-  created_at: string; // Erstellungsdatum als ISO-String
+  id: string; // unique UUID of the question
+  survey_id: string; // foreign key → surveys.id
+  label: string; // question text (required)
+  allow_multiple: boolean; // true = multiple selection allowed
+  order_index: number; // order of the question within the survey
+  created_at: string; // creation date as ISO string
 }
 ```
 
-**Datei:** `src/app/shared/interfaces/option.interface.ts`
+**File:** `src/app/shared/interfaces/option.interface.ts`
 
 ```ts
 export interface Option {
-  id: string; // Eindeutige UUID der Antwortoption
-  survey_id: string; // Fremdschlüssel → surveys.id
-  question_id: string; // Fremdschlüssel → questions.id
-  label: string; // Anzeigetext der Option (Pflichtfeld)
-  vote_count: number; // Aktuelle Stimmenanzahl (default 0)
-  created_at: string; // Erstellungsdatum als ISO-String
+  id: string; // unique UUID of the answer option
+  survey_id: string; // foreign key → surveys.id
+  question_id: string; // foreign key → questions.id
+  label: string; // display text of the option (required)
+  vote_count: number; // current vote count (default 0)
+  created_at: string; // creation date as ISO string
 }
 ```
 
@@ -377,12 +377,12 @@ export interface Option {
 
 ### Validators
 
-**Datei:** `src/app/shared/validators/survey.validators.ts`
+**File:** `src/app/shared/validators/survey.validators.ts`
 
-| Export                  | Signatur                                                 | Beschreibung                                                                                                                                  |
-| ----------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `noWhitespaceValidator` | `(control: AbstractControl) => ValidationErrors \| null` | Gibt `{ whitespace: true }` zurück, wenn der Feldwert nach `trim()` leer ist — verhindert rein aus Leerzeichen bestehende Eingaben            |
-| `futureDateValidator`   | `(control: AbstractControl) => ValidationErrors \| null` | Gibt `{ pastDate: true }` zurück, wenn das eingegebene Datum in der Vergangenheit liegt — stellt sicher, dass Deadlines in der Zukunft liegen |
+| Export                  | Signature                                                | Description                                                                                                   |
+| ----------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `noWhitespaceValidator` | `(control: AbstractControl) => ValidationErrors \| null` | Returns `{ whitespace: true }` when the field value is empty after `trim()` — prevents whitespace-only inputs |
+| `futureDateValidator`   | `(control: AbstractControl) => ValidationErrors \| null` | Returns `{ pastDate: true }` when the entered date is in the past — ensures deadlines are set in the future   |
 
 ---
 
@@ -390,64 +390,67 @@ export interface Option {
 
 #### SupabaseService
 
-**Datei:** `src/app/shared/services/supabase.ts`  
-**Bereitstellung:** `@Injectable({ providedIn: 'root' })` — App-weiter Singleton
+**File:** `src/app/shared/services/supabase.ts`  
+**Provided:** `@Injectable({ providedIn: 'root' })` — app-wide singleton
 
-| Export   | Typ              | Beschreibung                                                                                                                          |
-| -------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `client` | `SupabaseClient` | Einmalig erstellter Supabase-Client mit URL und Key aus `environment.ts` — alle anderen Services greifen darüber auf die Datenbank zu |
+| Export   | Type             | Description                                                                                                        |
+| -------- | ---------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `client` | `SupabaseClient` | Single Supabase client instance created from `environment.ts` — all other services use this to access the database |
 
 ---
 
 #### SurveyService
 
-**Datei:** `src/app/shared/services/survey.ts`  
-**Bereitstellung:** `@Injectable({ providedIn: 'root' })` — App-weiter Singleton
+**File:** `src/app/shared/services/survey.ts`  
+**Provided:** `@Injectable({ providedIn: 'root' })` — app-wide singleton
 
-##### Readonly Signals (Zustandsspeicher)
+##### Readonly Signals (State)
 
-| Signal      | Typ                  | Beschreibung                                                                         |
-| ----------- | -------------------- | ------------------------------------------------------------------------------------ |
-| `surveys`   | `Signal<Survey[]>`   | Enthält alle geladenen, veröffentlichten Umfragen — wird von `loadSurveys()` befüllt |
-| `questions` | `Signal<Question[]>` | Enthält alle Fragen der zuletzt geladenen Umfrage(n)                                 |
-| `options`   | `Signal<Option[]>`   | Enthält alle Antwortoptionen der zuletzt geladenen Umfrage(n)                        |
-| `isLoading` | `Signal<boolean>`    | Ist `true`, solange ein Datenbank-Request läuft — für Ladezustände im Template       |
+| Signal      | Type                 | Description                                                                       |
+| ----------- | -------------------- | --------------------------------------------------------------------------------- |
+| `surveys`   | `Signal<Survey[]>`   | All loaded published surveys — populated by `loadSurveys()`                       |
+| `questions` | `Signal<Question[]>` | All questions of the most recently loaded survey(s)                               |
+| `options`   | `Signal<Option[]>`   | All answer options of the most recently loaded survey(s)                          |
+| `isLoading` | `Signal<boolean>`    | `true` while a database request is running — used for loading states in templates |
 
-##### Computed-Getter (gefilterte Derived Signals)
+##### Computed Getters (Derived Signals)
 
-| Methode                          | Rückgabe             | Beschreibung                                                                                                                     |
-| -------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `questionsFor(surveyId: string)` | `Signal<Question[]>` | Gibt ein `computed()`-Signal zurück, das die Fragen für eine bestimmte Umfrage gefiltert und nach `order_index` sortiert liefert |
-| `optionsFor(questionId: string)` | `Signal<Option[]>`   | Gibt ein `computed()`-Signal zurück, das alle Antwortoptionen für eine bestimmte Frage filtert                                   |
+| Method                           | Returns              | Description                                                                                              |
+| -------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------- |
+| `questionsFor(surveyId: string)` | `Signal<Question[]>` | Returns a `computed()` signal with questions for a specific survey, filtered and sorted by `order_index` |
+| `optionsFor(questionId: string)` | `Signal<Option[]>`   | Returns a `computed()` signal with all answer options for a specific question                            |
 
-##### Öffentliche Methoden (CRUD)
+##### Public Methods (CRUD)
 
-| Methode                 | Signatur                                                           | Beschreibung                                                                                                                   |
-| ----------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `loadSurveys`           | `() => Promise<void>`                                              | Lädt alle veröffentlichten Umfragen aus Supabase (absteigend nach `created_at`) und setzt das `surveys`-Signal                 |
-| `loadSurveyWithOptions` | `(surveyNumber: number) => Promise<Survey \| null>`                | Lädt eine einzelne Umfrage anhand ihrer laufenden Nummer inklusive aller Fragen und Optionen; fügt sie dem lokalen Cache hinzu |
-| `createSurvey`          | `(surveyData, questionInputs: QuestionInput[]) => Promise<Survey>` | Legt eine neue Umfrage in Supabase an, fügt Fragen und Optionen ein, aktualisiert das `surveys`-Signal                         |
-| `vote`                  | `(optionId: string) => Promise<void>`                              | Ruft die Supabase-RPC-Funktion `increment_vote` auf und aktualisiert den `vote_count` der Option direkt im lokalen Signal      |
+| Method                     | Signature                                                          | Description                                                                                                              |
+| -------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `loadSurveys`              | `() => Promise<void>`                                              | Loads all published surveys from Supabase (descending by `created_at`) and sets the `surveys` signal                     |
+| `loadSurveyWithOptions`    | `(surveyNumber: number) => Promise<Survey \| null>`                | Loads a single survey by its sequential number including all questions and options; adds it to the local cache           |
+| `createSurvey`             | `(surveyData, questionInputs: QuestionInput[]) => Promise<Survey>` | Creates a new survey in Supabase, inserts questions and options, updates the `surveys` signal                            |
+| `vote`                     | `(optionId: string) => Promise<void>`                              | Calls the Supabase RPC function `increment_vote` and updates the option's `vote_count` directly in the local signal      |
+| `subscribeToOptionUpdates` | `(surveyId: string) => RealtimeChannel`                            | Registers a Realtime subscription for vote updates on a survey; returns the channel for cleanup via `unsubscribeChannel` |
+| `subscribeToSurveyInserts` | `() => RealtimeChannel`                                            | Registers a Realtime subscription for newly created surveys; returns the channel for cleanup via `unsubscribeChannel`    |
+| `unsubscribeChannel`       | `(channel: RealtimeChannel) => void`                               | Disconnects a Realtime channel — called in `DestroyRef.onDestroy`                                                        |
 
-##### Hilfsfunktionen (standalone exports aus `survey.ts`)
+##### Helper Functions (standalone exports from `survey.ts`)
 
-Diese Funktionen sind direkt aus der Datei exportiert — kein Klassenmember, kein `inject()` nötig.
+These functions are exported directly from the file — no class member, no `inject()` needed.
 
-| Funktion               | Signatur                      | Beschreibung                                                                                                     |
-| ---------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `isSurveyActive`       | `(survey: Survey) => boolean` | Gibt `true` zurück, wenn die Umfrage keine Deadline hat oder die Deadline in der Zukunft liegt                   |
-| `isSurveyUrgent`       | `(survey: Survey) => boolean` | Gibt `true` zurück, wenn die Deadline zwischen jetzt und den nächsten 48 Stunden liegt                           |
-| `getSurveyEndsInLabel` | `(survey: Survey) => string`  | Gibt einen lesbaren Ablauf-Text zurück, z. B. `"Ends in 3h"`, `"Ends in 2 Days"`, `"Ended"` oder `"No deadline"` |
-| `getSurveyEndsOnLabel` | `(survey: Survey) => string`  | Gibt das Ablaufdatum im deutschen Format zurück, z. B. `"31.12.2025"` — leerer String wenn keine Deadline        |
-| `getOptionLetter`      | `(index: number) => string`   | Wandelt einen Index in einen Buchstaben-Label um: `0 → "A."`, `1 → "B."` usw.                                    |
+| Function               | Signature                     | Description                                                                                                   |
+| ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `isSurveyActive`       | `(survey: Survey) => boolean` | Returns `true` if the survey has no deadline or the deadline is in the future                                 |
+| `isSurveyUrgent`       | `(survey: Survey) => boolean` | Returns `true` if the deadline falls between now and the next 48 hours                                        |
+| `getSurveyEndsInLabel` | `(survey: Survey) => string`  | Returns a human-readable expiry label, e.g. `"Ends in 3h"`, `"Ends in 2 Days"`, `"Ended"`, or `"No deadline"` |
+| `getSurveyEndsOnLabel` | `(survey: Survey) => string`  | Returns the deadline formatted as `"DD.MM.YYYY"` — empty string if no deadline                                |
+| `getOptionLetter`      | `(index: number) => string`   | Converts an index to a letter label: `0 → "A."`, `1 → "B."`, etc.                                             |
 
-##### Interface (aus `survey.ts` exportiert)
+##### Interface (exported from `survey.ts`)
 
 ```ts
 export interface QuestionInput {
-  label: string; // Fragetext
-  allow_multiple: boolean; // Mehrfachauswahl erlaubt?
-  answers: string[]; // Array der Antworttexte
+  label: string; // question text
+  allow_multiple: boolean; // multiple selection allowed?
+  answers: string[]; // array of answer texts
 }
 ```
 
@@ -457,236 +460,236 @@ export interface QuestionInput {
 
 #### Logo
 
-**Datei:** `src/app/shared/components/logo/logo.ts`  
+**File:** `src/app/shared/components/logo/logo.ts`  
 **Selector:** `<app-logo>`
 
-| Art       | Name   | Typ                    | Standard | Beschreibung                            |
-| --------- | ------ | ---------------------- | -------- | --------------------------------------- |
-| `input()` | `size` | `'sm' \| 'md' \| 'lg'` | `'md'`   | Steuert die Darstellungsgröße des Logos |
+| Kind      | Name   | Type                   | Default | Description                           |
+| --------- | ------ | ---------------------- | ------- | ------------------------------------- |
+| `input()` | `size` | `'sm' \| 'md' \| 'lg'` | `'md'`  | Controls the display size of the logo |
 
 ---
 
 #### SurveyCard
 
-**Datei:** `src/app/shared/components/survey-card/survey-card.ts`  
+**File:** `src/app/shared/components/survey-card/survey-card.ts`  
 **Selector:** `<app-survey-card>`
 
-| Art                | Name        | Typ       | Standard | Beschreibung                                                      |
-| ------------------ | ----------- | --------- | -------- | ----------------------------------------------------------------- |
-| `input.required()` | `survey`    | `Survey`  | —        | Die anzuzeigende Umfrage                                          |
-| `input()`          | `isPast`    | `boolean` | `false`  | Steuert ob die Karte im „abgelaufen"-Stil dargestellt wird        |
-| `computed`         | `endsLabel` | `string`  | —        | Abgeleiteter Text für die verbleibende Zeit, z. B. `"Ends in 5h"` |
-| `computed`         | `category`  | `string`  | —        | Kategorie der Umfrage — fällt auf `"General"` zurück, wenn `null` |
+| Kind               | Name        | Type      | Default | Description                                                    |
+| ------------------ | ----------- | --------- | ------- | -------------------------------------------------------------- |
+| `input.required()` | `survey`    | `Survey`  | —       | The survey to display                                          |
+| `input()`          | `isPast`    | `boolean` | `false` | Controls whether the card is rendered in the "expired" style   |
+| `computed`         | `endsLabel` | `string`  | —       | Derived text for remaining time, e.g. `"Ends in 5h"`           |
+| `computed`         | `category`  | `string`  | —       | Category of the survey — falls back to `"General"` when `null` |
 
 ---
 
 #### UrgentSurveys
 
-**Datei:** `src/app/shared/components/urgent-surveys/urgent-surveys.ts`  
+**File:** `src/app/shared/components/urgent-surveys/urgent-surveys.ts`  
 **Selector:** `<app-urgent-surveys>`
 
-| Art                | Name      | Typ        | Standard | Beschreibung                                                                     |
-| ------------------ | --------- | ---------- | -------- | -------------------------------------------------------------------------------- |
-| `input.required()` | `surveys` | `Survey[]` | —        | Liste der dringenden Umfragen (wird von `Home` bereits auf max. 3 eingeschränkt) |
+| Kind               | Name      | Type       | Default | Description                                            |
+| ------------------ | --------- | ---------- | ------- | ------------------------------------------------------ |
+| `input.required()` | `surveys` | `Survey[]` | —       | List of urgent surveys (already capped at 3 by `Home`) |
 
-| Methode       | Signatur                     | Beschreibung                                                                        |
-| ------------- | ---------------------------- | ----------------------------------------------------------------------------------- |
-| `endsInLabel` | `(survey: Survey) => string` | Delegiert an `getSurveyEndsInLabel()` — macht die Hilfsfunktion im Template nutzbar |
+| Method        | Signature                    | Description                                                                              |
+| ------------- | ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `endsInLabel` | `(survey: Survey) => string` | Delegates to `getSurveyEndsInLabel()` — makes the helper function available in templates |
 
 ---
 
 #### VoteOptions
 
-**Datei:** `src/app/shared/components/vote-options/vote-options.ts`  
+**File:** `src/app/shared/components/vote-options/vote-options.ts`  
 **Selector:** `<app-vote-options>`
 
-| Art                | Name              | Typ                   | Standard    | Beschreibung                                                                          |
-| ------------------ | ----------------- | --------------------- | ----------- | ------------------------------------------------------------------------------------- |
-| `input.required()` | `options`         | `Option[]`            | —           | Die Antwortoptionen der aktuellen Frage                                               |
-| `input()`          | `disabled`        | `boolean`             | `false`     | Sperrt alle Abstimmungs-Buttons (z. B. nach abgegebener Stimme)                       |
-| `input()`          | `allowMultiple`   | `boolean`             | `false`     | Erlaubt Mehrfachauswahl — bei `false` ersetzt jede Auswahl die vorherige              |
-| `output()`         | `selectionChange` | `string[]`            | —           | Wird ausgelöst, wenn sich die Auswahl ändert — liefert Array der gewählten Option-IDs |
-| `signal`           | `selectedIds`     | `Signal<Set<string>>` | `new Set()` | Interner Zustand der aktuellen Auswahl                                                |
+| Kind               | Name              | Type                  | Default     | Description                                                                        |
+| ------------------ | ----------------- | --------------------- | ----------- | ---------------------------------------------------------------------------------- |
+| `input.required()` | `options`         | `Option[]`            | —           | The answer options of the current question                                         |
+| `input()`          | `disabled`        | `boolean`             | `false`     | Disables all voting buttons (e.g. after a vote has been cast)                      |
+| `input()`          | `allowMultiple`   | `boolean`             | `false`     | Allows multiple selection — when `false`, each selection replaces the previous one |
+| `output()`         | `selectionChange` | `string[]`            | —           | Emitted when the selection changes — provides an array of selected option IDs      |
+| `signal`           | `selectedIds`     | `Signal<Set<string>>` | `new Set()` | Internal state of the current selection                                            |
 
-| Methode      | Signatur                    | Beschreibung                                                                                             |
-| ------------ | --------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `letter`     | `(index: number) => string` | Gibt den Buchstaben-Label für einen Index zurück (`"A."`, `"B."`, …)                                     |
-| `isSelected` | `(id: string) => boolean`   | Gibt `true` zurück, wenn die Option mit der gegebenen ID aktuell ausgewählt ist                          |
-| `select`     | `(id: string) => void`      | Wählt eine Option aus — bei `allowMultiple` wird umgeschaltet, sonst ersetzt; löst `selectionChange` aus |
+| Method       | Signature                   | Description                                                                                   |
+| ------------ | --------------------------- | --------------------------------------------------------------------------------------------- |
+| `letter`     | `(index: number) => string` | Returns the letter label for an index (`"A."`, `"B."`, …)                                     |
+| `isSelected` | `(id: string) => boolean`   | Returns `true` if the option with the given ID is currently selected                          |
+| `select`     | `(id: string) => void`      | Selects an option — toggles when `allowMultiple`, replaces otherwise; emits `selectionChange` |
 
 ---
 
 #### ResultsBar
 
-**Datei:** `src/app/shared/components/results-bar/results-bar.ts`  
+**File:** `src/app/shared/components/results-bar/results-bar.ts`  
 **Selector:** `<app-results-bar>`
 
-| Art                | Name               | Typ        | Standard | Beschreibung                                                                            |
-| ------------------ | ------------------ | ---------- | -------- | --------------------------------------------------------------------------------------- |
-| `input.required()` | `options`          | `Option[]` | —        | Alle Antwortoptionen der Frage mit ihren `vote_count`-Werten                            |
-| `input()`          | `previewOptionIds` | `string[]` | `[]`     | IDs der aktuell ausgewählten Optionen — zeigt eine Vorschau der Stimme vor dem Absenden |
-| `computed`         | `totalVotes`       | `number`   | —        | Summe aller abgegebenen Stimmen plus Vorschau-Stimmen                                   |
-| `computed`         | `votesLabel`       | `string`   | —        | `"vote"` (Einzahl) oder `"votes"` (Mehrzahl) je nach `totalVotes`                       |
+| Kind               | Name               | Type       | Default | Description                                                                |
+| ------------------ | ------------------ | ---------- | ------- | -------------------------------------------------------------------------- |
+| `input.required()` | `options`          | `Option[]` | —       | All answer options of the question with their `vote_count` values          |
+| `input()`          | `previewOptionIds` | `string[]` | `[]`    | IDs of currently selected options — shows a vote preview before submitting |
+| `computed`         | `totalVotes`       | `number`   | —       | Sum of all cast votes plus preview votes                                   |
+| `computed`         | `votesLabel`       | `string`   | —       | `"vote"` (singular) or `"votes"` (plural) depending on `totalVotes`        |
 
-| Methode      | Signatur                      | Beschreibung                                                                  |
-| ------------ | ----------------------------- | ----------------------------------------------------------------------------- |
-| `letter`     | `(index: number) => string`   | Buchstaben-Label für einen Index                                              |
-| `percentage` | `(option: Option) => number`  | Berechnet den gerundeten Prozentanteil einer Option inklusive Vorschau-Stimme |
-| `isPreview`  | `(option: Option) => boolean` | Gibt `true` zurück, wenn die Option in der Vorschau-Auswahl enthalten ist     |
+| Method       | Signature                     | Description                                                               |
+| ------------ | ----------------------------- | ------------------------------------------------------------------------- |
+| `letter`     | `(index: number) => string`   | Letter label for an index                                                 |
+| `percentage` | `(option: Option) => number`  | Calculates the rounded percentage of an option including the preview vote |
+| `isPreview`  | `(option: Option) => boolean` | Returns `true` if the option is included in the preview selection         |
 
 ---
 
-#### SurveyFilter _(Sub-Komponente von Home)_
+#### SurveyFilter _(Sub-component of Home)_
 
-**Datei:** `src/app/pages/home/survey-filter/survey-filter.ts`  
+**File:** `src/app/pages/home/survey-filter/survey-filter.ts`  
 **Selector:** `<app-survey-filter>`
 
-| Art                | Name               | Typ                  | Standard | Beschreibung                                                |
-| ------------------ | ------------------ | -------------------- | -------- | ----------------------------------------------------------- |
-| `input.required()` | `activeTab`        | `'active' \| 'past'` | —        | Aktuell aktiver Tab                                         |
-| `input()`          | `selectedCategory` | `string \| null`     | `null`   | Aktuell gewählte Kategorie — `null` bedeutet „alle"         |
-| `input.required()` | `categories`       | `readonly string[]`  | —        | Liste aller verfügbaren Kategorien                          |
-| `output()`         | `tabChange`        | `'active' \| 'past'` | —        | Wird ausgelöst, wenn der Nutzer einen anderen Tab wählt     |
-| `output()`         | `categoryChange`   | `string \| null`     | —        | Wird ausgelöst, wenn der Nutzer eine andere Kategorie wählt |
-| `signal`           | `isDropdownOpen`   | `Signal<boolean>`    | `false`  | Steuert, ob das Kategorie-Dropdown geöffnet ist             |
+| Kind               | Name               | Type                 | Default | Description                                        |
+| ------------------ | ------------------ | -------------------- | ------- | -------------------------------------------------- |
+| `input.required()` | `activeTab`        | `'active' \| 'past'` | —       | Currently active tab                               |
+| `input()`          | `selectedCategory` | `string \| null`     | `null`  | Currently selected category — `null` means "all"   |
+| `input.required()` | `categories`       | `readonly string[]`  | —       | List of all available categories                   |
+| `output()`         | `tabChange`        | `'active' \| 'past'` | —       | Emitted when the user selects a different tab      |
+| `output()`         | `categoryChange`   | `string \| null`     | —       | Emitted when the user selects a different category |
+| `signal`           | `isDropdownOpen`   | `Signal<boolean>`    | `false` | Controls whether the category dropdown is open     |
 
-| Methode          | Signatur                                  | Beschreibung                                                       |
-| ---------------- | ----------------------------------------- | ------------------------------------------------------------------ |
-| `setTab`         | `(tab: 'active' \| 'past') => void`       | Schließt das Dropdown und gibt das Tab-Änderungs-Event aus         |
-| `onTabKeydown`   | `(event: KeyboardEvent, current) => void` | Ermöglicht Tastaturnavigation zwischen Tabs mit Pfeil-links/rechts |
-| `setCategory`    | `(category: string \| null) => void`      | Schließt das Dropdown und gibt das Kategorie-Änderungs-Event aus   |
-| `toggleDropdown` | `() => void`                              | Öffnet oder schließt das Dropdown                                  |
+| Method           | Signature                                 | Description                                                         |
+| ---------------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| `setTab`         | `(tab: 'active' \| 'past') => void`       | Closes the dropdown and emits the tab change event                  |
+| `onTabKeydown`   | `(event: KeyboardEvent, current) => void` | Enables keyboard navigation between tabs with arrow left/right keys |
+| `setCategory`    | `(category: string \| null) => void`      | Closes the dropdown and emits the category change event             |
+| `toggleDropdown` | `() => void`                              | Opens or closes the dropdown                                        |
 
 ---
 
-#### SurveyList _(Sub-Komponente von Home)_
+#### SurveyList _(Sub-component of Home)_
 
-**Datei:** `src/app/pages/home/survey-list/survey-list.ts`  
+**File:** `src/app/pages/home/survey-list/survey-list.ts`  
 **Selector:** `<app-survey-list>`
 
-| Art                | Name        | Typ                  | Standard | Beschreibung                                               |
-| ------------------ | ----------- | -------------------- | -------- | ---------------------------------------------------------- |
-| `input.required()` | `surveys`   | `Survey[]`           | —        | Anzuzeigende Umfragen (bereits gefiltert und sortiert)     |
-| `input.required()` | `isLoading` | `boolean`            | —        | Zeigt einen Ladezustand an, wenn `true`                    |
-| `input()`          | `loadError` | `string \| null`     | `null`   | Fehlermeldung, die statt der Liste angezeigt wird          |
-| `input.required()` | `isPast`    | `boolean`            | —        | Wird an `SurveyCard` weitergegeben für den abgelaufen-Stil |
-| `input.required()` | `activeTab` | `'active' \| 'past'` | —        | Steuert leere-Zustands-Texte je nach Tab                   |
+| Kind               | Name        | Type                 | Default | Description                                      |
+| ------------------ | ----------- | -------------------- | ------- | ------------------------------------------------ |
+| `input.required()` | `surveys`   | `Survey[]`           | —       | Surveys to display (already filtered and sorted) |
+| `input.required()` | `isLoading` | `boolean`            | —       | Shows a loading state when `true`                |
+| `input()`          | `loadError` | `string \| null`     | `null`  | Error message displayed instead of the list      |
+| `input.required()` | `isPast`    | `boolean`            | —       | Passed to `SurveyCard` for the expired style     |
+| `input.required()` | `activeTab` | `'active' \| 'past'` | —       | Controls empty-state texts per tab               |
 
 ---
 
-### Layout-Komponenten
+### Layout Components
 
 #### Header
 
-**Datei:** `src/app/layout/header/header.ts`  
+**File:** `src/app/layout/header/header.ts`  
 **Selector:** `<app-header>`
 
-Reine Präsentationskomponente — kein State, keine Methoden.  
-Importiert: `RouterLink`, `Logo`
+Pure presentation component — no state, no methods.  
+Imports: `RouterLink`, `Logo`
 
 ---
 
 #### Footer
 
-**Datei:** `src/app/layout/footer/footer.ts`  
+**File:** `src/app/layout/footer/footer.ts`  
 **Selector:** `<app-footer>`
 
-| Art           | Name   | Typ      | Beschreibung                                                            |
-| ------------- | ------ | -------- | ----------------------------------------------------------------------- |
-| Klassenmember | `year` | `number` | Aktuelles Jahr aus `new Date().getFullYear()` — für die Copyright-Zeile |
+| Kind         | Name   | Type     | Description                                                           |
+| ------------ | ------ | -------- | --------------------------------------------------------------------- |
+| Class member | `year` | `number` | Current year from `new Date().getFullYear()` — for the copyright line |
 
-Importiert: `RouterLink`, `Logo`
+Imports: `RouterLink`, `Logo`
 
 ---
 
-### Page-Komponenten
+### Page Components
 
 #### Home
 
-**Datei:** `src/app/pages/home/home.ts`  
+**File:** `src/app/pages/home/home.ts`  
 **Route:** `/`
 
 ##### Signals & Readonly
 
-| Name               | Typ                          | Beschreibung                                        |
+| Name               | Type                         | Description                                         |
 | ------------------ | ---------------------------- | --------------------------------------------------- |
-| `surveys`          | `Signal<Survey[]>`           | Alle Umfragen — direkt aus `SurveyService` gebunden |
-| `isLoading`        | `Signal<boolean>`            | Ladezustand — direkt aus `SurveyService` gebunden   |
-| `activeTab`        | `Signal<'active' \| 'past'>` | Aktuell gewählter Tab, startet mit `'active'`       |
-| `selectedCategory` | `Signal<string \| null>`     | Gewählte Kategorie — `null` zeigt alle Kategorien   |
-| `loadError`        | `Signal<string \| null>`     | Fehlermeldung beim Laden der Umfragen               |
-| `categories`       | `readonly string[]`          | Liste aller Kategorien (aus `SURVEY_CATEGORIES`)    |
+| `surveys`          | `Signal<Survey[]>`           | All surveys — bound directly from `SurveyService`   |
+| `isLoading`        | `Signal<boolean>`            | Loading state — bound directly from `SurveyService` |
+| `activeTab`        | `Signal<'active' \| 'past'>` | Currently selected tab, starts with `'active'`      |
+| `selectedCategory` | `Signal<string \| null>`     | Selected category — `null` shows all categories     |
+| `loadError`        | `Signal<string \| null>`     | Error message when loading surveys fails            |
+| `categories`       | `readonly string[]`          | List of all categories (from `SURVEY_CATEGORIES`)   |
 
 ##### Computed
 
-| Name               | Typ                | Beschreibung                                                                    |
-| ------------------ | ------------------ | ------------------------------------------------------------------------------- |
-| `activeSurveys`    | `Signal<Survey[]>` | Aktive Umfragen der gewählten Kategorie, aufsteigend nach Deadline sortiert     |
-| `pastSurveys`      | `Signal<Survey[]>` | Abgelaufene Umfragen der gewählten Kategorie, absteigend nach Deadline sortiert |
-| `urgentSurveys`    | `Signal<Survey[]>` | Die ersten drei aktiven Umfragen, die in unter 48 Stunden ablaufen              |
-| `displayedSurveys` | `Signal<Survey[]>` | Liefert je nach Tab `activeSurveys` oder `pastSurveys`                          |
-| `isPastTab`        | `Signal<boolean>`  | `true` wenn der Tab `'past'` aktiv ist                                          |
+| Name               | Type               | Description                                                              |
+| ------------------ | ------------------ | ------------------------------------------------------------------------ |
+| `activeSurveys`    | `Signal<Survey[]>` | Active surveys for the selected category, sorted ascending by deadline   |
+| `pastSurveys`      | `Signal<Survey[]>` | Expired surveys for the selected category, sorted descending by deadline |
+| `urgentSurveys`    | `Signal<Survey[]>` | The first three active surveys expiring within 48 hours                  |
+| `displayedSurveys` | `Signal<Survey[]>` | Returns `activeSurveys` or `pastSurveys` depending on the active tab     |
+| `isPastTab`        | `Signal<boolean>`  | `true` when the `'past'` tab is active                                   |
 
-##### Methoden
+##### Methods
 
-| Methode       | Signatur                             | Beschreibung                                                                |
-| ------------- | ------------------------------------ | --------------------------------------------------------------------------- |
-| `ngOnInit`    | `() => Promise<void>`                | Ruft `surveyService.loadSurveys()` auf; bei Fehler wird `loadError` gesetzt |
-| `setTab`      | `(tab: 'active' \| 'past') => void`  | Aktualisiert das `activeTab`-Signal                                         |
-| `setCategory` | `(category: string \| null) => void` | Aktualisiert das `selectedCategory`-Signal                                  |
+| Method        | Signature                            | Description                                                      |
+| ------------- | ------------------------------------ | ---------------------------------------------------------------- |
+| `ngOnInit`    | `() => Promise<void>`                | Calls `surveyService.loadSurveys()`; sets `loadError` on failure |
+| `setTab`      | `(tab: 'active' \| 'past') => void`  | Updates the `activeTab` signal                                   |
+| `setCategory` | `(category: string \| null) => void` | Updates the `selectedCategory` signal                            |
 
 ---
 
 #### SurveyDetail
 
-**Datei:** `src/app/pages/survey-detail/survey-detail.ts`  
+**File:** `src/app/pages/survey-detail/survey-detail.ts`  
 **Route:** `/survey/:number`
 
 ##### Signals
 
-| Name           | Typ                             | Beschreibung                                                                     |
-| -------------- | ------------------------------- | -------------------------------------------------------------------------------- |
-| `survey`       | `Signal<Survey \| null>`        | Die geladene Umfrage — `null` solange noch nicht geladen                         |
-| `questions`    | `Signal<Question[]>`            | Fragen der geladenen Umfrage                                                     |
-| `hasCompleted` | `Signal<boolean>`               | `true` wenn der Nutzer diese Umfrage bereits abgestimmt hat (aus `localStorage`) |
-| `isSubmitting` | `Signal<boolean>`               | `true` während die Stimmen an Supabase gesendet werden                           |
-| `errorMessage` | `Signal<string \| null>`        | Fehlermeldung beim Laden oder Abstimmen                                          |
-| `selections`   | `Signal<Map<string, string[]>>` | Aktuelle Auswahl des Nutzers: `QuestionID → OptionIDs`                           |
+| Name           | Type                            | Description                                                               |
+| -------------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `survey`       | `Signal<Survey \| null>`        | The loaded survey — `null` while not yet loaded                           |
+| `questions`    | `Signal<Question[]>`            | Questions of the loaded survey                                            |
+| `hasCompleted` | `Signal<boolean>`               | `true` if the user has already voted on this survey (from `localStorage`) |
+| `isSubmitting` | `Signal<boolean>`               | `true` while votes are being sent to Supabase                             |
+| `errorMessage` | `Signal<string \| null>`        | Error message when loading or voting fails                                |
+| `selections`   | `Signal<Map<string, string[]>>` | Current user selection: `QuestionID → OptionIDs`                          |
 
 ##### Computed
 
-| Name           | Typ                     | Beschreibung                                                           |
-| -------------- | ----------------------- | ---------------------------------------------------------------------- |
-| `endsOnLabel`  | `Signal<string>`        | Formatiertes Ablaufdatum (z. B. `"31.12.2025"`) oder leerer String     |
-| `questionRows` | `Signal<QuestionRow[]>` | Kombiniert Fragen und Optionen zu darstellbaren Zeilen mit Überschrift |
-| `allAnswered`  | `Signal<boolean>`       | `true` wenn alle Fragen mindestens eine Auswahl haben                  |
+| Name           | Type                    | Description                                                       |
+| -------------- | ----------------------- | ----------------------------------------------------------------- |
+| `endsOnLabel`  | `Signal<string>`        | Formatted deadline date (e.g. `"31.12.2025"`) or empty string     |
+| `questionRows` | `Signal<QuestionRow[]>` | Combines questions and options into renderable rows with headings |
+| `allAnswered`  | `Signal<boolean>`       | `true` when all questions have at least one selection             |
 
-##### Methoden
+##### Methods
 
-| Methode             | Signatur                                      | Beschreibung                                                                                         |
-| ------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `ngOnInit`          | `() => Promise<void>`                         | Liest den `:number`-Parameter aus der URL, validiert ihn und ruft `loadSurvey()` auf                 |
-| `onSelectionChange` | `(questionId: string, ids: string[]) => void` | Aktualisiert die `selections`-Map wenn der Nutzer eine Auswahl trifft                                |
-| `previewIds`        | `(questionId: string) => string[]`            | Gibt die aktuelle Auswahl für eine Frage zurück — für die Vorschau in `ResultsBar`                   |
-| `completeSurvey`    | `() => Promise<void>`                         | Validiert, sendet alle Stimmen parallel und markiert die Umfrage in `localStorage` als abgeschlossen |
+| Method              | Signature                                     | Description                                                                                 |
+| ------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `ngOnInit`          | `() => Promise<void>`                         | Reads the `:number` param from the URL, validates it, and calls `loadSurvey()`              |
+| `onSelectionChange` | `(questionId: string, ids: string[]) => void` | Updates the `selections` map when the user makes a selection                                |
+| `previewIds`        | `(questionId: string) => string[]`            | Returns the current selection for a question — used for the preview in `ResultsBar`         |
+| `completeSurvey`    | `() => Promise<void>`                         | Validates, sends all votes in parallel, and marks the survey in `localStorage` as completed |
 
 ---
 
 #### CreateSurvey
 
-**Datei:** `src/app/pages/create-survey/create-survey.ts`  
+**File:** `src/app/pages/create-survey/create-survey.ts`  
 **Route:** `/create`
 
-##### Signals & Klassenmember
+##### Signals & Class Members
 
-| Name              | Typ                         | Beschreibung                                                |
-| ----------------- | --------------------------- | ----------------------------------------------------------- |
-| `isSubmitting`    | `Signal<boolean>`           | `true` während der Formular-Submit läuft                    |
-| `errorMessage`    | `Signal<string \| null>`    | Fehlermeldung, wenn das Speichern fehlschlägt               |
-| `getOptionLetter` | `(index: number) => string` | Hilfsfunktion als Klassenmember — damit im Template nutzbar |
-| `categories`      | `readonly string[]`         | Kategorienliste für das Dropdown                            |
+| Name              | Type                        | Description                                                       |
+| ----------------- | --------------------------- | ----------------------------------------------------------------- |
+| `isSubmitting`    | `Signal<boolean>`           | `true` while the form submit is running                           |
+| `errorMessage`    | `Signal<string \| null>`    | Error message when saving fails                                   |
+| `getOptionLetter` | `(index: number) => string` | Helper function as class member — makes it available in templates |
+| `categories`      | `readonly string[]`         | Category list for the dropdown                                    |
 
-##### Formular-Struktur
+##### Form Structure
 
 ```ts
 FormGroup {
@@ -698,30 +701,30 @@ FormGroup {
     label:          FormControl<string>   // required · noWhitespaceValidator · maxLength(200)
     allow_multiple: FormControl<boolean>  // default false
     answers:        FormArray<FormControl<string>> {
-      // mind. 2, max. 8 Einträge
-      // jeder Eintrag: required · noWhitespaceValidator · maxLength(60)
+      // min. 2, max. 8 entries
+      // each entry: required · noWhitespaceValidator · maxLength(60)
     }
   }
 }
 ```
 
-##### Methoden
+##### Methods
 
-| Methode                | Signatur                                               | Beschreibung                                                                                 |
-| ---------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| `questions` _(Getter)_ | `FormArray`                                            | Gibt das Fragen-`FormArray` aus dem Formular zurück                                          |
-| `getAnswers`           | `(questionIndex: number) => FormArray`                 | Gibt das Antworten-`FormArray` einer bestimmten Frage zurück                                 |
-| `addQuestion`          | `() => void`                                           | Fügt eine neue Frage mit zwei leeren Antwortfeldern ans Ende hinzu                           |
-| `removeQuestion`       | `(index: number) => void`                              | Entfernt eine Frage — mindestens eine Frage bleibt immer erhalten                            |
-| `addAnswer`            | `(questionIndex: number) => void`                      | Fügt ein Antwortfeld hinzu — maximal 8 Antworten pro Frage                                   |
-| `removeAnswer`         | `(questionIndex: number, answerIndex: number) => void` | Entfernt ein Antwortfeld — mindestens 2 Antworten bleiben erhalten                           |
-| `submit`               | `() => Promise<void>`                                  | Markiert alle Felder als berührt, prüft Validität, speichert und navigiert zur neuen Umfrage |
+| Method                 | Signature                                              | Description                                                                          |
+| ---------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `questions` _(Getter)_ | `FormArray`                                            | Returns the questions `FormArray` from the form                                      |
+| `getAnswers`           | `(questionIndex: number) => FormArray`                 | Returns the answers `FormArray` for a specific question                              |
+| `addQuestion`          | `() => void`                                           | Appends a new question with two empty answer fields                                  |
+| `removeQuestion`       | `(index: number) => void`                              | Removes a question — at least one question always remains                            |
+| `addAnswer`            | `(questionIndex: number) => void`                      | Adds an answer field — maximum 8 answers per question                                |
+| `removeAnswer`         | `(questionIndex: number, answerIndex: number) => void` | Removes an answer field — minimum 2 answers always remain                            |
+| `submit`               | `() => Promise<void>`                                  | Marks all fields as touched, checks validity, saves, and navigates to the new survey |
 
 ---
 
 #### Imprint
 
-**Datei:** `src/app/pages/imprint/imprint.ts`  
+**File:** `src/app/pages/imprint/imprint.ts`  
 **Route:** `/imprint`
 
-Reine Präsentationskomponente — kein State, keine Methoden, keine Inputs.
+Pure presentation component — no state, no methods, no inputs.
