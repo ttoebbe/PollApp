@@ -96,6 +96,8 @@ PollApp/
           survey-list/        → SurveyList (rendered list of SurveyCards)
         survey-detail/        → SurveyDetail (vote + live results per question)
         create-survey/        → CreateSurvey (multi-question reactive form)
+          survey-info-fields/   → SurveyInfoFields (title, description, category, deadline fields)
+          survey-question-block/ → SurveyQuestionBlock (single question + answers block)
         imprint/              → Imprint (legal page)
       shared/
         components/
@@ -198,6 +200,8 @@ flowchart TD
     SurveyCard[SurveyCard]
     VoteOptions[VoteOptions]
     ResultsBar[ResultsBar]
+    SurveyInfoFields[SurveyInfoFields]
+    SurveyQuestionBlock[SurveyQuestionBlock]
 
     App --> Header
     App --> Footer
@@ -217,12 +221,15 @@ flowchart TD
     SurveyDetail --> VoteOptions
     SurveyDetail --> ResultsBar
 
+    CreateSurvey --> SurveyInfoFields
+    CreateSurvey --> SurveyQuestionBlock
+
     classDef layout fill:#dbeafe,stroke:#3b82f6
     classDef page fill:#fef3c7,stroke:#f59e0b
     classDef shared fill:#dcfce7,stroke:#22c55e
 
     class Header,Footer,Logo layout
-    class Home,SurveyDetail,CreateSurvey,Imprint page
+    class Home,SurveyDetail,CreateSurvey,Imprint,SurveyInfoFields,SurveyQuestionBlock page
     class UrgentSurveys,SurveyFilter,SurveyList,SurveyCard,VoteOptions,ResultsBar shared
 ```
 
@@ -310,12 +317,12 @@ flowchart LR
 
 ### Pages
 
-| File               | Description                                                          |
-| ------------------ | -------------------------------------------------------------------- |
-| `home.ts`          | Urgent banner + Active / Past tabs + category filter                 |
-| `survey-detail.ts` | Vote card + results card, `localStorage` check for completed surveys |
-| `create-survey.ts` | Reactive Form with `FormArray` for dynamic questions (2–8 options)   |
-| `imprint.ts`       | Legal imprint page                                                   |
+| File               | Description                                                                                                                   |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `home.ts`          | Urgent banner + Active / Past tabs + category filter                                                                          |
+| `survey-detail.ts` | Vote card + results card, `localStorage` check for completed surveys                                                          |
+| `create-survey.ts` | Reactive Form with `FormArray` for dynamic questions (2–8 options); delegates to `SurveyInfoFields` and `SurveyQuestionBlock` |
+| `imprint.ts`       | Legal imprint page                                                                                                            |
 
 ---
 
@@ -728,3 +735,38 @@ FormGroup {
 **Route:** `/imprint`
 
 Pure presentation component — no state, no methods, no inputs.
+
+---
+
+#### SurveyInfoFields _(Sub-component of CreateSurvey)_
+
+**File:** `src/app/pages/create-survey/survey-info-fields/survey-info-fields.ts`
+**Selector:** `<app-survey-info-fields>`
+
+| Kind               | Name                 | Type                | Default | Description                       |
+| ------------------ | -------------------- | ------------------- | ------- | --------------------------------- |
+| `input.required()` | `titleControl`       | `FormControl`       | —       | FormControl for the title field   |
+| `input.required()` | `descriptionControl` | `FormControl`       | —       | FormControl for description       |
+| `input.required()` | `deadlineControl`    | `FormControl`       | —       | FormControl for deadline          |
+| `input.required()` | `categoryControl`    | `FormControl`       | —       | FormControl for category          |
+| `input.required()` | `categories`         | `readonly string[]` | —       | Available categories for dropdown |
+
+---
+
+#### SurveyQuestionBlock _(Sub-component of CreateSurvey)_
+
+**File:** `src/app/pages/create-survey/survey-question-block/survey-question-block.ts`
+**Selector:** `<app-survey-question-block>`
+
+| Kind               | Name            | Type        | Default | Description                                                                   |
+| ------------------ | --------------- | ----------- | ------- | ----------------------------------------------------------------------------- |
+| `input.required()` | `questionGroup` | `FormGroup` | —       | FormGroup for the question (label, allow_multiple, answers)                   |
+| `input.required()` | `questionIndex` | `number`    | —       | Index of this question in the questions FormArray                             |
+| `input.required()` | `canRemove`     | `boolean`   | —       | Whether the remove button should be enabled (false when only 1 question left) |
+| `output()`         | `remove`        | `void`      | —       | Emitted when the user clicks "remove question"                                |
+| `output()`         | `addAnswer`     | `void`      | —       | Emitted when the user clicks "add answer"                                     |
+| `output()`         | `removeAnswer`  | `number`    | —       | Emitted with the answer index to remove                                       |
+
+| Method    | Signature   | Description                                                   |
+| --------- | ----------- | ------------------------------------------------------------- |
+| `answers` | `FormArray` | Getter — returns the answers FormArray from the questionGroup |
