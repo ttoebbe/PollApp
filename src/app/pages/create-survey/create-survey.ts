@@ -6,6 +6,7 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { SurveyService, getOptionLetter } from '../../shared/services/survey';
@@ -25,6 +26,15 @@ interface SurveyFormValue {
   questions: { label: string; allow_multiple: boolean; answers: string[] }[];
 }
 
+interface FormFeedback {
+  title: string;
+  items: string[];
+}
+
+const TITLE_MAX = 100;
+const QUESTION_LABEL_MAX = 200;
+const ANSWER_MAX = 60;
+
 @Component({
   selector: 'app-create-survey',
   imports: [ReactiveFormsModule, RouterLink, SurveyInfoFields, SurveyQuestionBlock],
@@ -40,7 +50,7 @@ export class CreateSurvey {
   readonly getOptionLetter = getOptionLetter;
   readonly categories = SURVEY_CATEGORIES;
   readonly isSubmitting = signal(false);
-  readonly errorMessage = signal<string | null>(null);
+  readonly errorMessage = signal<FormFeedback | null>(null);
 
   readonly form: FormGroup = this.fb.group({
     title: [
@@ -110,13 +120,32 @@ export class CreateSurvey {
   }
 
   async submit(): Promise<void> {
-    if (!this.canSubmit()) return;
-    this.isSubmitting.set(true);
+    if (this.isSubmitting()) return;
+    if (this.form.invalid) {
+      this.handleInvalidSubmit();
+      return;
+    }
+    await this.performSubmit();
+  }
+
+  private handleInvalidSubmit(): void {
+    this.form.markAllAsTouched();
+    this.errorMessage.set({
+      title: 'Please fix the following before publishing:',
+      items: this.collectValidationErrors(),
+    });
+  }
+
+  private async performSubmit(): Promise<void> {
     this.errorMessage.set(null);
+    this.isSubmitting.set(true);
     try {
       await this.createAndNavigate();
-    } catch {
-      this.errorMessage.set('Saving failed — please try again.');
+    } catch (err) {
+      this.errorMessage.set({
+        title: 'Could not publish survey.',
+        items: [this.extractServerErrorMessage(err)],
+      });
     } finally {
       this.isSubmitting.set(false);
     }
@@ -134,12 +163,72 @@ export class CreateSurvey {
     return this.form.value as SurveyFormValue;
   }
 
-  private canSubmit(): boolean {
-    if (this.form.invalid || this.isSubmitting()) {
-      this.form.markAllAsTouched();
-      return false;
+  private collectValidationErrors(): string[] {
+    const items: string[] = [];
+    this.collectInfoFieldErrors(items);
+    for (let qi = 0; qi < this.questions.length; qi++) {
+      this.collectQuestionErrors(items, qi);
+      this.collectAnswerErrors(items, qi);
     }
-    return true;
+    return items;
+  }
+
+  private collectInfoFieldErrors(items: string[]): void {
+    this.appendErrors(items, 'Title', this.titleControl.errors, TITLE_MAX);
+    this.appendErrors(items, 'Description', this.descriptionControl.errors);
+    this.appendErrors(items, 'Category', this.categoryControl.errors);
+    this.appendErrors(items, 'Deadline', this.deadlineControl.errors);
+  }
+
+  private collectQuestionErrors(items: string[], qi: number): void {
+    const label = this.getQuestion(qi).get('label') as FormControl;
+    this.appendErrors(items, `Question ${qi + 1}: label`, label.errors, QUESTION_LABEL_MAX);
+  }
+
+  private collectAnswerErrors(items: string[], qi: number): void {
+    const answers = this.getAnswers(qi);
+    for (let ai = 0; ai < answers.length; ai++) {
+      const ctrl = answers.at(ai);
+      const letter = String.fromCharCode(65 + ai);
+      const prefix = `Question ${qi + 1}, answer ${letter}: text`;
+      this.appendErrors(items, prefix, ctrl.errors, ANSWER_MAX);
+    }
+  }
+
+  private appendErrors(
+    items: string[],
+    label: string,
+    errors: ValidationErrors | null,
+    maxLen?: number,
+  ): void {
+    if (!errors) return;
+    if (errors['required']) items.push(`${label} is required.`);
+    if (errors['whitespace']) items.push(`${label} cannot be only whitespace.`);
+    if (errors['pastDate']) items.push(`${label} must be in the future.`);
+    this.appendLengthErrors(items, label, errors, maxLen);
+  }
+
+  private appendLengthErrors(
+    items: string[],
+    label: string,
+    errors: ValidationErrors,
+    maxLen?: number,
+  ): void {
+    const min = errors['minlength']?.requiredLength;
+    if (min) items.push(`${label} must be at least ${min} characters long.`);
+    if (errors['maxlength'] && maxLen)
+      items.push(`${label} is too long (max ${maxLen} characters).`);
+  }
+
+  private extractServerErrorMessage(err: unknown): string {
+    if (err instanceof Error) {
+      const msg = err.message;
+      if (/fetch|network|offline/i.test(msg)) {
+        return 'Network error — please check your connection.';
+      }
+      return msg || 'An unexpected error occurred.';
+    }
+    return 'An unexpected error occurred. Please try again.';
   }
 
   private buildSurveyInput() {

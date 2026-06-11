@@ -155,6 +155,26 @@
     }
   }
 
+  &__error-title {
+    margin: 0 0 a.$space-2;
+    font-weight: a.$font-weight-bold;
+  }
+
+  &__error-list {
+    margin: 0;
+    padding-left: a.$space-5;
+    list-style: disc;
+
+    li {
+      font-size: a.$fs-body-sm;
+      line-height: 1.4;
+
+      & + li {
+        margin-top: a.$space-1;
+      }
+    }
+  }
+
   &__actions {
     display: flex;
     justify-content: flex-end;

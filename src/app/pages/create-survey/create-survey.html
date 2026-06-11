@@ -38,12 +38,21 @@
         </button>
       </div>
 
-      @if (errorMessage()) {
-        <p class="form__error form__error--global" role="alert">{{ errorMessage() }}</p>
+      @if (errorMessage(); as feedback) {
+        <div class="form__error form__error--global" role="alert" aria-live="polite">
+          <p class="form__error-title">{{ feedback.title }}</p>
+          @if (feedback.items.length > 0) {
+            <ul class="form__error-list">
+              @for (item of feedback.items; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          }
+        </div>
       }
 
       <div class="form__actions">
-        <button type="submit" class="btn btn--publish" [disabled]="form.invalid || isSubmitting()">
+        <button type="submit" class="btn btn--publish" [disabled]="isSubmitting()">
           {{ isSubmitting() ? 'Publishing…' : 'Publish' }}
         </button>
       </div>
