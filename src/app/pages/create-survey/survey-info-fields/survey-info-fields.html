@@ -68,7 +68,7 @@
   <div class="form__field">
     <label for="cs-deadline">Set end date <span class="form__hint">(optional)</span></label>
     <div class="form__input-wrap form__input-wrap--date">
-      <input id="cs-deadline" type="date" [formControl]="deadlineControl()" />
+      <input id="cs-deadline" type="date" [min]="todayIso" [formControl]="deadlineControl()" />
       @if (deadlineControl().value) {
         <button
           type="button"
