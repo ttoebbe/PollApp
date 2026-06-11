@@ -95,24 +95,19 @@
   gap: a.$space-6;
 
   &__questions-wrap {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    flex-direction: column;
     gap: a.$space-5;
-    align-items: start;
-
-    @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: 1fr;
-    }
   }
 
   &__questions {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
     gap: a.$space-6;
   }
 
   &__add-question {
-    align-self: end;
+    align-self: flex-start;
     display: inline-flex;
     align-items: center;
     gap: a.$space-2;
