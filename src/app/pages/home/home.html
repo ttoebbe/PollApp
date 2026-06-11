@@ -14,12 +14,22 @@
 
     <figure class="hero__visual">
       <img
-        class="hero__visual-img"
-        ngSrc="img/hero-visual.png"
+        class="hero__visual-img hero__visual-img--default"
+        src="img/hero-visual.svg"
         alt="Illustration of people collecting feedback and sharing ideas through online surveys"
         width="420"
         height="420"
-        priority
+        fetchpriority="high"
+        decoding="async"
+      />
+      <img
+        class="hero__visual-img hero__visual-img--touched"
+        src="img/hero-visual-touched.svg"
+        alt=""
+        aria-hidden="true"
+        width="420"
+        height="420"
+        decoding="async"
       />
       <figcaption class="visually-hidden">
         Hero illustration for the Poll App survey platform

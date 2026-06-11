@@ -97,16 +97,13 @@
   }
 
   &__visual {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  &__visual-img {
     width: 100%;
     max-width: 420px;
-    height: auto;
-    filter: drop-shadow(0 8px 24px rgb(0 0 0 / 0.35));
+    margin-inline: auto;
     transition: transform 0.3s ease;
 
     @media (hover: hover) {
@@ -117,6 +114,30 @@
 
     @media (max-width: a.$breakpoint-tablet) {
       max-width: 280px;
+    }
+  }
+
+  &__visual-img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 8px 24px rgb(0 0 0 / 0.35));
+    transition: opacity 0.3s ease;
+
+    &--touched {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  @media (hover: hover) {
+    &__visual:hover &__visual-img--default {
+      opacity: 0;
+    }
+
+    &__visual:hover &__visual-img--touched {
+      opacity: 1;
     }
   }
 }

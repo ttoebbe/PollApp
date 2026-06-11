@@ -8,7 +8,6 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgOptimizedImage } from '@angular/common';
 import { SurveyService, isSurveyActive, isSurveyUrgent } from '../../shared/services/survey';
 import { UrgentSurveys } from '../../shared/components/urgent-surveys/urgent-surveys';
 import { SURVEY_CATEGORIES } from '../../shared/interfaces/survey.interface';
@@ -17,7 +16,7 @@ import { SurveyList } from './survey-list/survey-list';
 
 @Component({
   selector: 'app-home',
-  imports: [UrgentSurveys, RouterLink, NgOptimizedImage, SurveyFilter, SurveyList],
+  imports: [UrgentSurveys, RouterLink, SurveyFilter, SurveyList],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
