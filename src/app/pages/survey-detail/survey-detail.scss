@@ -8,6 +8,7 @@
   max-width: a.$container-max;
   margin-inline: auto;
   padding: a.$space-10 a.$space-7;
+  min-height: 70vh;
   text-align: center;
   color: rgb(255 255 255 / 0.7);
 
@@ -31,6 +32,7 @@
   max-width: a.$container-max;
   margin-inline: auto;
   padding: a.$space-7;
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   gap: a.$space-7;
@@ -176,6 +178,8 @@
   &__submit-row {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    min-height: 52px;
   }
 
   &__results-empty-intro,
@@ -226,9 +230,15 @@
     align-items: center;
     gap: a.$space-2;
     margin: 0;
+    min-height: 52px;
     font-size: a.$fs-body-sm;
     font-weight: a.$font-weight-semi;
     color: a.$color-text-muted;
+  }
+
+  &__error-slot {
+    min-height: 24px;
+    line-height: 1.5;
   }
 
   &__error {
@@ -236,12 +246,14 @@
     color: a.$color-danger;
     font-size: a.$fs-body-sm;
     font-weight: a.$font-weight-medium;
+    line-height: 1.5;
   }
 
   &__results-col {
     background: a.$color-white;
     border-radius: 5px 60px 5px 5px;
     padding: a.$space-7;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     gap: a.$space-6;

@@ -39,7 +39,10 @@
     justify-content: center;
     border-radius: a.$radius-sm;
     padding: 0;
+    opacity: 0;
+    pointer-events: none;
     transition:
+      opacity 0.15s ease,
       color 0.15s ease,
       background 0.15s ease,
       transform 0.1s ease;
@@ -55,11 +58,21 @@
     &:active {
       transform: translateY(1px);
     }
+
+    &--visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
   &__input-wrap {
     position: relative;
     display: flex;
+    min-width: 0;
+
+    &--answer {
+      flex: 1;
+    }
 
     input {
       width: 100%;
@@ -92,13 +105,15 @@
   }
 
   &__error-slot {
-    min-height: 20px;
+    min-height: 24px;
+    line-height: 1.5;
   }
 
   &__error {
     color: a.$color-danger;
     font-size: a.$fs-body-sm;
     font-weight: a.$font-weight-medium;
+    line-height: 1.5;
   }
 
   &__answers {

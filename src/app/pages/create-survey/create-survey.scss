@@ -140,13 +140,31 @@
 
   &__error {
     &--global {
+      position: fixed;
+      right: a.$space-5;
+      bottom: a.$space-5;
+      z-index: 100;
+      max-width: min(420px, calc(100vw - #{a.$space-5} * 2));
       color: a.$color-danger;
       font-size: a.$fs-body-sm;
       font-weight: a.$font-weight-medium;
-      padding: a.$space-3 a.$space-4;
-      background: rgb(220 80 80 / 0.1);
-      border-radius: a.$radius-sm;
-      border: 1px solid rgb(220 80 80 / 0.3);
+      padding: a.$space-4 a.$space-5;
+      background: a.$color-surface-overlay-dark;
+      border-radius: a.$radius-md;
+      border: 1px solid rgb(220 80 80 / 0.4);
+      box-shadow: 0 12px 30px rgb(0 0 0 / 0.35);
+      animation: form-error-slide-in 0.25s ease-out;
+    }
+  }
+
+  @keyframes form-error-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 

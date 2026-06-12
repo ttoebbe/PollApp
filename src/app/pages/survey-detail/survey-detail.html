@@ -63,9 +63,11 @@
           }
         </div>
 
-        @if (errorMessage()) {
-          <p class="detail__error" role="alert">{{ errorMessage() }}</p>
-        }
+        <div class="detail__error-slot" role="alert" aria-live="polite">
+          @if (errorMessage()) {
+            <p class="detail__error">{{ errorMessage() }}</p>
+          }
+        </div>
       </section>
 
       <aside class="detail__results-col" aria-label="Survey results">

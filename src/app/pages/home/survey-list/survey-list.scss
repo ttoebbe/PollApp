@@ -4,6 +4,12 @@
   display: block;
 }
 
+.surveys__viewport {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
 .surveys__list {
   list-style: none;
   padding: 0;

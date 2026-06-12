@@ -148,6 +148,7 @@
   gap: a.$space-9;
   align-items: center;
   padding-block: a.$space-7;
+  min-height: 360px;
 
   &__title {
     font-family: a.$font-family-display;

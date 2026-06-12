@@ -17,9 +17,14 @@
           (click)="select(option.id)"
         >
           <span class="vote-pill__check" aria-hidden="true">
-            @if (isSelected(option.id)) {
-              <img src="img/icons/check.svg" width="14" height="14" alt="" />
-            }
+            <img
+              class="vote-pill__check-icon"
+              [class.vote-pill__check-icon--visible]="isSelected(option.id)"
+              src="img/icons/check.svg"
+              width="14"
+              height="14"
+              alt=""
+            />
           </span>
           <span class="vote-pill__letter">{{ letter(i) }}</span>
           <span class="vote-pill__label">{{ option.label }}</span>
