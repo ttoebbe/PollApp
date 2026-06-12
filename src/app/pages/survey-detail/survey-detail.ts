@@ -62,6 +62,18 @@ export class SurveyDetail implements OnInit {
     );
   });
 
+  readonly hasAnyVotes = computed(() => {
+    const surveyId = this.survey()?.id;
+    if (!surveyId) return false;
+    return this.surveyService.options().some((o) => o.survey_id === surveyId && o.vote_count > 0);
+  });
+
+  readonly hasPreviewSelection = computed(() =>
+    [...this.selections().values()].some((ids) => ids.length > 0),
+  );
+
+  readonly showResults = computed(() => this.hasAnyVotes() || this.hasPreviewSelection());
+
   async ngOnInit(): Promise<void> {
     const raw = this.route.snapshot.paramMap.get('number');
     const surveyNumber = raw ? parseInt(raw, 10) : NaN;

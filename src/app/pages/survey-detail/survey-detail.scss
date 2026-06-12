@@ -41,10 +41,11 @@
   }
 
   &__head {
-    background: a.$color-surface-overlay-dark;
+    position: relative;
+    background: a.$color-surface-card;
     border-radius: a.$radius-card-detail;
     padding: a.$space-7 a.$space-8 a.$space-8;
-    color: a.$color-text-on-dark;
+    color: a.$color-text-dark;
     display: flex;
     flex-direction: column;
     gap: a.$space-3;
@@ -55,9 +56,39 @@
     }
   }
 
+  &__close {
+    display: none;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      position: absolute;
+      top: a.$space-4;
+      right: a.$space-4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgb(0 0 0 / 0.06);
+      color: a.$color-text-dark;
+      transition: background 0.15s ease;
+    }
+
+    img {
+      filter: brightness(0);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: rgb(0 0 0 / 0.12);
+      }
+    }
+  }
+
   &__head-meta {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: a.$space-4;
     flex-wrap: wrap;
   }
@@ -77,13 +108,13 @@
 
   &__deadline {
     font-size: a.$fs-body-sm;
-    color: rgb(255 255 255 / 0.7);
+    color: a.$color-text-muted;
     font-weight: a.$font-weight-medium;
   }
 
   &__category-label {
     font-size: a.$fs-body-sm;
-    color: a.$color-orange-light;
+    color: a.$color-text-muted;
     font-weight: a.$font-weight-medium;
   }
 
@@ -100,7 +131,7 @@
   &__desc {
     margin: 0;
     font-size: a.$fs-body-lg;
-    color: rgb(255 255 255 / 0.85);
+    color: a.$color-text-dark;
     max-width: 70ch;
     text-wrap: pretty;
     overflow-wrap: break-word;
@@ -132,8 +163,34 @@
     }
   }
 
+  &__questions-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: a.$space-6;
+
+    @media (min-width: calc(a.$breakpoint-tablet + 1px)) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__submit-row {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__results-empty-intro,
+  &__results-empty {
+    margin: 0;
+    font-size: a.$fs-body;
+    color: a.$color-text-muted;
+  }
+
+  &__results-empty {
+    margin-top: a.$space-7;
+    font-weight: a.$font-weight-medium;
+  }
+
   &__submit {
-    align-self: center;
     padding: 13px 32px;
     background: a.$color-orange;
     border: none;
@@ -172,7 +229,6 @@
     font-size: a.$fs-body-sm;
     font-weight: a.$font-weight-semi;
     color: a.$color-text-muted;
-    align-self: center;
   }
 
   &__error {

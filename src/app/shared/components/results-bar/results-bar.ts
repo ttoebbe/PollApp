@@ -11,6 +11,7 @@ import { getOptionLetter } from '../../services/survey';
 export class ResultsBar {
   readonly options = input.required<Option[]>();
   readonly previewOptionIds = input<string[]>([]);
+  readonly compact = input(false);
 
   readonly totalVotes = computed(() => {
     const base = this.options().reduce((sum, o) => sum + o.vote_count, 0);

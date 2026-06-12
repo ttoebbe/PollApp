@@ -1,20 +1,18 @@
 <div class="results">
-  <div class="results__header">
-    <span class="results__live" aria-live="polite">
-      <span class="results__dot" aria-hidden="true"></span>
-      LIVE
-    </span>
-    <span class="results__total">{{ totalVotes() }} {{ votesLabel() }}</span>
-  </div>
+  @if (!compact()) {
+    <div class="results__header">
+      <span class="results__live" aria-live="polite">
+        <span class="results__dot" aria-hidden="true"></span>
+        LIVE
+      </span>
+      <span class="results__total">{{ totalVotes() }} {{ votesLabel() }}</span>
+    </div>
+  }
 
   <ul class="results__list" role="list">
     @for (option of options(); track option.id; let i = $index) {
       <li class="results__row" [class.results__row--preview]="isPreview(option)">
-        <div class="results__row-top">
-          <span class="results__letter">{{ letter(i) }}</span>
-          <span class="results__label">{{ option.label }}</span>
-          <span class="results__pct">{{ percentage(option) }}%</span>
-        </div>
+        <span class="results__letter">{{ letter(i) }}</span>
         <div
           class="results__track"
           role="progressbar"
@@ -25,6 +23,7 @@
         >
           <div class="results__fill" [style.width.%]="percentage(option)"></div>
         </div>
+        <span class="results__pct">{{ percentage(option) }}%</span>
       </li>
     }
   </ul>

@@ -8,15 +8,18 @@
 } @else {
   <article class="detail">
     <header class="detail__head">
+      <a routerLink="/" class="detail__close" aria-label="Close survey">
+        <img src="img/icons/close.svg" width="18" height="18" alt="" />
+      </a>
       <div class="detail__head-meta">
         <span class="detail__badge detail__badge--published">Published</span>
-        @if (survey()!.deadline) {
-          <span class="detail__deadline">Ends on {{ endsOnLabel() }}</span>
-        }
         @if (survey()!.category) {
           <span class="detail__category-label">Category: {{ survey()!.category }}</span>
         }
       </div>
+      @if (survey()!.deadline) {
+        <span class="detail__deadline">Ends on {{ endsOnLabel() }}</span>
+      }
       <h1 class="detail__title">{{ survey()!.title }}</h1>
       @if (survey()!.description) {
         <p class="detail__desc">{{ survey()!.description }}</p>
@@ -25,36 +28,40 @@
 
     <div class="detail__grid">
       <section class="detail__vote-col" aria-label="Cast your vote">
-        @for (row of questionRows(); track row.question.id) {
-          <div class="question-block">
-            <h2 class="question-block__heading">{{ row.heading }}</h2>
-            @if (row.question.allow_multiple) {
-              <p class="question-block__hint">More than one answers are possible.</p>
-            }
-            <app-vote-options
-              [options]="row.options"
-              [disabled]="hasCompleted()"
-              [allowMultiple]="row.question.allow_multiple"
-              (selectionChange)="onSelectionChange(row.question.id, $event)"
-            ></app-vote-options>
-          </div>
-        }
+        <div class="detail__questions-grid">
+          @for (row of questionRows(); track row.question.id) {
+            <div class="question-block">
+              <h2 class="question-block__heading">{{ row.heading }}</h2>
+              @if (row.question.allow_multiple) {
+                <p class="question-block__hint">More than one answers are possible.</p>
+              }
+              <app-vote-options
+                [options]="row.options"
+                [disabled]="hasCompleted()"
+                [allowMultiple]="row.question.allow_multiple"
+                (selectionChange)="onSelectionChange(row.question.id, $event)"
+              ></app-vote-options>
+            </div>
+          }
+        </div>
 
-        @if (hasCompleted()) {
-          <p class="detail__completed" role="status">
-            <img src="img/icons/check.svg" width="18" height="18" alt="" />
-            Thank you — your answers have been recorded.
-          </p>
-        } @else {
-          <button
-            type="button"
-            class="detail__submit"
-            [disabled]="!allAnswered() || isSubmitting()"
-            (click)="completeSurvey()"
-          >
-            {{ isSubmitting() ? 'Submitting…' : 'Complete survey' }}
-          </button>
-        }
+        <div class="detail__submit-row">
+          @if (hasCompleted()) {
+            <p class="detail__completed" role="status">
+              <img src="img/icons/check.svg" width="18" height="18" alt="" />
+              Thank you — your answers have been recorded.
+            </p>
+          } @else {
+            <button
+              type="button"
+              class="detail__submit"
+              [disabled]="!allAnswered() || isSubmitting()"
+              (click)="completeSurvey()"
+            >
+              {{ isSubmitting() ? 'Submitting…' : 'Complete survey' }}
+            </button>
+          }
+        </div>
 
         @if (errorMessage()) {
           <p class="detail__error" role="alert">{{ errorMessage() }}</p>
@@ -70,14 +77,22 @@
           </span>
         </h2>
 
-        @for (row of questionRows(); track row.question.id) {
-          <div class="result-block">
-            <h3 class="result-block__heading">{{ row.heading }}</h3>
-            <app-results-bar
-              [options]="row.options"
-              [previewOptionIds]="previewIds(row.question.id)"
-            ></app-results-bar>
-          </div>
+        @if (showResults()) {
+          @for (row of questionRows(); track row.question.id) {
+            <div class="result-block">
+              <h3 class="result-block__heading">{{ row.heading }}</h3>
+              <app-results-bar
+                [options]="row.options"
+                [previewOptionIds]="previewIds(row.question.id)"
+                [compact]="true"
+              ></app-results-bar>
+            </div>
+          }
+        } @else {
+          <p class="detail__results-empty-intro">
+            Results will be shown here after participants complete the survey.
+          </p>
+          <p class="detail__results-empty">There are no answers yet.</p>
         }
       </aside>
     </div>

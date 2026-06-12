@@ -49,8 +49,9 @@
   }
   &__row {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    flex-direction: row;
+    align-items: center;
+    gap: a.$space-3;
 
     &--preview &__fill {
       background: a.$color-orange-deep;
@@ -60,29 +61,24 @@
       font-style: italic;
     }
   }
-  &__row-top {
-    display: flex;
-    align-items: baseline;
-    gap: a.$space-2;
+  &__letter {
+    flex-shrink: 0;
+    min-width: 16px;
+    font-weight: a.$font-weight-bold;
     font-size: a.$fs-body;
     color: a.$color-text-dark;
   }
-  &__letter {
-    font-weight: a.$font-weight-bold;
-  }
-  &__label {
-    flex: 1;
-    min-width: 0;
-    font-weight: a.$font-weight-medium;
-    overflow-wrap: break-word;
-  }
   &__pct {
+    flex-shrink: 0;
+    min-width: 48px;
+    text-align: right;
     font-weight: a.$font-weight-bold;
     color: a.$color-orange-deep;
     font-variant-numeric: tabular-nums;
   }
   &__track {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     height: 14px;
     background: a.$color-gray-track;
     border-radius: a.$radius-pill;
