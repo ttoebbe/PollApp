@@ -27,7 +27,27 @@
     margin: 0;
 
     @media (max-width: a.$breakpoint-tablet) {
-      grid-template-columns: minmax(0, 1fr);
+      display: flex;
+      grid-template-columns: none;
+      gap: a.$space-4;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-inline: a.$space-4;
+      margin-inline: -#{a.$space-4};
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  &__cell {
+    @media (max-width: a.$breakpoint-tablet) {
+      flex: 0 0 85%;
+      scroll-snap-align: start;
     }
   }
 
@@ -47,7 +67,7 @@
   color: a.$color-text-muted;
   border-radius: a.$radius-card-hl;
   padding: a.$space-7 a.$space-4 a.$space-7;
-  min-height: 310px;
+  // min-height: 310px;
   overflow: hidden;
   text-decoration: none;
   transition:

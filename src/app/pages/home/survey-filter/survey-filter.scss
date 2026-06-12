@@ -8,6 +8,17 @@
   display: flex;
   gap: a.$space-5;
   align-items: center;
+
+  @media (max-width: a.$breakpoint-tablet) {
+    flex-wrap: wrap;
+    gap: a.$space-4;
+
+    [role='tablist'] {
+      display: flex;
+      gap: a.$space-3;
+      flex: 1 0 100%;
+    }
+  }
 }
 
 .dropdown-backdrop {
@@ -20,6 +31,10 @@
   position: relative;
   margin-inline-start: auto;
   z-index: 10;
+
+  @media (max-width: a.$breakpoint-tablet) {
+    margin-inline-start: 0;
+  }
 
   &__toggle {
     display: inline-flex;
@@ -138,6 +153,27 @@
     color: a.$color-orange;
     &::after {
       background: a.$color-orange;
+    }
+  }
+
+  @media (max-width: a.$breakpoint-tablet) {
+    padding: a.$space-2 a.$space-4;
+    border: 2px solid a.$color-orange-light;
+    border-radius: a.$radius-pill;
+    color: a.$color-orange-light;
+    background: transparent;
+
+    &::after {
+      display: none;
+    }
+
+    &--active {
+      background: a.$color-orange-light;
+      color: a.$color-text-dark;
+
+      &::after {
+        display: none;
+      }
     }
   }
 }
