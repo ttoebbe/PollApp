@@ -28,27 +28,9 @@
     min-height: 220px;
 
     @media (max-width: a.$breakpoint-tablet) {
-      display: flex;
-      grid-template-columns: none;
+      grid-template-columns: minmax(0, 1fr);
       gap: a.$space-4;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      padding-inline: a.$space-4;
-      margin-inline: -#{a.$space-4};
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-  }
-
-  &__cell {
-    @media (max-width: a.$breakpoint-tablet) {
-      flex: 0 0 85%;
-      scroll-snap-align: start;
+      min-height: 0;
     }
   }
 
