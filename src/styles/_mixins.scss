@@ -1,0 +1,60 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'tokens' as t;
+
+$_breakpoints: (
+  'mobile': t.$breakpoint-mobile,
+  'tablet': t.$breakpoint-tablet,
+  'desktop': t.$breakpoint-desktop,
+);
+
+@mixin respond($breakpoint, $direction: down) {
+  $value: map.get($_breakpoints, $breakpoint);
+
+  @if $value == null {
+    @warn "Unknown breakpoint: #{$breakpoint}. Use one of: mobile, tablet, desktop.";
+  } @else if $direction == down {
+    @media (max-width: $value) {
+      @content;
+    }
+  } @else if $direction == up {
+    @media (min-width: calc(#{$value} + 1px)) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown direction: #{$direction}. Use 'up' or 'down'.";
+  }
+}
+
+@mixin hover-hover {
+  @media (hover: hover) {
+    @content;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@function px-to-rem($px) {
+  @return math.div($px, 16) * 1rem;
+}

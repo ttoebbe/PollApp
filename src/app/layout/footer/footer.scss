@@ -13,7 +13,7 @@
     justify-content: space-between;
     gap: a.$space-5;
 
-    @media (max-width: a.$breakpoint-mobile) {
+    @include a.respond(mobile) {
       flex-direction: column;
       gap: a.$space-2;
       padding-inline: a.$space-4;
