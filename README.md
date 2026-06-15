@@ -95,9 +95,11 @@ PollApp/
           survey-filter/      → SurveyFilter (tab + category dropdown)
           survey-list/        → SurveyList (rendered list of SurveyCards)
         survey-detail/        → SurveyDetail (vote + live results per question)
+          survey-detail-header/ → SurveyDetailHeader (back link, title, category, deadline)
         create-survey/        → CreateSurvey (multi-question reactive form)
           survey-info-fields/   → SurveyInfoFields (title, description, category, deadline fields)
           survey-question-block/ → SurveyQuestionBlock (single question + answers block)
+          form-clear-button/    → FormClearButton (reusable clear button for form inputs)
         imprint/              → Imprint (legal page)
       shared/
         components/
@@ -120,14 +122,11 @@ PollApp/
     index.html
     environments/
       environment.ts          (not committed — listed in .gitignore)
+    styles.scss               global styles entry — imports _abstracts and applies resets
     styles/
-      styles.scss
-      _tokens.scss            raw design tokens (colors, spacing, breakpoints, shadows)
-      _abstracts.scss         @forward entry point for tokens
-      abstracts/
-        _variables.scss       SCSS variables
-        _mixins.scss          respond(), flex-center(), px-to-rem()
-        _index.scss           @forward for all abstracts
+      _tokens.scss            raw design tokens (colors, spacing, fonts, breakpoints, shadows)
+      _abstracts.scss         @forward entry point — forwards 'tokens' and 'mixins'
+      _mixins.scss            respond(), flex-center(), flex-between(), flex-column(), truncate(), hover-hover(), px-to-rem()
 ```
 
 ---
@@ -200,8 +199,10 @@ flowchart TD
     SurveyCard[SurveyCard]
     VoteOptions[VoteOptions]
     ResultsBar[ResultsBar]
+    SurveyDetailHeader[SurveyDetailHeader]
     SurveyInfoFields[SurveyInfoFields]
     SurveyQuestionBlock[SurveyQuestionBlock]
+    FormClearButton[FormClearButton]
 
     App --> Header
     App --> Footer
@@ -218,19 +219,22 @@ flowchart TD
     Home --> SurveyList
     SurveyList --> SurveyCard
 
+    SurveyDetail --> SurveyDetailHeader
     SurveyDetail --> VoteOptions
     SurveyDetail --> ResultsBar
 
     CreateSurvey --> SurveyInfoFields
     CreateSurvey --> SurveyQuestionBlock
+    SurveyInfoFields --> FormClearButton
+    SurveyQuestionBlock --> FormClearButton
 
     classDef layout fill:#dbeafe,stroke:#3b82f6
     classDef page fill:#fef3c7,stroke:#f59e0b
     classDef shared fill:#dcfce7,stroke:#22c55e
 
     class Header,Footer,Logo layout
-    class Home,SurveyDetail,CreateSurvey,Imprint,SurveyInfoFields,SurveyQuestionBlock page
-    class UrgentSurveys,SurveyFilter,SurveyList,SurveyCard,VoteOptions,ResultsBar shared
+    class Home,SurveyDetail,CreateSurvey,Imprint page
+    class UrgentSurveys,SurveyFilter,SurveyList,SurveyCard,VoteOptions,ResultsBar,SurveyDetailHeader,SurveyInfoFields,SurveyQuestionBlock,FormClearButton shared
 ```
 
 ### Diagram 2: Data Flow — Services & Signals
@@ -317,12 +321,12 @@ flowchart LR
 
 ### Pages
 
-| File               | Description                                                                                                                   |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| `home.ts`          | Urgent banner + Active / Past tabs + category filter                                                                          |
-| `survey-detail.ts` | Vote card + results card, `localStorage` check for completed surveys                                                          |
-| `create-survey.ts` | Reactive Form with `FormArray` for dynamic questions (2–8 options); delegates to `SurveyInfoFields` and `SurveyQuestionBlock` |
-| `imprint.ts`       | Legal imprint page                                                                                                            |
+| File               | Description                                                                                                                                                                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `home.ts`          | Urgent banner + Active / Past tabs + category filter                                                                                                                         |
+| `survey-detail.ts` | Vote card + results card, `localStorage` check for completed surveys; header section extracted to `SurveyDetailHeader`                                                       |
+| `create-survey.ts` | Reactive Form with `FormArray` for dynamic questions (2–8 options); delegates to `SurveyInfoFields`, `SurveyQuestionBlock` and reuses `FormClearButton` for clearable inputs |
+| `imprint.ts`       | Legal imprint page                                                                                                                                                           |
 
 ---
 
@@ -770,3 +774,29 @@ Pure presentation component — no state, no methods, no inputs.
 | Method    | Signature   | Description                                                   |
 | --------- | ----------- | ------------------------------------------------------------- |
 | `answers` | `FormArray` | Getter — returns the answers FormArray from the questionGroup |
+
+---
+
+#### SurveyDetailHeader _(Sub-component of SurveyDetail)_
+
+**File:** `src/app/pages/survey-detail/survey-detail-header/survey-detail-header.ts`
+**Selector:** `<app-survey-detail-header>`
+
+| Kind               | Name          | Type     | Default | Description                                  |
+| ------------------ | ------------- | -------- | ------- | -------------------------------------------- |
+| `input.required()` | `survey`      | `Survey` | —       | The survey being displayed                   |
+| `input.required()` | `endsOnLabel` | `string` | —       | Formatted deadline label (e.g. `31.12.2025`) |
+
+---
+
+#### FormClearButton _(Reusable in CreateSurvey)_
+
+**File:** `src/app/pages/create-survey/form-clear-button/form-clear-button.ts`
+**Selector:** `<app-form-clear-button>`
+
+| Kind               | Name      | Type                                | Default     | Description                                          |
+| ------------------ | --------- | ----------------------------------- | ----------- | ---------------------------------------------------- |
+| `input.required()` | `value`   | `unknown`                           | —           | Current field value — button hides itself when empty |
+| `input.required()` | `label`   | `string`                            | —           | Accessible label for screen readers                  |
+| `input()`          | `variant` | `'default' \| 'textarea' \| 'date'` | `'default'` | Visual variant for different input types             |
+| `output()`         | `cleared` | `void`                              | —           | Emitted when the user clicks the clear button        |
