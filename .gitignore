@@ -40,3 +40,6 @@ Desktop.ini
 src/environments/environment.ts
 .env
 .env*.local
+
+# Lokale Seed-/Demo-Skripte — nicht auf GitHub
+scripts/seed-surveys.mjs
