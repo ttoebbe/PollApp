@@ -1,0 +1,13 @@
+<button
+  type="button"
+  class="clear-btn"
+  [class.clear-btn--visible]="value()"
+  [class.clear-btn--textarea]="variant() === 'textarea'"
+  [class.clear-btn--date]="variant() === 'date'"
+  [attr.aria-hidden]="!value()"
+  [attr.tabindex]="value() ? 0 : -1"
+  [attr.aria-label]="label()"
+  (click)="cleared.emit()"
+>
+  <img src="img/icons/close.svg" width="14" height="14" alt="" />
+</button>

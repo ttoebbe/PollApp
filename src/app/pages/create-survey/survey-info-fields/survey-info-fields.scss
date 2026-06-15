@@ -90,53 +90,6 @@
     }
   }
 
-  &__input-wrap--date {
-    .form__clear {
-      right: 38px;
-    }
-  }
-
-  &__clear {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: rgb(53 39 58 / 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    padding: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition:
-      opacity 0.15s ease,
-      color 0.15s ease,
-      background 0.15s ease;
-
-    @media (hover: hover) {
-      &:hover {
-        color: a.$color-text-dark;
-        background: rgb(53 39 58 / 0.08);
-      }
-    }
-
-    &--visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    &--textarea {
-      top: 10px;
-      transform: translateY(0);
-    }
-  }
-
   &__select-wrap {
     position: relative;
 

@@ -9,17 +9,11 @@
         placeholder="e.g. Team Event Planning"
         autocomplete="off"
       />
-      <button
-        type="button"
-        class="form__clear"
-        [class.form__clear--visible]="titleControl().value"
-        [attr.aria-hidden]="!titleControl().value"
-        [attr.tabindex]="titleControl().value ? 0 : -1"
-        (click)="titleControl().reset('')"
-        aria-label="Clear survey name"
-      >
-        <img src="img/icons/close.svg" width="14" height="14" alt="" />
-      </button>
+      <app-form-clear-button
+        [value]="titleControl().value"
+        label="Clear survey name"
+        (cleared)="titleControl().reset('')"
+      />
     </div>
     <div class="form__error-slot">
       @if (getTitleError(titleControl()); as msg) {
@@ -37,17 +31,12 @@
         rows="4"
         placeholder="Give people a bit more context…"
       ></textarea>
-      <button
-        type="button"
-        class="form__clear form__clear--textarea"
-        [class.form__clear--visible]="descriptionControl().value"
-        [attr.aria-hidden]="!descriptionControl().value"
-        [attr.tabindex]="descriptionControl().value ? 0 : -1"
-        (click)="descriptionControl().reset('')"
-        aria-label="Clear description"
-      >
-        <img src="img/icons/close.svg" width="14" height="14" alt="" />
-      </button>
+      <app-form-clear-button
+        [value]="descriptionControl().value"
+        label="Clear description"
+        variant="textarea"
+        (cleared)="descriptionControl().reset('')"
+      />
     </div>
     <div class="form__error-slot">
       @if (getDescriptionError(descriptionControl()); as msg) {
@@ -62,17 +51,12 @@
     <label for="cs-deadline">Set end date <span class="form__hint">(optional)</span></label>
     <div class="form__input-wrap form__input-wrap--date">
       <input id="cs-deadline" type="date" [min]="todayIso" [formControl]="deadlineControl()" />
-      <button
-        type="button"
-        class="form__clear"
-        [class.form__clear--visible]="deadlineControl().value"
-        [attr.aria-hidden]="!deadlineControl().value"
-        [attr.tabindex]="deadlineControl().value ? 0 : -1"
-        (click)="deadlineControl().reset('')"
-        aria-label="Clear end date"
-      >
-        <img src="img/icons/close.svg" width="14" height="14" alt="" />
-      </button>
+      <app-form-clear-button
+        [value]="deadlineControl().value"
+        label="Clear end date"
+        variant="date"
+        (cleared)="deadlineControl().reset('')"
+      />
     </div>
     <div class="form__error-slot">
       @if (getDeadlineError(deadlineControl()); as msg) {

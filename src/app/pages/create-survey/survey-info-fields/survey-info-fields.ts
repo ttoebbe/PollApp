@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormClearButton } from '../form-clear-button/form-clear-button';
 
 type ErrorRule = readonly [errorKey: string, message: string];
 
@@ -18,7 +19,7 @@ const DEADLINE_ERRORS: readonly ErrorRule[] = [['pastDate', 'Deadline must be in
 
 @Component({
   selector: 'app-survey-info-fields',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormClearButton],
   templateUrl: './survey-info-fields.html',
   styleUrl: './survey-info-fields.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
