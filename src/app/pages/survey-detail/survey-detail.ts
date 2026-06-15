@@ -14,6 +14,7 @@ import type { Question } from '../../shared/interfaces/question.interface';
 import type { Option } from '../../shared/interfaces/option.interface';
 import { VoteOptions } from '../../shared/components/vote-options/vote-options';
 import { ResultsBar } from '../../shared/components/results-bar/results-bar';
+import { SurveyDetailHeader } from './survey-detail-header/survey-detail-header';
 
 interface QuestionRow {
   question: Question;
@@ -23,7 +24,7 @@ interface QuestionRow {
 
 @Component({
   selector: 'app-survey-detail',
-  imports: [VoteOptions, ResultsBar, RouterLink],
+  imports: [VoteOptions, ResultsBar, RouterLink, SurveyDetailHeader],
   templateUrl: './survey-detail.html',
   styleUrl: './survey-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

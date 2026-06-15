@@ -1,0 +1,104 @@
+@use '../../../../styles/abstracts' as a;
+
+:host {
+  display: contents;
+}
+
+.detail {
+  &__head {
+    position: relative;
+    background: a.$color-surface-card;
+    border-radius: a.$radius-card-detail;
+    padding: a.$space-7 a.$space-8 a.$space-8;
+    color: a.$color-text-dark;
+    display: flex;
+    flex-direction: column;
+    gap: a.$space-3;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      border-radius: 5px 60px 5px 5px;
+      padding: a.$space-5;
+    }
+  }
+
+  &__close {
+    display: none;
+
+    @media (max-width: a.$breakpoint-tablet) {
+      position: absolute;
+      top: a.$space-4;
+      right: a.$space-4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgb(0 0 0 / 0.06);
+      color: a.$color-text-dark;
+      transition: background 0.15s ease;
+    }
+
+    img {
+      filter: brightness(0);
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: rgb(0 0 0 / 0.12);
+      }
+    }
+  }
+
+  &__head-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: a.$space-4;
+    flex-wrap: wrap;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: a.$space-1 a.$space-3;
+    font-size: a.$fs-body-sm;
+    font-weight: a.$font-weight-bold;
+    border-radius: a.$radius-tag;
+
+    &--published {
+      background: a.$color-orange-pale;
+      color: a.$color-orange-text;
+    }
+  }
+
+  &__deadline {
+    font-size: a.$fs-body-sm;
+    color: a.$color-text-muted;
+    font-weight: a.$font-weight-medium;
+  }
+
+  &__category-label {
+    font-size: a.$fs-body-sm;
+    color: a.$color-text-muted;
+    font-weight: a.$font-weight-medium;
+  }
+
+  &__title {
+    font-family: a.$font-family-display;
+    font-size: clamp(36px, 5vw, a.$fs-survey-title-lg);
+    line-height: 1;
+    color: a.$color-orange;
+    margin: 0;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: a.$fs-body-lg;
+    color: a.$color-text-dark;
+    max-width: 70ch;
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+}
