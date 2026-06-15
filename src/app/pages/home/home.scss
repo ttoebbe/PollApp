@@ -24,7 +24,7 @@
   flex-direction: column;
   gap: 90px;
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     gap: a.$space-12;
     padding-inline: a.$space-4;
   }
@@ -36,7 +36,7 @@
   gap: a.$space-6;
   align-items: center;
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -84,7 +84,7 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         background: a.$color-orange;
         text-decoration: none;
@@ -106,13 +106,13 @@
     margin-inline: auto;
     transition: transform 0.3s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         transform: scale(1.02);
       }
     }
 
-    @media (max-width: a.$breakpoint-tablet) {
+    @include a.respond(tablet) {
       max-width: 280px;
     }
   }
@@ -131,7 +131,7 @@
     }
   }
 
-  @media (hover: hover) {
+  @include a.hover-hover {
     &__visual:hover &__visual-img--default {
       opacity: 0;
     }

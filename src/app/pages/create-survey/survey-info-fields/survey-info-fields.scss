@@ -10,7 +10,7 @@
     grid-template-columns: 1fr 1fr;
     gap: a.$space-5;
 
-    @media (max-width: a.$breakpoint-tablet) {
+    @include a.respond(tablet) {
       grid-template-columns: 1fr;
     }
   }
@@ -20,7 +20,7 @@
     grid-template-columns: 1fr 1fr;
     gap: a.$space-5;
 
-    @media (max-width: a.$breakpoint-tablet) {
+    @include a.respond(tablet) {
       grid-template-columns: 1fr;
     }
   }

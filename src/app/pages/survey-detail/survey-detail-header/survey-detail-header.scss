@@ -15,7 +15,7 @@
     flex-direction: column;
     gap: a.$space-3;
 
-    @media (max-width: a.$breakpoint-tablet) {
+    @include a.respond(tablet) {
       border-radius: 5px 60px 5px 5px;
       padding: a.$space-5;
     }
@@ -24,7 +24,7 @@
   &__close {
     display: none;
 
-    @media (max-width: a.$breakpoint-tablet) {
+    @include a.respond(tablet) {
       position: absolute;
       top: a.$space-4;
       right: a.$space-4;
@@ -43,7 +43,7 @@
       filter: brightness(0);
     }
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         background: rgb(0 0 0 / 0.12);
       }

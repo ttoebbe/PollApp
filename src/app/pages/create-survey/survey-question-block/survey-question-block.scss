@@ -47,7 +47,7 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         color: a.$color-danger;
         background: rgb(220 80 80 / 0.1);
@@ -190,7 +190,7 @@
       color 0.15s ease,
       transform 0.1s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover:not(:disabled) {
         color: a.$color-orange;
         transform: translateY(-2px);

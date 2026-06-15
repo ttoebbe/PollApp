@@ -9,7 +9,7 @@
   gap: a.$space-5;
   align-items: center;
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     flex-wrap: wrap;
     gap: a.$space-4;
 
@@ -32,7 +32,7 @@
   margin-inline-start: auto;
   z-index: 10;
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     margin-inline-start: 0;
   }
 
@@ -52,7 +52,7 @@
       border-color 0.15s ease,
       color 0.15s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         border-color: a.$color-orange-light;
         color: a.$color-orange-light;
@@ -97,7 +97,7 @@
         background 0.1s ease,
         color 0.1s ease;
 
-      @media (hover: hover) {
+      @include a.hover-hover {
         &:hover {
           background: rgb(255 255 255 / 0.07);
           color: a.$color-orange-light;
@@ -138,7 +138,7 @@
     transition: background 0.15s ease;
   }
 
-  @media (hover: hover) {
+  @include a.hover-hover {
     &:hover {
       color: a.$color-orange-light;
       transform: translateY(-2px);
@@ -156,7 +156,7 @@
     }
   }
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     padding: a.$space-2 a.$space-4;
     border: 2px solid a.$color-orange-light;
     border-radius: a.$radius-pill;

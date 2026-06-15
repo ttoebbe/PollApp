@@ -12,7 +12,7 @@
   flex-direction: column;
   gap: a.$space-7;
 
-  @media (max-width: a.$breakpoint-mobile) {
+  @include a.respond(mobile) {
     padding-inline: a.$space-4;
   }
 
@@ -48,7 +48,7 @@
     border-radius: a.$radius-card-detail;
     padding: a.$space-7 a.$space-8;
 
-    @media (max-width: a.$breakpoint-mobile) {
+    @include a.respond(mobile) {
       padding: a.$space-5;
       border-radius: a.$radius-md;
     }
@@ -86,7 +86,7 @@
     display: flex;
     gap: a.$space-3;
 
-    @media (max-width: a.$breakpoint-mobile) {
+    @include a.respond(mobile) {
       flex-direction: column;
       gap: a.$space-1;
     }

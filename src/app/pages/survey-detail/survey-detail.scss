@@ -12,7 +12,7 @@
   text-align: center;
   color: rgb(255 255 255 / 0.7);
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     padding: a.$space-7 a.$space-4;
   }
 
@@ -37,7 +37,7 @@
   flex-direction: column;
   gap: a.$space-7;
 
-  @media (max-width: a.$breakpoint-tablet) {
+  @include a.respond(tablet) {
     padding: a.$space-5 a.$space-4;
     gap: a.$space-5;
   }
@@ -48,7 +48,7 @@
     gap: a.$space-6;
     align-items: start;
 
-    @media (max-width: a.$breakpoint-tablet) {
+    @include a.respond(tablet) {
       grid-template-columns: minmax(0, 1fr);
     }
   }
@@ -62,7 +62,7 @@
     gap: a.$space-6;
     color: a.$color-text-dark;
 
-    @media (max-width: a.$breakpoint-mobile) {
+    @include a.respond(mobile) {
       padding: a.$space-5 a.$space-4;
       border-radius: 5px 30px 5px 5px;
     }
@@ -73,7 +73,7 @@
     grid-template-columns: minmax(0, 1fr);
     gap: a.$space-6;
 
-    @media (min-width: calc(a.$breakpoint-tablet + 1px)) {
+    @include a.respond(tablet, up) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
@@ -111,7 +111,7 @@
       background 0.15s ease,
       transform 0.1s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover:not(:disabled) {
         background: a.$color-orange-deep;
         transform: translateY(-2px);
@@ -162,7 +162,7 @@
     gap: a.$space-6;
     color: a.$color-text-dark;
 
-    @media (max-width: a.$breakpoint-mobile) {
+    @include a.respond(mobile) {
       padding: a.$space-5 a.$space-4;
       border-radius: 5px 30px 5px 5px;
     }
