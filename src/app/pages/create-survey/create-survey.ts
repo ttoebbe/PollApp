@@ -237,7 +237,9 @@ export class CreateSurvey {
       title: v.title.trim(),
       description: v.description?.trim() || null,
       category: v.category,
-      deadline: v.deadline ? new Date(v.deadline).toISOString() : null,
+      deadline: v.deadline
+        ? new Date(v.deadline).toISOString()
+        : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       status: 'published' as const,
     };
   }
