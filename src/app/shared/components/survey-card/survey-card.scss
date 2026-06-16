@@ -28,13 +28,7 @@
   }
 
   &--past {
-    cursor: not-allowed;
     opacity: 0.55;
-    @media (hover: hover) {
-      &:hover {
-        background: a.$color-surface-overlay-dark;
-      }
-    }
   }
 
   &__meta {

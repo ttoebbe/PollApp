@@ -8,7 +8,7 @@ import {
   DestroyRef,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { SurveyService, getSurveyEndsOnLabel } from '../../shared/services/survey';
+import { SurveyService, getSurveyEndsOnLabel, isSurveyActive } from '../../shared/services/survey';
 import type { Survey } from '../../shared/interfaces/survey.interface';
 import type { Question } from '../../shared/interfaces/question.interface';
 import type { Option } from '../../shared/interfaces/option.interface';
@@ -45,6 +45,11 @@ export class SurveyDetail implements OnInit {
   readonly endsOnLabel = computed(() => {
     const s = this.survey();
     return s ? getSurveyEndsOnLabel(s) : '';
+  });
+
+  readonly isExpired = computed(() => {
+    const s = this.survey();
+    return s ? !isSurveyActive(s) : false;
   });
 
   readonly questionRows = computed<QuestionRow[]>(() => {

@@ -20,7 +20,7 @@
               }
               <app-vote-options
                 [options]="row.options"
-                [disabled]="hasCompleted()"
+                [disabled]="hasCompleted() || isExpired()"
                 [allowMultiple]="row.question.allow_multiple"
                 (selectionChange)="onSelectionChange(row.question.id, $event)"
               ></app-vote-options>
@@ -34,6 +34,8 @@
               <img src="img/icons/check.svg" width="18" height="18" alt="" />
               Thank you — your answers have been recorded.
             </p>
+          } @else if (isExpired()) {
+            <p class="detail__completed" role="status">This survey has ended — voting is closed.</p>
           } @else {
             <button
               type="button"
