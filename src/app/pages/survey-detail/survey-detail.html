@@ -7,10 +7,10 @@
   <div class="state" aria-live="polite">Loading survey&hellip;</div>
 } @else {
   <article class="detail">
-    <app-survey-detail-header [survey]="survey()!" [endsOnLabel]="endsOnLabel()" />
-
     <div class="detail__grid">
       <section class="detail__vote-col" aria-label="Cast your vote">
+        <app-survey-detail-header [survey]="survey()!" [endsOnLabel]="endsOnLabel()" />
+
         <div class="detail__questions-grid">
           @for (row of questionRows(); track row.question.id) {
             <div class="question-block">

@@ -7,18 +7,10 @@
 .detail {
   &__head {
     position: relative;
-    background: a.$color-surface-card;
-    border-radius: a.$radius-card-detail;
-    padding: a.$space-7 a.$space-8 a.$space-8;
     color: a.$color-text-dark;
     display: flex;
     flex-direction: column;
     gap: a.$space-3;
-
-    @include a.respond(tablet) {
-      border-radius: 5px 60px 5px 5px;
-      padding: a.$space-5;
-    }
   }
 
   &__close {
