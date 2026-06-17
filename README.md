@@ -539,6 +539,7 @@ export interface QuestionInput {
 | ------------------ | ------------------ | ---------- | ------- | -------------------------------------------------------------------------- |
 | `input.required()` | `options`          | `Option[]` | —       | All answer options of the question with their `vote_count` values          |
 | `input()`          | `previewOptionIds` | `string[]` | `[]`    | IDs of currently selected options — shows a vote preview before submitting |
+| `input()`          | `compact`          | `boolean`  | `false` | Renders the bar in a more compact layout (smaller spacing/typography)      |
 | `computed`         | `totalVotes`       | `number`   | —       | Sum of all cast votes plus preview votes                                   |
 | `computed`         | `votesLabel`       | `string`   | —       | `"vote"` (singular) or `"votes"` (plural) depending on `totalVotes`        |
 
@@ -669,11 +670,15 @@ Imports: `RouterLink`, `Logo`
 
 ##### Computed
 
-| Name           | Type                    | Description                                                       |
-| -------------- | ----------------------- | ----------------------------------------------------------------- |
-| `endsOnLabel`  | `Signal<string>`        | Formatted deadline date (e.g. `"31.12.2025"`) or empty string     |
-| `questionRows` | `Signal<QuestionRow[]>` | Combines questions and options into renderable rows with headings |
-| `allAnswered`  | `Signal<boolean>`       | `true` when all questions have at least one selection             |
+| Name                  | Type                    | Description                                                                      |
+| --------------------- | ----------------------- | -------------------------------------------------------------------------------- |
+| `endsOnLabel`         | `Signal<string>`        | Formatted deadline date (e.g. `"31.12.2025"`) or empty string                    |
+| `isExpired`           | `Signal<boolean>`       | `true` when the survey's deadline is in the past                                 |
+| `questionRows`        | `Signal<QuestionRow[]>` | Combines questions and options into renderable rows with headings                |
+| `allAnswered`         | `Signal<boolean>`       | `true` when all questions have at least one selection                            |
+| `hasAnyVotes`         | `Signal<boolean>`       | `true` when at least one option of this survey has `vote_count > 0`              |
+| `hasPreviewSelection` | `Signal<boolean>`       | `true` when the user has selected at least one option (before submitting)        |
+| `showResults`         | `Signal<boolean>`       | Drives whether `ResultsBar` is rendered — `hasAnyVotes \|\| hasPreviewSelection` |
 
 ##### Methods
 
@@ -693,12 +698,14 @@ Imports: `RouterLink`, `Logo`
 
 ##### Signals & Class Members
 
-| Name              | Type                        | Description                                                       |
-| ----------------- | --------------------------- | ----------------------------------------------------------------- |
-| `isSubmitting`    | `Signal<boolean>`           | `true` while the form submit is running                           |
-| `errorMessage`    | `Signal<string \| null>`    | Error message when saving fails                                   |
-| `getOptionLetter` | `(index: number) => string` | Helper function as class member — makes it available in templates |
-| `categories`      | `readonly string[]`         | Category list for the dropdown                                    |
+| Name              | Type                           | Description                                                                      |
+| ----------------- | ------------------------------ | -------------------------------------------------------------------------------- |
+| `form`            | `FormGroup`                    | Reactive form root — structure described below                                   |
+| `isSubmitting`    | `Signal<boolean>`              | `true` while the form submit is running                                          |
+| `errorMessage`    | `Signal<FormFeedback \| null>` | Validation/submit feedback — `FormFeedback = { title: string; items: string[] }` |
+| `showSuccess`     | `Signal<boolean>`              | Controls the success overlay shown briefly after a successful submit             |
+| `getOptionLetter` | `(index: number) => string`    | Helper function as class member — makes it available in templates                |
+| `categories`      | `readonly string[]`            | Category list for the dropdown                                                   |
 
 ##### Form Structure
 
@@ -721,15 +728,21 @@ FormGroup {
 
 ##### Methods
 
-| Method                 | Signature                                              | Description                                                                          |
-| ---------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `questions` _(Getter)_ | `FormArray`                                            | Returns the questions `FormArray` from the form                                      |
-| `getAnswers`           | `(questionIndex: number) => FormArray`                 | Returns the answers `FormArray` for a specific question                              |
-| `addQuestion`          | `() => void`                                           | Appends a new question with two empty answer fields                                  |
-| `removeQuestion`       | `(index: number) => void`                              | Removes a question — at least one question always remains                            |
-| `addAnswer`            | `(questionIndex: number) => void`                      | Adds an answer field — maximum 8 answers per question                                |
-| `removeAnswer`         | `(questionIndex: number, answerIndex: number) => void` | Removes an answer field — minimum 2 answers always remain                            |
-| `submit`               | `() => Promise<void>`                                  | Marks all fields as touched, checks validity, saves, and navigates to the new survey |
+| Method                          | Signature                                              | Description                                                                          |
+| ------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `questions` _(Getter)_          | `FormArray`                                            | Returns the questions `FormArray` from the form                                      |
+| `titleControl` _(Getter)_       | `FormControl`                                          | Returns the title `FormControl`                                                      |
+| `descriptionControl` _(Getter)_ | `FormControl`                                          | Returns the description `FormControl`                                                |
+| `deadlineControl` _(Getter)_    | `FormControl`                                          | Returns the deadline `FormControl`                                                   |
+| `categoryControl` _(Getter)_    | `FormControl`                                          | Returns the category `FormControl`                                                   |
+| `getQuestion`                   | `(index: number) => FormGroup`                         | Returns the question `FormGroup` at the given index                                  |
+| `getAnswers`                    | `(questionIndex: number) => FormArray`                 | Returns the answers `FormArray` for a specific question                              |
+| `addQuestion`                   | `() => void`                                           | Appends a new question with two empty answer fields                                  |
+| `removeQuestion`                | `(index: number) => void`                              | Removes a question — at least one question always remains                            |
+| `addAnswer`                     | `(questionIndex: number) => void`                      | Adds an answer field — maximum 8 answers per question                                |
+| `removeAnswer`                  | `(questionIndex: number, answerIndex: number) => void` | Removes an answer field — minimum 2 answers always remain                            |
+| `submit`                        | `() => Promise<void>`                                  | Marks all fields as touched, checks validity, saves, and navigates to the new survey |
+| `dismissSuccess`                | `() => void`                                           | Closes the success overlay and navigates to the newly created survey immediately     |
 
 ---
 
