@@ -31,7 +31,7 @@
   text-align: left;
   transition: color 0.15s ease;
 
-  @media (hover: hover) {
+  @include a.hover-hover {
     &:hover:not([aria-disabled='true']) {
       color: a.$color-orange-deep;
     }

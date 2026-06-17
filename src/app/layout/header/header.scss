@@ -24,7 +24,7 @@
     text-decoration: none;
     transition: opacity 0.15s ease;
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         text-decoration: none;
         opacity: 0.9;
@@ -53,7 +53,7 @@
       color: a.$color-text-dark;
     }
 
-    @media (hover: hover) {
+    @include a.hover-hover {
       &:hover {
         background: a.$color-orange;
         text-decoration: none;
@@ -66,7 +66,7 @@
   }
 }
 
-@media (max-width: a.$breakpoint-mobile) {
+@include a.respond(mobile) {
   .header__inner {
     padding-inline: a.$space-4;
   }

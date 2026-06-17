@@ -20,7 +20,7 @@
   overflow: hidden;
   cursor: pointer;
 
-  @media (hover: hover) {
+  @include a.hover-hover {
     &:hover {
       background: rgb(255 255 255 / 0.1);
       text-decoration: none;
