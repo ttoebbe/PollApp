@@ -21,35 +21,24 @@
   display: flex;
   align-items: center;
   gap: a.$space-3;
-  padding: a.$space-3 a.$space-4;
-  background: a.$color-white;
-  border: 2px solid transparent;
-  border-radius: a.$radius-input;
+  padding: a.$space-2 0;
+  background: transparent;
+  border: none;
   font-family: a.$font-family-base;
   font-size: a.$fs-body-lg;
   color: a.$color-text-dark;
   cursor: pointer;
   text-align: left;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease,
-    transform 0.1s ease;
+  transition: color 0.15s ease;
 
   @media (hover: hover) {
     &:hover:not([aria-disabled='true']) {
-      border-color: a.$color-orange-light;
-      background: rgb(255 207 161 / 0.08);
-      transform: translateY(-2px);
+      color: a.$color-orange-deep;
     }
   }
 
-  &:active:not([aria-disabled='true']) {
-    transform: translateY(1px);
-  }
-
   &--selected {
-    border-color: a.$color-orange;
-    background: rgb(255 207 161 / 0.18);
+    color: a.$color-orange-deep;
   }
 
   &__check {

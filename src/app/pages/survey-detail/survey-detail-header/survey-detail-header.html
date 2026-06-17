@@ -4,12 +4,16 @@
   </a>
   <div class="detail__head-meta">
     <span class="detail__badge detail__badge--published">Published</span>
-    @if (survey().category) {
-      <span class="detail__category-label">Category: {{ survey().category }}</span>
-    }
   </div>
-  @if (survey().deadline) {
-    <span class="detail__deadline">Ends on {{ endsOnLabel() }}</span>
+  @if (survey().deadline || survey().category) {
+    <div class="detail__meta-row">
+      @if (survey().deadline) {
+        <span class="detail__deadline">Ends on {{ endsOnLabel() }}</span>
+      }
+      @if (survey().category) {
+        <span class="detail__category-label">Category: {{ survey().category }}</span>
+      }
+    </div>
   }
   <h1 class="detail__title">{{ survey().title }}</h1>
   @if (survey().description) {

@@ -45,6 +45,14 @@
   &__head-meta {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    gap: a.$space-4;
+    flex-wrap: wrap;
+  }
+
+  &__meta-row {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: a.$space-4;
     flex-wrap: wrap;
