@@ -38,6 +38,20 @@
         </button>
       </div>
 
+      @if (showSuccess()) {
+        <div class="form__success form__success--global" role="status" aria-live="polite">
+          <p class="form__success-text">Your survey is now published</p>
+          <button
+            type="button"
+            class="form__success-close"
+            (click)="dismissSuccess()"
+            aria-label="Close notification"
+          >
+            <img src="img/icons/close.svg" width="14" height="14" alt="" />
+          </button>
+        </div>
+      }
+
       @if (errorMessage(); as feedback) {
         <div class="form__error form__error--global" role="alert" aria-live="polite">
           <p class="form__error-title">{{ feedback.title }}</p>

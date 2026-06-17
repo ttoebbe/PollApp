@@ -34,6 +34,7 @@ interface FormFeedback {
 const TITLE_MAX = 100;
 const QUESTION_LABEL_MAX = 200;
 const ANSWER_MAX = 60;
+const SUCCESS_OVERLAY_MS = 1500;
 
 @Component({
   selector: 'app-create-survey',
@@ -51,6 +52,9 @@ export class CreateSurvey {
   readonly categories = SURVEY_CATEGORIES;
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<FormFeedback | null>(null);
+  readonly showSuccess = signal(false);
+
+  private pendingSurveyNumber: number | null = null;
 
   readonly form: FormGroup = this.fb.group({
     title: [
@@ -137,7 +141,7 @@ export class CreateSurvey {
   }
 
   private async performSubmit(): Promise<void> {
-    this.errorMessage.set(null);
+    this.resetFeedback();
     this.isSubmitting.set(true);
     try {
       await this.createAndNavigate();
@@ -151,12 +155,40 @@ export class CreateSurvey {
     }
   }
 
+  /** Clears all transient feedback signals before a new submit. */
+  private resetFeedback(): void {
+    this.errorMessage.set(null);
+    this.showSuccess.set(false);
+  }
+
   private async createAndNavigate(): Promise<void> {
     const survey = await this.surveyService.createSurvey(
       this.buildSurveyInput(),
       this.buildQuestionInputs(),
     );
-    this.router.navigate(['/survey', survey.survey_number]);
+    this.pendingSurveyNumber = survey.survey_number;
+    this.showSuccess.set(true);
+    await this.delay(SUCCESS_OVERLAY_MS);
+    this.navigateToPendingSurvey();
+  }
+
+  /** Closes the success overlay and navigates immediately. */
+  dismissSuccess(): void {
+    this.navigateToPendingSurvey();
+  }
+
+  /** Resolves after the given milliseconds. */
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /** Navigates to the pending survey detail page if still pending. */
+  private navigateToPendingSurvey(): void {
+    if (this.pendingSurveyNumber === null) return;
+    const nr = this.pendingSurveyNumber;
+    this.pendingSurveyNumber = null;
+    this.showSuccess.set(false);
+    this.router.navigate(['/survey', nr]);
   }
 
   private get formValue(): SurveyFormValue {
