@@ -48,9 +48,6 @@
     &__icon {
       width: 32px;
       height: 32px;
-      background-color: currentColor;
-      mask: url('/img/icons/delete-icon.svg') no-repeat center / contain;
-      -webkit-mask: url('/img/icons/delete-icon.svg') no-repeat center / contain;
     }
 
     @include a.hover-hover {
