@@ -44,13 +44,15 @@
   }
 
   &__input-wrap {
-    position: relative;
     display: flex;
+    align-items: center;
+    gap: a.$space-3;
 
     input,
     textarea,
     select {
-      width: 100%;
+      flex: 1;
+      min-width: 0;
       padding: 10px 14px;
       background: a.$color-white;
       border: 1.5px solid transparent;
@@ -85,9 +87,7 @@
   }
 
   &__input-wrap--textarea {
-    textarea {
-      padding-right: a.$space-7;
-    }
+    align-items: flex-start;
   }
 
   &__select-wrap {

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
-type ClearButtonVariant = 'default' | 'textarea' | 'date';
+type ClearButtonVariant = 'default' | 'textarea';
 
 @Component({
   selector: 'app-form-clear-button',

@@ -4,13 +4,12 @@
     <button
       type="button"
       class="form__icon-btn"
-      [class.form__icon-btn--visible]="canRemove()"
-      [attr.aria-hidden]="!canRemove()"
-      [attr.tabindex]="canRemove() ? 0 : -1"
+      [disabled]="!canRemove()"
+      [attr.aria-disabled]="!canRemove()"
       (click)="remove.emit()"
       [attr.aria-label]="'Remove question ' + (questionIndex() + 1)"
     >
-      <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
+      <span class="form__icon-btn__icon" aria-hidden="true"></span>
     </button>
   </div>
 
@@ -47,13 +46,12 @@
           <button
             type="button"
             class="form__icon-btn"
-            [class.form__icon-btn--visible]="answers.length > 2"
-            [attr.aria-hidden]="answers.length <= 2"
-            [attr.tabindex]="answers.length > 2 ? 0 : -1"
+            [disabled]="answers.length <= 2"
+            [attr.aria-disabled]="answers.length <= 2"
             (click)="removeAnswer.emit(ai)"
             [attr.aria-label]="'Remove answer ' + (ai + 1)"
           >
-            <img src="img/icons/delete-icon.svg" width="18" height="18" alt="" />
+            <span class="form__icon-btn__icon" aria-hidden="true"></span>
           </button>
         </li>
       }

@@ -28,40 +28,46 @@
   }
 
   &__icon-btn {
-    width: 32px;
-    height: 32px;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
     background: transparent;
     border: none;
     cursor: pointer;
-    color: rgb(255 255 255 / 0.4);
+    color: a.$color-text-on-dark;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: a.$radius-sm;
     padding: 0;
-    opacity: 0;
-    pointer-events: none;
     transition:
-      opacity 0.15s ease,
       color 0.15s ease,
       background 0.15s ease,
       transform 0.1s ease;
 
+    &__icon {
+      width: 32px;
+      height: 32px;
+      background-color: currentColor;
+      mask: url('/img/icons/delete-icon.svg') no-repeat center / contain;
+      -webkit-mask: url('/img/icons/delete-icon.svg') no-repeat center / contain;
+    }
+
     @include a.hover-hover {
-      &:hover {
+      &:hover:not(:disabled) {
         color: a.$color-danger;
-        background: rgb(220 80 80 / 0.1);
+        background: rgb(220 80 80 / 0.15);
         transform: translateY(-2px);
       }
     }
 
-    &:active {
+    &:active:not(:disabled) {
       transform: translateY(1px);
     }
 
-    &--visible {
-      opacity: 1;
-      pointer-events: auto;
+    &:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
     }
   }
 

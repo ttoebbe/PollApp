@@ -49,12 +49,11 @@
 <div class="form__meta-row">
   <div class="form__field">
     <label for="cs-deadline">Set end date <span class="form__hint">(optional)</span></label>
-    <div class="form__input-wrap form__input-wrap--date">
+    <div class="form__input-wrap">
       <input id="cs-deadline" type="date" [min]="todayIso" [formControl]="deadlineControl()" />
       <app-form-clear-button
         [value]="deadlineControl().value"
         label="Clear end date"
-        variant="date"
         (cleared)="deadlineControl().reset('')"
       />
     </div>
