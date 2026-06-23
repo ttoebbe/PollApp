@@ -37,33 +37,48 @@
   align-items: center;
 
   @include a.respond(tablet) {
-    grid-template-columns: minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: a.$space-5;
   }
 
   &__text {
     display: flex;
     flex-direction: column;
     gap: a.$space-7;
+
+    @include a.respond(tablet) {
+      display: contents;
+    }
   }
 
   &__headline {
     font-family: a.$font-family-display;
-    font-size: clamp(56px, 7vw, a.$fs-hero);
+    font-size: clamp(60px, 9vw, a.$fs-hero);
     line-height: 0.89;
     color: a.$color-orange;
     margin: 0;
     letter-spacing: 0.005em;
     text-wrap: balance;
+
+    @include a.respond(tablet) {
+      order: 1;
+    }
   }
 
   &__sub {
     font-family: a.$font-family-base;
-    font-weight: a.$font-weight-bold;
+    font-weight: a.$font-weight-semi;
     font-size: a.$fs-hero-sub;
     line-height: 1.2;
     color: a.$color-text-on-dark;
     max-width: 666px;
     text-wrap: pretty;
+
+    @include a.respond(tablet) {
+      order: 3;
+    }
   }
 
   &__cta {
@@ -94,6 +109,10 @@
     &:active {
       transform: translateY(1px);
     }
+
+    @include a.respond(tablet) {
+      order: 4;
+    }
   }
 
   &__visual {
@@ -113,7 +132,9 @@
     }
 
     @include a.respond(tablet) {
-      max-width: 280px;
+      order: 2;
+      max-width: 100%;
+      margin-inline: 0;
     }
   }
 

@@ -2,6 +2,8 @@
 
 :host {
   display: block;
+  width: 100%;
+  min-width: 0;
 }
 
 .ending-soon {
@@ -16,6 +18,10 @@
     color: a.$color-text-on-dark;
     margin: 0;
     line-height: 1;
+
+    @include a.respond(tablet) {
+      font-size: 24px;
+    }
   }
 
   &__grid {
@@ -28,9 +34,24 @@
     min-height: 220px;
 
     @include a.respond(tablet) {
-      grid-template-columns: minmax(0, 1fr);
+      display: flex;
       gap: a.$space-4;
+      min-width: 0;
       min-height: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  &__cell {
+    @include a.respond(tablet) {
+      flex: 0 0 250px;
+      scroll-snap-align: start;
     }
   }
 
