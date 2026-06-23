@@ -48,4 +48,14 @@
     align-self: flex-start;
     margin-top: 4px;
   }
+
+  @include a.respond(mobile) {
+    width: 32px;
+    height: 32px;
+
+    &__icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
 }

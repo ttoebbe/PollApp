@@ -66,6 +66,16 @@
       opacity: 0.75;
       cursor: not-allowed;
     }
+
+    @include a.respond(mobile) {
+      width: 32px;
+      height: 32px;
+
+      &__icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   &__input-wrap {
