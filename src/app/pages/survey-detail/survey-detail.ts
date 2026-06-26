@@ -7,6 +7,7 @@ import {
   computed,
   DestroyRef,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SurveyService, getSurveyEndsOnLabel, isSurveyActive } from '../../shared/services/survey';
 import type { Survey } from '../../shared/interfaces/survey.interface';
@@ -34,6 +35,7 @@ export class SurveyDetail implements OnInit {
   private readonly router = inject(Router);
   private readonly surveyService = inject(SurveyService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
 
   readonly survey = signal<Survey | null>(null);
   readonly questions = signal<Question[]>([]);
@@ -81,6 +83,7 @@ export class SurveyDetail implements OnInit {
   readonly showResults = computed(() => this.hasAnyVotes() || this.hasPreviewSelection());
 
   async ngOnInit(): Promise<void> {
+    this.applyDetailTheme();
     const raw = this.route.snapshot.paramMap.get('number');
     const surveyNumber = raw ? parseInt(raw, 10) : NaN;
     if (isNaN(surveyNumber)) {
@@ -88,6 +91,12 @@ export class SurveyDetail implements OnInit {
       return;
     }
     await this.loadSurvey(surveyNumber);
+  }
+
+  /** Apply white survey-detail theme via body class; revert on destroy. */
+  private applyDetailTheme(): void {
+    this.document.body.classList.add('body--survey-detail');
+    this.destroyRef.onDestroy(() => this.document.body.classList.remove('body--survey-detail'));
   }
 
   onSelectionChange(questionId: string, ids: string[]): void {

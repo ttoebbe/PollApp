@@ -54,7 +54,7 @@
   }
 
   &__vote-col {
-    background: a.$color-white;
+    background: a.$color-surface-overlay-light;
     border-radius: 5px 60px 5px 5px;
     padding: a.$space-7;
     display: flex;
@@ -153,9 +153,8 @@
   }
 
   &__results-col {
-    background: a.$color-white;
-    border-radius: 5px 60px 5px 5px;
-    padding: a.$space-7;
+    padding-block: a.$space-7;
+    padding-inline: 0;
     min-height: 400px;
     display: flex;
     flex-direction: column;
@@ -163,8 +162,7 @@
     color: a.$color-text-dark;
 
     @include a.respond(mobile) {
-      padding: a.$space-5 a.$space-4;
-      border-radius: 5px 30px 5px 5px;
+      padding-block: a.$space-5;
     }
   }
 

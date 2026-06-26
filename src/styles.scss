@@ -80,3 +80,34 @@ img {
   min-height: calc(100vh - a.$header-height);
   padding-block: a.$space-7 a.$space-12;
 }
+
+body.body--survey-detail {
+  background-color: a.$color-white;
+  color: a.$color-text-dark;
+
+  .header,
+  .footer {
+    background: a.$color-white;
+  }
+
+  .header {
+    border-bottom-color: rgb(0 0 0 / 0.05);
+  }
+
+  .footer {
+    border-top-color: rgb(0 0 0 / 0.05);
+  }
+
+  .header__logo-link,
+  .footer__logo-link {
+    color: a.$color-text-dark;
+  }
+
+  .footer__link {
+    color: a.$color-text-muted;
+
+    &:hover {
+      color: a.$color-orange-deep;
+    }
+  }
+}
