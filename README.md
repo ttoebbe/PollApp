@@ -596,7 +596,10 @@ export interface QuestionInput {
 **File:** `src/app/layout/header/header.ts`  
 **Selector:** `<app-header>`
 
-Pure presentation component — no state, no methods.  
+| Kind       | Name                  | Type              | Description                                                                    |
+| ---------- | --------------------- | ----------------- | ------------------------------------------------------------------------------ |
+| `computed` | `showNewSurveyButton` | `Signal<boolean>` | `true` on `/survey/:number` routes — drives visibility of the "New Survey" CTA |
+
 Imports: `RouterLink`, `Logo`
 
 ---
@@ -728,21 +731,21 @@ FormGroup {
 
 ##### Methods
 
-| Method                          | Signature                                              | Description                                                                          |
-| ------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `questions` _(Getter)_          | `FormArray`                                            | Returns the questions `FormArray` from the form                                      |
-| `titleControl` _(Getter)_       | `FormControl`                                          | Returns the title `FormControl`                                                      |
-| `descriptionControl` _(Getter)_ | `FormControl`                                          | Returns the description `FormControl`                                                |
-| `deadlineControl` _(Getter)_    | `FormControl`                                          | Returns the deadline `FormControl`                                                   |
-| `categoryControl` _(Getter)_    | `FormControl`                                          | Returns the category `FormControl`                                                   |
-| `getQuestion`                   | `(index: number) => FormGroup`                         | Returns the question `FormGroup` at the given index                                  |
-| `getAnswers`                    | `(questionIndex: number) => FormArray`                 | Returns the answers `FormArray` for a specific question                              |
-| `addQuestion`                   | `() => void`                                           | Appends a new question with two empty answer fields                                  |
-| `removeQuestion`                | `(index: number) => void`                              | Removes a question — at least one question always remains                            |
-| `addAnswer`                     | `(questionIndex: number) => void`                      | Adds an answer field — maximum 8 answers per question                                |
-| `removeAnswer`                  | `(questionIndex: number, answerIndex: number) => void` | Removes an answer field — minimum 2 answers always remain                            |
-| `submit`                        | `() => Promise<void>`                                  | Marks all fields as touched, checks validity, saves, and navigates to the new survey |
-| `dismissSuccess`                | `() => void`                                           | Closes the success overlay and navigates to the newly created survey immediately     |
+| Method                          | Signature                                              | Description                                                                                                     |
+| ------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `questions` _(Getter)_          | `FormArray`                                            | Returns the questions `FormArray` from the form                                                                 |
+| `titleControl` _(Getter)_       | `FormControl`                                          | Returns the title `FormControl`                                                                                 |
+| `descriptionControl` _(Getter)_ | `FormControl`                                          | Returns the description `FormControl`                                                                           |
+| `deadlineControl` _(Getter)_    | `FormControl`                                          | Returns the deadline `FormControl`                                                                              |
+| `categoryControl` _(Getter)_    | `FormControl`                                          | Returns the category `FormControl`                                                                              |
+| `getQuestion`                   | `(index: number) => FormGroup`                         | Returns the question `FormGroup` at the given index                                                             |
+| `getAnswers`                    | `(questionIndex: number) => FormArray`                 | Returns the answers `FormArray` for a specific question                                                         |
+| `addQuestion`                   | `() => void`                                           | Appends a new question with two empty answer fields                                                             |
+| `removeQuestion`                | `(index: number) => void`                              | Clear-or-remove: clears the label if filled; otherwise removes the question — the first question is always kept |
+| `addAnswer`                     | `(questionIndex: number) => void`                      | Adds an answer field — maximum 8 answers per question                                                           |
+| `removeAnswer`                  | `(questionIndex: number, answerIndex: number) => void` | Clear-or-remove: clears the answer if filled; otherwise removes it — minimum 2 answers always remain            |
+| `submit`                        | `() => Promise<void>`                                  | Marks all fields as touched, checks validity, saves, and navigates to the new survey                            |
+| `dismissSuccess`                | `() => void`                                           | Closes the success overlay and navigates to the newly created survey immediately                                |
 
 ---
 
@@ -768,6 +771,16 @@ Pure presentation component — no state, no methods, no inputs.
 | `input.required()` | `categoryControl`    | `FormControl`       | —       | FormControl for category          |
 | `input.required()` | `categories`         | `readonly string[]` | —       | Available categories for dropdown |
 
+| Class member | Type     | Description                                                                     |
+| ------------ | -------- | ------------------------------------------------------------------------------- |
+| `todayIso`   | `string` | Today's date in `YYYY-MM-DD` format — used as `min` for the deadline date input |
+
+| Method                | Signature                               | Description                                                                                 |
+| --------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `getTitleError`       | `(ctrl: FormControl) => string \| null` | Returns the first matching error message for the title field (or `null` if untouched/valid) |
+| `getDescriptionError` | `(ctrl: FormControl) => string \| null` | Returns the first matching error message for the description field                          |
+| `getDeadlineError`    | `(ctrl: FormControl) => string \| null` | Returns the first matching error message for the deadline field                             |
+
 ---
 
 #### SurveyQuestionBlock _(Sub-component of CreateSurvey)_
@@ -775,18 +788,22 @@ Pure presentation component — no state, no methods, no inputs.
 **File:** `src/app/pages/create-survey/survey-question-block/survey-question-block.ts`
 **Selector:** `<app-survey-question-block>`
 
-| Kind               | Name            | Type        | Default | Description                                                                   |
-| ------------------ | --------------- | ----------- | ------- | ----------------------------------------------------------------------------- |
-| `input.required()` | `questionGroup` | `FormGroup` | —       | FormGroup for the question (label, allow_multiple, answers)                   |
-| `input.required()` | `questionIndex` | `number`    | —       | Index of this question in the questions FormArray                             |
-| `input.required()` | `canRemove`     | `boolean`   | —       | Whether the remove button should be enabled (false when only 1 question left) |
-| `output()`         | `remove`        | `void`      | —       | Emitted when the user clicks "remove question"                                |
-| `output()`         | `addAnswer`     | `void`      | —       | Emitted when the user clicks "add answer"                                     |
-| `output()`         | `removeAnswer`  | `number`    | —       | Emitted with the answer index to remove                                       |
+| Kind               | Name            | Type        | Default | Description                                                 |
+| ------------------ | --------------- | ----------- | ------- | ----------------------------------------------------------- |
+| `input.required()` | `questionGroup` | `FormGroup` | —       | FormGroup for the question (label, allow_multiple, answers) |
+| `input.required()` | `questionIndex` | `number`    | —       | Index of this question in the questions FormArray           |
+| `output()`         | `remove`        | `void`      | —       | Emitted when the user clicks "remove question"              |
+| `output()`         | `addAnswer`     | `void`      | —       | Emitted when the user clicks "add answer"                   |
+| `output()`         | `removeAnswer`  | `number`    | —       | Emitted with the answer index to remove                     |
 
-| Method    | Signature   | Description                                                   |
-| --------- | ----------- | ------------------------------------------------------------- |
-| `answers` | `FormArray` | Getter — returns the answers FormArray from the questionGroup |
+| Class member      | Type                        | Description                                                       |
+| ----------------- | --------------------------- | ----------------------------------------------------------------- |
+| `getOptionLetter` | `(index: number) => string` | Helper function as class member — makes it available in templates |
+
+| Method          | Signature              | Description                                                                                    |
+| --------------- | ---------------------- | ---------------------------------------------------------------------------------------------- |
+| `answers`       | `FormArray`            | Getter — returns the answers FormArray from the questionGroup                                  |
+| `getLabelError` | `() => string \| null` | Returns the first matching error message for the question label (or `null` if untouched/valid) |
 
 ---
 
@@ -807,9 +824,9 @@ Pure presentation component — no state, no methods, no inputs.
 **File:** `src/app/pages/create-survey/form-clear-button/form-clear-button.ts`
 **Selector:** `<app-form-clear-button>`
 
-| Kind               | Name      | Type                                | Default     | Description                                          |
-| ------------------ | --------- | ----------------------------------- | ----------- | ---------------------------------------------------- |
-| `input.required()` | `value`   | `unknown`                           | —           | Current field value — button hides itself when empty |
-| `input.required()` | `label`   | `string`                            | —           | Accessible label for screen readers                  |
-| `input()`          | `variant` | `'default' \| 'textarea' \| 'date'` | `'default'` | Visual variant for different input types             |
-| `output()`         | `cleared` | `void`                              | —           | Emitted when the user clicks the clear button        |
+| Kind               | Name      | Type                      | Default     | Description                                          |
+| ------------------ | --------- | ------------------------- | ----------- | ---------------------------------------------------- |
+| `input.required()` | `value`   | `unknown`                 | —           | Current field value — button hides itself when empty |
+| `input.required()` | `label`   | `string`                  | —           | Accessible label for screen readers                  |
+| `input()`          | `variant` | `'default' \| 'textarea'` | `'default'` | Visual variant for different input types             |
+| `output()`         | `cleared` | `void`                    | —           | Emitted when the user clicks the clear button        |
