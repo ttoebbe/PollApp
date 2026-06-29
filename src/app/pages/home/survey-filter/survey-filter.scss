@@ -9,13 +9,16 @@
   gap: a.$space-5;
   align-items: center;
 
+  [role='tablist'] {
+    display: flex;
+    gap: a.$space-3;
+  }
+
   @include a.respond(tablet) {
     flex-wrap: wrap;
     gap: a.$space-4;
 
     [role='tablist'] {
-      display: flex;
-      gap: a.$space-3;
       flex: 1 0 100%;
     }
   }
@@ -113,34 +116,21 @@
 }
 
 .tab {
-  position: relative;
-  padding: a.$space-1 8px a.$space-2;
+  padding: a.$space-2 a.$space-4;
   background: transparent;
-  border: none;
-  color: rgb(255 255 255 / 0.65);
+  border: 2px solid a.$color-orange-light;
+  border-radius: a.$radius-pill;
+  color: a.$color-orange-light;
   font-family: a.$font-family-base;
   font-weight: a.$font-weight-bold;
   font-size: a.$fs-body-lg;
   line-height: 1;
   transition:
-    color 0.15s ease,
+    background 0.15s ease,
     transform 0.1s ease;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 3px;
-    border-radius: 2px;
-    background: transparent;
-    transition: background 0.15s ease;
-  }
 
   @include a.hover-hover {
     &:hover {
-      color: a.$color-orange-light;
       transform: translateY(-2px);
     }
   }
@@ -150,30 +140,7 @@
   }
 
   &--active {
-    color: a.$color-orange;
-    &::after {
-      background: a.$color-orange;
-    }
-  }
-
-  @include a.respond(tablet) {
-    padding: a.$space-2 a.$space-4;
-    border: 2px solid a.$color-orange-light;
-    border-radius: a.$radius-pill;
-    color: a.$color-orange-light;
-    background: transparent;
-
-    &::after {
-      display: none;
-    }
-
-    &--active {
-      background: a.$color-orange-light;
-      color: a.$color-text-dark;
-
-      &::after {
-        display: none;
-      }
-    }
+    background: a.$color-orange-light;
+    color: a.$color-text-dark;
   }
 }
