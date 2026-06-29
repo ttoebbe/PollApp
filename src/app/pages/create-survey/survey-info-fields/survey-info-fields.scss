@@ -133,4 +133,10 @@
     font-weight: a.$font-weight-medium;
     line-height: 1.5;
   }
+
+  @include a.respond(mobile) {
+    &__field {
+      position: relative;
+    }
+  }
 }

@@ -68,8 +68,8 @@
     }
 
     @include a.respond(mobile) {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
 
       &__icon {
         width: 20px;
@@ -218,6 +218,32 @@
       opacity: 0.4;
       cursor: not-allowed;
       text-decoration: none;
+    }
+  }
+
+  @include a.respond(mobile) {
+    &__answer-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: a.$space-2;
+      row-gap: a.$space-1;
+      align-items: center;
+    }
+
+    &__answer-item > .form__letter {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    &__answer-item > .form__icon-btn {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: end;
+    }
+
+    &__answer-item > .form__input-wrap--answer {
+      grid-column: 1 / -1;
+      grid-row: 2;
     }
   }
 }
