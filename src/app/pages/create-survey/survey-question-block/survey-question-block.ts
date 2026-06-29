@@ -19,7 +19,6 @@ const QUESTION_LABEL_ERRORS: readonly ErrorRule[] = [
 export class SurveyQuestionBlock {
   readonly questionGroup = input.required<FormGroup>();
   readonly questionIndex = input.required<number>();
-  readonly canRemove = input.required<boolean>();
 
   readonly remove = output<void>();
   readonly addAnswer = output<void>();

@@ -4,8 +4,6 @@
     <button
       type="button"
       class="form__icon-btn"
-      [disabled]="!canRemove()"
-      [attr.aria-disabled]="!canRemove()"
       (click)="remove.emit()"
       [attr.aria-label]="'Remove question ' + (questionIndex() + 1)"
     >
@@ -56,8 +54,6 @@
           <button
             type="button"
             class="form__icon-btn"
-            [disabled]="answers.length <= 2"
-            [attr.aria-disabled]="answers.length <= 2"
             (click)="removeAnswer.emit(ai)"
             [attr.aria-label]="'Remove answer ' + (ai + 1)"
           >

@@ -25,7 +25,6 @@
             <app-survey-question-block
               [questionGroup]="getQuestion(qi)"
               [questionIndex]="qi"
-              [canRemove]="questions.length > 1"
               (remove)="removeQuestion(qi)"
               (addAnswer)="addAnswer(qi)"
               (removeAnswer)="removeAnswer(qi, $event)"

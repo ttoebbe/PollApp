@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
@@ -104,8 +105,14 @@ export class CreateSurvey {
     this.questions.push(this.buildQuestion());
   }
 
+  /** Clears a filled label; otherwise removes the question (first question is kept). */
   removeQuestion(index: number): void {
-    if (this.questions.length <= 1) return;
+    const label = this.getQuestion(index).get('label') as FormControl;
+    if (this.hasValue(label)) {
+      this.clearControl(label);
+      return;
+    }
+    if (index === 0) return;
     this.questions.removeAt(index);
   }
 
@@ -117,10 +124,29 @@ export class CreateSurvey {
     );
   }
 
+  /** Clears a filled answer value; otherwise removes it (keeps the minimum of two answers). */
   removeAnswer(questionIndex: number, answerIndex: number): void {
     const answers = this.getAnswers(questionIndex);
+    const answer = answers.at(answerIndex);
+    if (this.hasValue(answer)) {
+      this.clearControl(answer);
+      return;
+    }
     if (answers.length <= 2) return;
     answers.removeAt(answerIndex);
+  }
+
+  /** Returns true when the control holds a non-whitespace string value. */
+  private hasValue(control: AbstractControl): boolean {
+    const value = control.value;
+    return typeof value === 'string' && value.trim().length > 0;
+  }
+
+  /** Resets a control to an empty, pristine and untouched state. */
+  private clearControl(control: AbstractControl): void {
+    control.setValue('');
+    control.markAsPristine();
+    control.markAsUntouched();
   }
 
   async submit(): Promise<void> {
