@@ -179,21 +179,10 @@
   }
 
   &__results-live {
-    display: inline-flex;
-    align-items: center;
-    gap: a.$space-1;
-    font-family: a.$font-family-base;
-    font-size: a.$fs-body-sm;
-    font-weight: a.$font-weight-bold;
-    color: a.$color-orange-deep;
-  }
-
-  &__live-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: a.$color-orange-deep;
-    animation: pulse 1.4s ease-in-out infinite;
+    font-family: a.$font-family-display;
+    font-size: inherit;
+    line-height: inherit;
+    color: a.$color-orange;
   }
 }
 
@@ -231,17 +220,5 @@
     color: a.$color-text-dark;
     margin: 0;
     overflow-wrap: break-word;
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.75);
   }
 }
